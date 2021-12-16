@@ -7,8 +7,8 @@ import * as queries from './queries/landing.js';
 import { loginSetup } from '../utils/setup.js'
 
 export const options = {
-  vus: 1000,
-  iterations: 1000000,
+  vus: 1,
+  duration: '30s',
 
   thresholds: {
     http_req_duration: ['p(99)<500'], // 99% of requests must complete below 1.5s
@@ -23,14 +23,6 @@ export const options = {
           loadZone: 'amazon:in:mumbai',
           percent: 50
         },
-        // hongKongDistribution: {
-        //   loadZone: 'amazon:cn:hong kong',
-        //   percent: 25
-        // },
-        // irelandDistribution: {
-        //   loadZone: 'amazon:ie:dublin',
-        //   percent: 25
-        // },
         portlandDistribution: {
           loadZone: 'amazon:us:portland',
           percent: 50
