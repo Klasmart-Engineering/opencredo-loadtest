@@ -27,36 +27,40 @@ const USERNAME = 'max.flintoff+testlogin@opencredo.com';
 const PASSWORD = __ENV.PASSWORD;
 
 export function loginSetup() {
-  const accessToken = group('Login to AMS', function () {
-    const loginPay = JSON.stringify({
+  const loginPay = JSON.stringify({
 
-      email: USERNAME,
-      pw: PASSWORD,
-      deviceId: "loadtest",
-      deviceName: "k6",
-    });
+    email: USERNAME,
+    pw: PASSWORD,
+    deviceId: "loadtest",
+    deviceName: "k6",
+  });
 
-    const loginParams = {
-      headers: APIHeaders
-    }
+  const loginParams = {
+    headers: APIHeaders
+  }
 
-    http.options(`${AMS_URL}/v1/login`);
+  http.options(`${AMS_URL}/v1/login`);
 
-    const loginResp = http.post(`${AMS_URL}/v1/login`, loginPay, loginParams);
-    check(loginResp, {
-      'is status 200': (r) => r.status === 200,
-    });
+  const loginResp = http.post(`${AMS_URL}/v1/login`, loginPay, loginParams);
 
-    return loginResp.json('accessToken');
+  check(loginResp, {
+    'has access token': (r) => r.json('accessToken') !== null,
+    'has status 200': (r) => r.status === 200,
   });
 
   const authPayload = JSON.stringify({
-    token: accessToken
+    token: loginResp.json('accessToken')
     });
 
   const transferResp = http.post(`https://auth.${APP_URL}/transfer`, authPayload, {
       headers: APIHeaders
     });
+
+  check(transferResp, {
+    'has access cookie': (r) => r.cookies.access[0],
+    'has refresh cookie': (r) => r.cookies.refresh[0],
+    'has status 200': (r) => r.status === 200,
+  });
 
   return transferResp;
 };
