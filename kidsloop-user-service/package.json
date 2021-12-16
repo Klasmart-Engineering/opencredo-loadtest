@@ -1,10 +1,9 @@
 {
-  "name": "kidsloop-user-service",
-  "version": "1.0.0",
-  "description": "",
-  "main": "landing-test.js",
+  "name": "kidsloop-user-service-loadtests",
+  "version": "0.0.1",
+  "description": "Collection of K6 based load testing scripts",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "bundle": "webpack"
   },
   "keywords": [],
