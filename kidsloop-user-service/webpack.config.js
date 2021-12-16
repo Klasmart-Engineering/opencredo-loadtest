@@ -4,13 +4,13 @@ var webpack = require('webpack');
 
 const args = process.argv.slice(2);
 const fileName = args[0];
-const outFilename = path.basename(fileName, path.extname(fileName))+'.es5.js';
+const outFilename = `${ path.basename(fileName, path.extname(fileName)) }.es5.js`;
 
 module.exports = {
     mode: "production",
     entry: fileName,
     output: {
-         path: path.resolve(path.dirname(fileName)) + '/dist',
+         path: `${ path.resolve(path.dirname(fileName)) }/dist`,
          libraryTarget: "commonjs",
          filename: outFilename
      },
