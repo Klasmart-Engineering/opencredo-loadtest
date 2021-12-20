@@ -8,7 +8,7 @@ import { loginSetup } from '../utils/setup.js'
 
 export const options = {
   vus: 1,
-  duration: '30s',
+  iterations: 1,
 
   thresholds: {
     http_req_duration: ['p(99)<500'], // 99% of requests must complete below 1.5s
@@ -33,6 +33,9 @@ export const options = {
 }
 
 const APP_URL = 'loadtest.kidsloop.live';
+const USERNAME = __ENV.USERNAME
+
+const TESTVAL = __ENV.test
 
 const userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36';
 const defaultHeaders = {
@@ -45,81 +48,130 @@ const APIHeaders = Object.assign({
 }, defaultHeaders)
 
 export function setup() {
-  return loginSetup();
+  return loginSetup(APP_URL, USERNAME, 'dev');
+}
+
+function isRequestSuccessful(request) {
+  if (request.status !== 200) {
+    console.error(request.status)
+    if (request.body) {
+      console.error(request.body)
+    }
+  }
 }
 
 export default function main(data) {
 
+  let test;
+  if (!TESTVAL) {
+    test = 'all';
+  }
+  else {
+    test = TESTVAL
+  }
+
   const userUrl = `https://api.${APP_URL}/user/`;
   let response;
-  const accessCookie = data.cookies.access[0]
+  const accessCookie = data;
 
   //initialise the cookies for this VU
   const cookieJar = http.cookieJar();
-  cookieJar.set(userUrl, 'access', accessCookie.Value);
+  cookieJar.set(userUrl, 'access', accessCookie);
   cookieJar.set(userUrl, 'locale', 'en');
   cookieJar.set(userUrl, 'privacy', 'true');
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.ME,
-    operationName: 'me',
-  }), {
-    headers: APIHeaders
-  });
+  if (test == 1 || test == 'all' ) {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.ME,
+      operationName: 'me',
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.MY_USER,
-    operationName: 'myUser',
-  }), {
-    headers: APIHeaders
-  });
+  if (test == 2 || test == 'all') {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.MY_USER,
+      operationName: 'myUser',
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.MEMBERSHIPS,
-    operationName: 'memberships',
-  }), {
-    headers: APIHeaders
-  });
+  if (test == 3 || test == 'all') {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.MEMBERSHIPS,
+      operationName: 'memberships',
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
 
+  if (test == 4 || test == 6 || test == 'all')
   response = http.post(userUrl, JSON.stringify({
     query: queries.ORG_MEMBERSHIPS,
     operationName: 'orgMemberships',
   }), {
     headers: APIHeaders
   });
+  isRequestSuccessful(response)
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.MY_USERS,
-    operationName: 'myUsers',
-  }), {
-    headers: APIHeaders
-  });
+  let ORGID = '';
 
-  const ID = response.json('data.my_users.0.user_id');
-  const ORGID = "e89ce553-6eea-446a-ab0c-fd23aeab4c07";
+  if (response.body) {
+    ORGID = response.json('data.me.memberships.0.organization_id')
+  }
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.GET_USER_NODE,
-    operationName: 'userNode',
-    variables: {
-      id: ID,
-      organizationId: ORGID
-    }
-  }), {
-    headers: APIHeaders
-  });
+  if (test == 5 || test == 6 || test == 'all' ) {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.MY_USERS,
+      operationName: 'myUsers',
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.GET_MY_CLASSES,
-    operationName: 'myClasses',
-  }), {
-    headers: APIHeaders
-  });
+  let ID = ''
 
-  response = http.post(userUrl, JSON.stringify({
-    query: queries.GET_PERMS,
-    operationName: 'permissions',
-  }), {
-    headers: APIHeaders
-  });
+  if (response.body) {
+    ID = response.json('data.my_users.0.user_id')
+  }
+
+  if ((test == 6 || test == 'all') && (ID && ORGID)) {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.GET_USER_NODE,
+      operationName: 'userNode',
+      variables: {
+        id: ID,
+        organizationId: ORGID
+      }
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
+
+  if (test == 7 || test == 'all') {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.GET_MY_CLASSES,
+      operationName: 'myClasses',
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
+
+  if (test == 8 || test == 'all') {
+    response = http.post(userUrl, JSON.stringify({
+      query: queries.GET_PERMS,
+      operationName: 'permissions',
+    }), {
+      headers: APIHeaders
+    });
+    isRequestSuccessful(response)
+  }
 }
