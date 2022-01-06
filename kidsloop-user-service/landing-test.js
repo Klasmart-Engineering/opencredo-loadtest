@@ -7,7 +7,7 @@ export const options = {
 
   thresholds: {
     http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<2000'] // 95% of the iteration duration below 2s
+    iteration_duration: ['p(95)<8000'] // 95% of the iteration duration below 2s
   },
 
   ext: {
@@ -15,11 +15,11 @@ export const options = {
       projectID: 3560234,
       distribution: {
         mumbaiDistribution: {
-          loadZone: 'amazon:in:mumbai',
+          loadZone: 'amazon:gb:london',
           percent: 50
         },
         portlandDistribution: {
-          loadZone: 'amazon:us:portland',
+          loadZone: 'amazon:ie:dublin',
           percent: 50
         },
       }
