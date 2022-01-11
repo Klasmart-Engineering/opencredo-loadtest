@@ -1,5 +1,5 @@
 import { loginSetup } from '../utils/setup.js'
-import { teacherTest } from './functions.js';
+import { ecsOrgID, k8sOrgID, teacherTest } from './functions.js';
 
 export const options = {
   vus: 1,
@@ -40,13 +40,13 @@ export default function main(data) {
 
   const cmsUrl = `https://cms.${APP_URL}/v1`;
 
-  let test;
-  if (!TESTVAL) {
-    test = 'all';
+  let orgID;
+  if (APP_URL.includes('k8s')) {
+    orgID = k8sOrgID
   }
   else {
-    test = TESTVAL
+    orgID = ecsOrgID
   }
 
-  teacherTest(cmsUrl, data, test);
+  teacherTest(cmsUrl, data, orgID);
 }

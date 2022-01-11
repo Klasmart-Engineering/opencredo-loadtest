@@ -1,5 +1,5 @@
 import { loginSetup } from '../utils/setup.js'
-import { studentTest } from './functions.js';
+import { ecsOrgID, k8sOrgID, studentTest } from './functions.js';
 
 export const options = {
   vus: 1,
@@ -31,9 +31,8 @@ const APP_URL = __ENV.APP_URL
 const CMS_PREFIX = __ENV.CMS_PREFIX
 const USERNAME = __ENV.USERNAME
 
-const TESTVAL = __ENV.test
-
 export function setup() {
+  console.log(APP_URL);
   return loginSetup(APP_URL, USERNAME, 'dev');
 }
 
@@ -41,13 +40,13 @@ export default function main(data) {
 
   const cmsUrl = `https://${CMS_PREFIX}.${APP_URL}/v1`;
 
-  let test;
-  if (!TESTVAL) {
-    test = 'all';
+  let orgID;
+  if (APP_URL.includes('k8s')) {
+    orgID = k8sOrgID
   }
   else {
-    test = TESTVAL
+    orgID = ecsOrgID
   }
 
-  studentTest(cmsUrl, data, test);
+  studentTest(cmsUrl, data, orgID);
 }

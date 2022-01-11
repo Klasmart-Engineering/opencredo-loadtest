@@ -2,12 +2,7 @@
 import { group } from 'k6';
 import http from 'k6/http';
 
-// import helpers
-//import * as queries from './queries/landing.js';
-
 const userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
-//const orgID = 'e89ce553-6eea-446a-ab0c-fd23aeab4c07'; // ECS Loadtest OrgID
-const orgID = '5956e9e9-d73c-499d-b42c-b88136fbbe56'; // K8s Loadtest OrgID
 
 const defaultHeaders = {
   pragma: 'no-cache',
@@ -18,7 +13,10 @@ const APIHeaders = Object.assign({
   'content-type': 'application/json',
 }, defaultHeaders)
 
-export function teacherTest(cmsEndpoint, accessCookieData, testValue) {
+export const ecsOrgID = 'e89ce553-6eea-446a-ab0c-fd23aeab4c07' // ECS Loadtest OrgID
+export const k8sOrgID = '5956e9e9-d73c-499d-b42c-b88136fbbe56' // K8s Loadtest OrgID
+
+export function teacherTest(cmsEndpoint, accessCookieData, orgID) {
 
     let response;
 
@@ -57,7 +55,7 @@ export function teacherTest(cmsEndpoint, accessCookieData, testValue) {
     });
 }
 
-export function studentTest(cmsEndpoint, accessCookieData, testValue) {
+export function studentTest(cmsEndpoint, accessCookieData, orgID) {
 
     let response;
 
