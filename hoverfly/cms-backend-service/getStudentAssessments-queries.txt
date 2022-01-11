@@ -1,0 +1,17 @@
+query(
+		$user_id: ID! 
+		$organization_id: ID!
+		$permission_name: ID!
+	) {
+		user(user_id: $user_id) {
+			membership(organization_id: $organization_id) {
+				checkAllowed(permission_name: $permission_name)
+			}
+		}
+	}
+
+{
+  "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1",
+  "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+  "permission_name": "view_teacher_feedback_670"
+}

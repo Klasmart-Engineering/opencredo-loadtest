@@ -1,5 +1,5 @@
 import { loginSetup } from '../utils/setup.js'
-import { landingTest } from './functions.js';
+import { ecsOrgID, k8sOrgID, studentTest } from './functions.js';
 
 export const options = {
   vus: 1,
@@ -7,7 +7,7 @@ export const options = {
 
   thresholds: {
     http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<8000'] // 95% of the iteration duration below 2s
+    iteration_duration: ['p(95)<2000'] // 95% of the iteration duration below 2s
   },
 
   ext: {
@@ -15,11 +15,11 @@ export const options = {
       projectID: 3560234,
       distribution: {
         mumbaiDistribution: {
-          loadZone: 'amazon:gb:london',
+          loadZone: 'amazon:in:mumbai',
           percent: 50
         },
         portlandDistribution: {
-          loadZone: 'amazon:ie:dublin',
+          loadZone: 'amazon:us:portland',
           percent: 50
         },
       }
@@ -28,25 +28,25 @@ export const options = {
 }
 
 const APP_URL = __ENV.APP_URL
+const CMS_PREFIX = __ENV.CMS_PREFIX
 const USERNAME = __ENV.USERNAME
 
-const TESTVAL = __ENV.test
-
 export function setup() {
+  console.log(APP_URL);
   return loginSetup(APP_URL, USERNAME, 'dev');
 }
 
 export default function main(data) {
 
-  const userUrl = `https://api.${APP_URL}/user/`;
+  const cmsUrl = `https://${CMS_PREFIX}.${APP_URL}/v1`;
 
-  let test;
-  if (!TESTVAL) {
-    test = 'all';
+  let orgID;
+  if (APP_URL.includes('k8s')) {
+    orgID = k8sOrgID
   }
   else {
-    test = TESTVAL
+    orgID = ecsOrgID
   }
 
-  landingTest(userUrl, data, test);
+  studentTest(cmsUrl, data, orgID);
 }
