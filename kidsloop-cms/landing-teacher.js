@@ -15,11 +15,11 @@ export const options = {
       projectID: 3560234,
       distribution: {
         mumbaiDistribution: {
-          loadZone: 'amazon:in:mumbai',
+          loadZone: 'amazon:gb:london',
           percent: 50
         },
         portlandDistribution: {
-          loadZone: 'amazon:us:portland',
+          loadZone: 'amazon:ie:dublin',
           percent: 50
         },
       }
