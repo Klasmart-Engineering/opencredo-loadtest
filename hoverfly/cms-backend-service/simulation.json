@@ -621,6 +621,213 @@
 					},
 					"templated": false
 				}
+			},
+			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/user/"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "POST"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "api.loadtest-k8s.kidsloop.live"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": "https"
+						}
+					],
+					"body": [
+						{
+							"matcher": "json",
+							"value": "{\"query\":\"query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID! $permission_name_3: ID! $permission_name_4: ID! $permission_name_5: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\\nq1: checkAllowed(permission_name: $permission_name_1)\\nq2: checkAllowed(permission_name: $permission_name_2)\\nq3: checkAllowed(permission_name: $permission_name_3)\\nq4: checkAllowed(permission_name: $permission_name_4)\\nq5: checkAllowed(permission_name: $permission_name_5)\\n}}}\",\"variables\":{\"organization_id\":\"5956e9e9-d73c-499d-b42c-b88136fbbe56\",\"permission_name_0\":\"view_completed_assessments_414\",\"permission_name_1\":\"view_in_progress_assessments_415\",\"permission_name_2\":\"view_org_completed_assessments_424\",\"permission_name_3\":\"view_org_in_progress_assessments_425\",\"permission_name_4\":\"view_school_completed_assessments_426\",\"permission_name_5\":\"view_school_in_progress_assessments_427\",\"user_id\":\"b4479424-a9d7-46a5-8ee6-40db4ed264b1\"}}"
+						}
+					]
+				},
+				"response": {
+					"status": 200,
+					"body": "{\"data\":{\"user\":{\"membership\":{\"q0\":false,\"q1\":false,\"q2\":false,\"q3\":false,\"q4\":false,\"q5\":false}}}}\n",
+					"encodedBody": false,
+					"headers": {
+						"Access-Control-Allow-Credentials": [
+							"true"
+						],
+						"Connection": [
+							"keep-alive"
+						],
+						"Content-Length": [
+							"101"
+						],
+						"Content-Type": [
+							"application/json; charset=utf-8"
+						],
+						"Date": [
+							"Tue, 11 Jan 2022 11:29:01 GMT"
+						],
+						"Etag": [
+							"W/\"65-NYfmb1xcAet5WJRpKUqgEI7HToM\""
+						],
+						"Hoverfly": [
+							"Was-Here"
+						],
+						"Vary": [
+							"Origin"
+						],
+						"X-Powered-By": [
+							"Express"
+						]
+					},
+					"templated": false
+				}
+			},
+			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/user/"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "POST"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "api.loadtest-k8s.kidsloop.live"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": "https"
+						}
+					],
+					"body": [
+						{
+							"matcher": "json",
+							"value": "{\"query\":\"query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\\nq1: checkAllowed(permission_name: $permission_name_1)\\nq2: checkAllowed(permission_name: $permission_name_2)\\n}}}\",\"variables\":{\"organization_id\":\"5956e9e9-d73c-499d-b42c-b88136fbbe56\",\"permission_name_0\":\"view_org_calendar_511\",\"permission_name_1\":\"view_school_calendar_512\",\"permission_name_2\":\"view_my_calendar_510\",\"user_id\":\"b4479424-a9d7-46a5-8ee6-40db4ed264b1\"}}"
+						}
+					]
+				},
+				"response": {
+					"status": 200,
+					"body": "{\"data\":{\"user\":{\"membership\":{\"q0\":false,\"q1\":false,\"q2\":true}}}}\n",
+					"encodedBody": false,
+					"headers": {
+						"Access-Control-Allow-Credentials": [
+							"true"
+						],
+						"Connection": [
+							"keep-alive"
+						],
+						"Content-Length": [
+							"67"
+						],
+						"Content-Type": [
+							"application/json; charset=utf-8"
+						],
+						"Date": [
+							"Tue, 11 Jan 2022 11:29:06 GMT"
+						],
+						"Etag": [
+							"W/\"43-OBQnyJrDS0m0oTkSgPJFQdJoQ00\""
+						],
+						"Hoverfly": [
+							"Was-Here"
+						],
+						"Vary": [
+							"Origin"
+						],
+						"X-Powered-By": [
+							"Express"
+						]
+					},
+					"templated": false
+				}
+			},
+			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/user/"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "POST"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "api.loadtest-k8s.kidsloop.live"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": "https"
+						}
+					],
+					"body": [
+						{
+							"matcher": "json",
+							"value": "{\"query\":\"\\n\\tquery(\\n\\t\\t$user_id: ID! \\n\\t\\t$organization_id: ID!\\n\\t\\t$permission_name: ID!\\n\\t) {\\n\\t\\tuser(user_id: $user_id) {\\n\\t\\t\\tmembership(organization_id: $organization_id) {\\n\\t\\t\\t\\tcheckAllowed(permission_name: $permission_name)\\n\\t\\t\\t}\\n\\t\\t}\\n\\t}\",\"variables\":{\"organization_id\":\"5956e9e9-d73c-499d-b42c-b88136fbbe56\",\"permission_name\":\"view_teacher_feedback_670\",\"user_id\":\"b4479424-a9d7-46a5-8ee6-40db4ed264b1\"}}"
+						}
+					]
+				},
+				"response": {
+					"status": 200,
+					"body": "{\"data\":{\"user\":{\"membership\":{\"checkAllowed\":true}}}}\n",
+					"encodedBody": false,
+					"headers": {
+						"Access-Control-Allow-Credentials": [
+							"true"
+						],
+						"Connection": [
+							"keep-alive"
+						],
+						"Content-Length": [
+							"55"
+						],
+						"Content-Type": [
+							"application/json; charset=utf-8"
+						],
+						"Date": [
+							"Tue, 11 Jan 2022 11:29:11 GMT"
+						],
+						"Etag": [
+							"W/\"37-ngIa/RT0hS+q+zXplimATtPXw/I\""
+						],
+						"Hoverfly": [
+							"Was-Here"
+						],
+						"Vary": [
+							"Origin"
+						],
+						"X-Powered-By": [
+							"Express"
+						]
+					},
+					"templated": false
+				}
 			}
 		],
 		"globalActions": {
