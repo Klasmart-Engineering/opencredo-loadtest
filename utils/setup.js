@@ -15,7 +15,7 @@ const APIHeaders = Object.assign({
 
 const PASSWORD = __ENV.PASSWORD;
 
-export function loginSetup(APP_URL, USERNAME, AmsENV = 'dev') {
+export function amsLogin(USERNAME, AmsENV = 'dev') {
   const loginPay = JSON.stringify({
 
     email: USERNAME,
@@ -58,34 +58,51 @@ export function loginSetup(APP_URL, USERNAME, AmsENV = 'dev') {
     fail('AMS did not return an access token')
   }
 
-  const authPayload = JSON.stringify({
-    token: loginResp.json('accessToken')
+  return loginResp.json('accessToken');
+}
+
+export function getAccessCookie(APP_URL, token) {
+
+  const payload = JSON.stringify({
+    token: token
     });
 
-  const transferResp = http.post(`https://auth.${APP_URL}/transfer`, authPayload, {
+  const response = http.post(`https://auth.${APP_URL}/transfer`, payload, {
       headers: APIHeaders
     });
 
   if (
-    !check(transferResp, {
+    !check(response, {
       'has status 200': (r) => r.status === 200,
     })
   ) {
+    console.error(JSON.stringify(response))
     fail('Transfer status code was *not* 200')
   }
 
   if (
-    !check(transferResp, {
+    !check(response, {
       'has access cookie': (r) => r.cookies.access[0],
     })
   ) {
+    console.error(JSON.stringify(response))
     fail('Transfer did not return an access cookie')
   }
+  
+  return response.cookies.access[0].value;
+}
 
-  const accessCookie = transferResp.cookies.access[0].value
+export function GetUserID(APP_URL, token, cookie = undefined) {
 
+  let accessCookie;
+  if (cookie) {
+    accessCookie = cookie
+  }
+  else {
+    accessCookie = getAccessCookie(APP_URL, token);
+  }
 
-  const userIDResp = http.post(`https://api.${APP_URL}/user/`, JSON.stringify({
+  const response = http.post(`https://api.${APP_URL}/user/`, JSON.stringify({
     query: '{\n  my_users {\n    user_id\n  }\n}'
   }), {
     headers: APIHeaders,
@@ -95,7 +112,7 @@ export function loginSetup(APP_URL, USERNAME, AmsENV = 'dev') {
   });
 
   if (
-    !check(userIDResp, {
+    !check(response, {
       'has status 200': (r) => r.status === 200,
     })
   ) {
@@ -103,14 +120,21 @@ export function loginSetup(APP_URL, USERNAME, AmsENV = 'dev') {
   }
 
   if (
-    !check(userIDResp, {
+    !check(response, {
       'has user ID value': (r) => r.json('data.my_users.0.user_id'),
     })
   ) {
     fail('No User ID value returned')
   }
 
-  const userID = userIDResp.json('data.my_users.0.user_id')
+  return response.json('data.my_users.0.user_id');
+}
+
+export function loginSetup(APP_URL, USERNAME, AMSENV = 'dev') {
+
+  const accessToken = amsLogin(USERNAME, AMSENV);
+  const accessCookie = getAccessCookie(APP_URL, accessToken);
+  const userID = GetUserID(APP_URL, accessToken, accessCookie);
 
   const switchPayload = JSON.stringify({
     user_id: userID
