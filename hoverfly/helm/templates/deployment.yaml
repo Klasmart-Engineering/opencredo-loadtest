@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hoverfly.fullname" . }}
+  labels:
+    {{- include "hoverfly.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hoverfly.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "hoverfly.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "hoverfly.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: FLAGS
+              value: {{ .Values.hoverflyFlags }}
+            {{- if .Values.auth.enabled }}
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hoverfly.fullname" . }}-auth-creds
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hoverfly.fullname" . }}-auth-creds
+                  key: password
+          args: ["-auth", "-username=$(USERNAME)", "-password=$(PASSWORD)", "$(FLAGS)"]
+          {{- else }}
+          args: ["$(FLAGS)"]
+          {{- end }}
+          ports:
+            - name: admin
+              containerPort: {{ .Values.service.adminPort }}
+              protocol: TCP
+            - name: proxy
+              containerPort: {{ .Values.service.proxyPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healthcheckEndpoint }}
+              port: {{ .Values.service.adminPort }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healthcheckEndpoint }}
+              port: {{ .Values.service.adminPort }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

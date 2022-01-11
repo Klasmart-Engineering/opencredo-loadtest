@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hoverfly.fullname" . }}
+  labels:
+    {{- include "hoverfly.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.externalAdminPort }}
+      targetPort: admin
+      protocol: TCP
+      name: admin
+    - port: {{ .Values.service.externalProxyPort }}
+      targetPort: proxy
+      protocol: TCP
+      name: proxy
+  selector:
+    {{- include "hoverfly.selectorLabels" . | nindent 4 }}
