@@ -30,6 +30,75 @@
 					"body": [
 						{
 							"matcher": "json",
+							"value": "{\"query\":\"{my_users{user_id}}\"}"
+						}
+					]
+				},
+				"response": {
+					"status": 200,
+					"body": "{\"data\":{\"my_users\":[{\"user_id\":\"b4479424-a9d7-46a5-8ee6-40db4ed264b1\"}]}}\n",
+					"encodedBody": false,
+					"headers": {
+						"Access-Control-Allow-Credentials": [
+							"true"
+						],
+						"Connection": [
+							"keep-alive"
+						],
+						"Content-Length": [
+							"75"
+						],
+						"Content-Type": [
+							"application/json; charset=utf-8"
+						],
+						"Date": [
+							"Tue, 11 Jan 2022 09:05:32 GMT"
+						],
+						"Etag": [
+							"W/\"4b-hqnQyw3um486sc/+8NutgLfEgHg\""
+						],
+						"Hoverfly": [
+							"Was-Here"
+						],
+						"Vary": [
+							"Origin"
+						],
+						"X-Powered-By": [
+							"Express"
+						]
+					},
+					"templated": false
+				}
+			},
+			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/user/"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "POST"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "api.loadtest-k8s.kidsloop.live"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": "https"
+						}
+					],
+					"body": [
+						{
+							"matcher": "json",
 							"value": "{\"query\":\"query ($user_id: ID!, $organization_id: ID!, $permission_name_0: ID!, $permission_name_1: ID!, $permission_name_2: ID!, $permission_name_3: ID!, $permission_name_4: ID!, $permission_name_5: ID!) {\\n  user(user_id: $user_id) {\\n    membership(organization_id: $organization_id) {\\n      q0: checkAllowed(permission_name: $permission_name_0)\\n      q1: checkAllowed(permission_name: $permission_name_1)\\n      q2: checkAllowed(permission_name: $permission_name_2)\\n      q3: checkAllowed(permission_name: $permission_name_3)\\n      q4: checkAllowed(permission_name: $permission_name_4)\\n      q5: checkAllowed(permission_name: $permission_name_5)\\n    }\\n  }\\n}\",\"variables\":{\"user_id\":\"b4479424-a9d7-46a5-8ee6-40db4ed264b1\",\"organization_id\":\"5956e9e9-d73c-499d-b42c-b88136fbbe56\",\"permission_name_0\":\"view_completed_assessments_414\",\"permission_name_1\":\"view_in_progress_assessments_415\",\"permission_name_2\":\"view_org_completed_assessments_424\",\"permission_name_3\":\"view_org_in_progress_assessments_425\",\"permission_name_4\":\"view_school_completed_assessments_426\",\"permission_name_5\":\"view_school_in_progress_assessments_427\"}}"
 						}
 					]
@@ -52,7 +121,7 @@
 							"application/json; charset=utf-8"
 						],
 						"Date": [
-							"Mon, 10 Jan 2022 16:12:17 GMT"
+							"Tue, 11 Jan 2022 09:05:58 GMT"
 						],
 						"Etag": [
 							"W/\"65-NYfmb1xcAet5WJRpKUqgEI7HToM\""
@@ -121,7 +190,7 @@
 							"application/json; charset=utf-8"
 						],
 						"Date": [
-							"Mon, 10 Jan 2022 16:12:28 GMT"
+							"Tue, 11 Jan 2022 09:06:09 GMT"
 						],
 						"Etag": [
 							"W/\"7b-3ddZyeN58N+Y4YpfxFatacVzRN0\""
@@ -190,7 +259,7 @@
 							"application/json; charset=utf-8"
 						],
 						"Date": [
-							"Mon, 10 Jan 2022 16:12:38 GMT"
+							"Tue, 11 Jan 2022 09:06:20 GMT"
 						],
 						"Etag": [
 							"W/\"e2-oMWvDSAQXxODH3ESScXHuPJ95sk\""
@@ -259,7 +328,7 @@
 							"application/json; charset=utf-8"
 						],
 						"Date": [
-							"Mon, 10 Jan 2022 16:12:49 GMT"
+							"Tue, 11 Jan 2022 09:06:30 GMT"
 						],
 						"Etag": [
 							"W/\"71-pUFVnA05uXzlvjGgdt0PCcSgu4s\""
@@ -328,7 +397,7 @@
 							"application/json; charset=utf-8"
 						],
 						"Date": [
-							"Mon, 10 Jan 2022 16:13:00 GMT"
+							"Tue, 11 Jan 2022 09:06:45 GMT"
 						],
 						"Etag": [
 							"W/\"43-OBQnyJrDS0m0oTkSgPJFQdJoQ00\""
@@ -397,7 +466,7 @@
 							"application/json; charset=utf-8"
 						],
 						"Date": [
-							"Mon, 10 Jan 2022 16:13:11 GMT"
+							"Tue, 11 Jan 2022 09:06:58 GMT"
 						],
 						"Etag": [
 							"W/\"37-ngIa/RT0hS+q+zXplimATtPXw/I\""
@@ -424,6 +493,6 @@
 	"meta": {
 		"schemaVersion": "v5.1",
 		"hoverflyVersion": "v1.3.3",
-		"timeExported": "2022-01-10T16:13:22Z"
+		"timeExported": "2022-01-11T09:07:27Z"
 	}
 }
