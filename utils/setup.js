@@ -31,7 +31,7 @@ export function amsLogin(USERNAME, AmsENV = 'dev') {
   let AMS_URL;
   switch(AmsENV) {
     case 'prod':
-      AMS_URL = 'https://auth.dev.badanamu.net';
+      AMS_URL = 'https://ams-auth.badanamu.net';
       break;
     case 'dev':
       AMS_URL = 'https://auth.dev.badanamu.net'
