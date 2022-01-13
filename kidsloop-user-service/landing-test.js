@@ -29,11 +29,16 @@ export const options = {
 
 const APP_URL = __ENV.APP_URL
 const USERNAME = __ENV.USERNAME
+const AMSENV = __ENV.AMSENV
 
 const TESTVAL = __ENV.test
 
 export function setup() {
-  return loginSetup(APP_URL, USERNAME, 'dev');
+  let amsEnv = AMSENV
+  if (!amsEnv) {
+    amsEnv = 'dev'
+  }
+  return loginSetup(APP_URL, USERNAME, amsEnv);
 }
 
 export default function main(data) {

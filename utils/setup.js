@@ -31,7 +31,7 @@ export function amsLogin(USERNAME, AmsENV = 'dev') {
   let AMS_URL;
   switch(AmsENV) {
     case 'prod':
-      AMS_URL = 'https://auth.dev.badanamu.net';
+      AMS_URL = 'https://ams-auth.badanamu.net';
       break;
     case 'dev':
       AMS_URL = 'https://auth.dev.badanamu.net'
@@ -44,7 +44,7 @@ export function amsLogin(USERNAME, AmsENV = 'dev') {
 
   if (
     !check(loginResp, {
-      'has status 200': (r) => r.status === 200,
+      'AMS status code was 200': (r) => r.status === 200,
     })
   ) {
     fail('AMS status code was *not* 200')
@@ -52,7 +52,7 @@ export function amsLogin(USERNAME, AmsENV = 'dev') {
 
   if (
     !check(loginResp, {
-      'has access token': (r) => r.json('accessToken') !== null,
+      'AMS returned an access token': (r) => r.json('accessToken') !== null,
     })
   ) {
     fail('AMS did not return an access token')
@@ -73,7 +73,7 @@ export function getAccessCookie(APP_URL, token) {
 
   if (
     !check(response, {
-      'has status 200': (r) => r.status === 200,
+      'Transfer status code was 200': (r) => r.status === 200,
     })
   ) {
     console.error(JSON.stringify(response))
@@ -82,7 +82,7 @@ export function getAccessCookie(APP_URL, token) {
 
   if (
     !check(response, {
-      'has access cookie': (r) => r.cookies.access[0],
+      'Transfer returned an access cookie': (r) => r.cookies.access[0],
     })
   ) {
     console.error(JSON.stringify(response))
@@ -113,7 +113,7 @@ export function GetUserID(APP_URL, token, cookie = undefined) {
 
   if (
     !check(response, {
-      'has status 200': (r) => r.status === 200,
+      'UserID status code was 200': (r) => r.status === 200,
     })
   ) {
     fail('UserID status code was *not* 200')
@@ -121,7 +121,7 @@ export function GetUserID(APP_URL, token, cookie = undefined) {
 
   if (
     !check(response, {
-      'has user ID value': (r) => r.json('data.my_users.0.user_id'),
+      'User ID value returned': (r) => r.json('data.my_users.0.user_id'),
     })
   ) {
     fail('No User ID value returned')
@@ -149,7 +149,7 @@ export function loginSetup(APP_URL, USERNAME, AMSENV = 'dev') {
 
   if (
     !check(switchResp, {
-      'has status 200': (r) => r.status === 200,
+      'Switch status code was 200': (r) => r.status === 200,
     })
   ) {
     fail('Switch status code was *not* 200')
@@ -157,7 +157,7 @@ export function loginSetup(APP_URL, USERNAME, AMSENV = 'dev') {
 
   if (
     !check(switchResp, {
-      'has access cookie': (r) => r.cookies.access[0],
+      'Switch returned an access cookie': (r) => r.cookies.access[0],
     })
   ) {
     fail('Switch did not return an access cookie')
