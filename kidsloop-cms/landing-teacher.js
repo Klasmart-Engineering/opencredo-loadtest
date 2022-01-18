@@ -1,5 +1,6 @@
-import { loginSetup } from '../utils/setup.js'
-import { ecsOrgID, k8sOrgID, teacherTest } from './functions.js';
+import { getOrgID, loginSetup } from '../utils/setup.js';
+import { teacherTest } from './functions.js';
+import * as env from '../utils/env.js';
 
 export const options = {
   vus: 1,
@@ -27,26 +28,19 @@ export const options = {
   },
 }
 
-const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-
-const TESTVAL = __ENV.test
-
 export function setup() {
-  return loginSetup(APP_URL, USERNAME, 'dev');
+
+  const accessCookie = loginSetup();
+
+  const orgID = getOrgID(accessCookie);
+
+  return {
+    accessCookie: accessCookie,
+    orgID: orgID
+  }
 }
 
 export default function main(data) {
 
-  const cmsUrl = `https://cms.${APP_URL}/v1`;
-
-  let orgID;
-  if (APP_URL.includes('k8s')) {
-    orgID = k8sOrgID
-  }
-  else {
-    orgID = ecsOrgID
-  }
-
-  teacherTest(cmsUrl, data, orgID);
+  teacherTest(`https://${env.CMS_PREFIX}.${env.APP_URL}/v1`, data.accessCookie, data.orgID);
 }
