@@ -3,16 +3,7 @@ import http from 'k6/http';
 
 // import helpers
 import * as queries from './queries/landing.js';
-
-const userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36';
-const defaultHeaders = {
-  pragma: 'no-cache',
-  'user-agent': userAgent
-};
-const APIHeaders = Object.assign({
-  accept: 'application/json',
-  'content-type': 'application/json',
-}, defaultHeaders)
+import { APIHeaders } from '../utils/common.js'
 
 export function landingTest(userEndpoint, accessCookieData, testValue) {
 

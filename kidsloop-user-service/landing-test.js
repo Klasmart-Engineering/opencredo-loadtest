@@ -1,5 +1,6 @@
-import { loginSetup } from '../utils/setup.js'
+import { loginSetup } from '../utils/setup.js';
 import { landingTest } from './functions.js';
+import * as env from '../utils/env.js';
 
 export const options = {
   vus: 1,
@@ -27,30 +28,20 @@ export const options = {
   },
 }
 
-const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-const AMSENV = __ENV.AMSENV
-
-const TESTVAL = __ENV.test
-
 export function setup() {
-  let amsEnv = AMSENV
-  if (!amsEnv) {
-    amsEnv = 'dev'
-  }
-  return loginSetup(APP_URL, USERNAME, amsEnv);
+  return loginSetup();
 }
 
 export default function main(data) {
 
-  const userUrl = `https://api.${APP_URL}/user/`;
+  const userUrl = `https://api.${env.APP_URL}/user/`;
 
   let test;
-  if (!TESTVAL) {
+  if (!env.TESTVAL) {
     test = 'all';
   }
   else {
-    test = TESTVAL
+    test = env.TESTVAL
   }
 
   landingTest(userUrl, data, test);

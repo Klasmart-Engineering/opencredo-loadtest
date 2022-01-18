@@ -1,5 +1,5 @@
-import { loginSetup } from '../utils/setup.js'
 import { landingTest } from './functions.js';
+import * as env from '../utils/env.js';
 
 export const options = {
   vus: 1,
@@ -11,23 +11,15 @@ export const options = {
   }
 }
 
-const APP_URL = 'http://localhost:8080/user/'
-
-const TESTVAL = __ENV.test
-
-//This should be a JWT string
-const ACCESS_COOKIE = __ENV.ACCESS_COOKIE
-
-
 export default function main(data) {
 
   let test;
-  if (!TESTVAL) {
+  if (!env.TESTVAL) {
     test = 'all';
   }
   else {
-    test = TESTVAL
+    test = env.TESTVAL
   }
 
-  landingTest(APP_URL, ACCESS_COOKIE, test);
+  landingTest(env.APP_URL, env.ACCESS_COOKIE, test);
 }

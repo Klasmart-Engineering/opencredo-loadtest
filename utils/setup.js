@@ -1,25 +1,13 @@
 import http from 'k6/http';
 import { check, fail } from 'k6';
+import { APIHeaders } from './common.js';
+import * as env from './env.js';
 
-const userAgent = 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36';
-
-const defaultHeaders = {
-  pragma: 'no-cache',
-  'user-agent': userAgent
-};
-
-const APIHeaders = Object.assign({
-  accept: 'application/json',
-  'content-type': 'application/json',
-}, defaultHeaders)
-
-const PASSWORD = __ENV.PASSWORD;
-
-export function amsLogin(USERNAME, AmsENV = 'dev') {
+export function amsLogin() {
   const loginPay = JSON.stringify({
 
-    email: USERNAME,
-    pw: PASSWORD,
+    email: env.USERNAME,
+    pw: env.PASSWORD,
     deviceId: "loadtest",
     deviceName: "k6",
   });
@@ -28,19 +16,25 @@ export function amsLogin(USERNAME, AmsENV = 'dev') {
     headers: APIHeaders
   }
 
-  let AMS_URL;
+  let AmsENV = env.AMSENV;
+  if (!AmsENV) {
+    AmsENV = 'dev';
+  }
+
+  let amsURL;
+
   switch(AmsENV) {
     case 'prod':
-      AMS_URL = 'https://ams-auth.badanamu.net';
+      amsURL = 'https://ams-auth.badanamu.net';
       break;
     case 'dev':
-      AMS_URL = 'https://auth.dev.badanamu.net'
+      amsURL = 'https://auth.dev.badanamu.net'
       break;
   }
 
-  http.options(`${AMS_URL}/v1/login`);
+  http.options(`${amsURL}/v1/login`);
 
-  const loginResp = http.post(`${AMS_URL}/v1/login`, loginPay, loginParams);
+  const loginResp = http.post(`${amsURL}/v1/login`, loginPay, loginParams);
 
   if (
     !check(loginResp, {
@@ -61,13 +55,13 @@ export function amsLogin(USERNAME, AmsENV = 'dev') {
   return loginResp.json('accessToken');
 }
 
-export function getAccessCookie(APP_URL, token) {
+export function getAccessCookie(token) {
 
   const payload = JSON.stringify({
     token: token
     });
 
-  const response = http.post(`https://auth.${APP_URL}/transfer`, payload, {
+  const response = http.post(`https://auth.${env.APP_URL}/transfer`, payload, {
       headers: APIHeaders
     });
 
@@ -92,17 +86,17 @@ export function getAccessCookie(APP_URL, token) {
   return response.cookies.access[0].value;
 }
 
-export function GetUserID(APP_URL, token, cookie = undefined) {
+export function GetUserID(token, cookie = undefined) {
 
   let accessCookie;
   if (cookie) {
     accessCookie = cookie
   }
   else {
-    accessCookie = getAccessCookie(APP_URL, token);
+    accessCookie = getAccessCookie(token);
   }
 
-  const response = http.post(`https://api.${APP_URL}/user/`, JSON.stringify({
+  const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
     query: '{\n  my_users {\n    user_id\n  }\n}'
   }), {
     headers: APIHeaders,
@@ -130,17 +124,17 @@ export function GetUserID(APP_URL, token, cookie = undefined) {
   return response.json('data.my_users.0.user_id');
 }
 
-export function loginSetup(APP_URL, USERNAME, AMSENV = 'dev') {
+export function loginSetup() {
 
-  const accessToken = amsLogin(USERNAME, AMSENV);
-  const accessCookie = getAccessCookie(APP_URL, accessToken);
-  const userID = GetUserID(APP_URL, accessToken, accessCookie);
+  const accessToken = amsLogin();
+  const accessCookie = getAccessCookie(accessToken);
+  const userID = GetUserID(accessToken, accessCookie);
 
   const switchPayload = JSON.stringify({
     user_id: userID
   })
 
-  const switchResp = http.post(`https://auth.${APP_URL}/switch`, switchPayload, {
+  const switchResp = http.post(`https://auth.${env.APP_URL}/switch`, switchPayload, {
     headers: APIHeaders,
     cookies: {
       access: accessCookie
@@ -165,3 +159,18 @@ export function loginSetup(APP_URL, USERNAME, AMSENV = 'dev') {
 
   return switchResp.cookies.access[0].value;
 };
+
+export function getOrgID(accessCookie) {
+
+  const orgResp = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
+    query: '{\n  my_users {\n    memberships {\n      organization_id\n      status\n    }\n  }\n}',
+    variables: {},
+  }), {
+    headers: APIHeaders,
+    cookies: {
+      access: accessCookie,
+    }
+  })
+
+  return orgResp.json('data.my_users.0.memberships.0.organization_id');
+}
