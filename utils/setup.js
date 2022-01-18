@@ -86,7 +86,7 @@ export function getAccessCookie(token) {
   return response.cookies.access[0].value;
 }
 
-export function GetUserID(token, cookie = undefined) {
+export function getUserID(token, cookie = undefined) {
 
   let accessCookie;
   if (cookie) {
@@ -97,7 +97,13 @@ export function GetUserID(token, cookie = undefined) {
   }
 
   const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
-    query: '{\n  my_users {\n    user_id\n  }\n}'
+    query: `{
+      myUser {
+        profiles {
+          id
+        }
+      }
+    }`
   }), {
     headers: APIHeaders,
     cookies: {
@@ -115,20 +121,20 @@ export function GetUserID(token, cookie = undefined) {
 
   if (
     !check(response, {
-      'User ID value returned': (r) => r.json('data.my_users.0.user_id'),
+      'User ID value returned': (r) => r.json('data.myUser.profiles.0.id'),
     })
   ) {
     fail('No User ID value returned')
   }
 
-  return response.json('data.my_users.0.user_id');
+  return response.json('data.myUser.profiles.0.id');
 }
 
 export function loginSetup() {
 
   const accessToken = amsLogin();
   const accessCookie = getAccessCookie(accessToken);
-  const userID = GetUserID(accessToken, accessCookie);
+  const userID = getUserID(accessToken, accessCookie);
 
   const switchPayload = JSON.stringify({
     user_id: userID

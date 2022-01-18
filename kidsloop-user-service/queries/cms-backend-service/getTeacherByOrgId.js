@@ -1,25 +1,37 @@
-// Note: typo in 'Organization' has been preserved from CMS in order to align with what we'll see in the application
-
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 
-const query = `query roleBasedUsersByOrgnization($organization_id: ID!) {
+const query = `query teacherByOrgId($organization_id: ID!) {
   organization(organization_id: $organization_id) {
-    roles {
-      role_name
-      memberships {
-        user {
-          user_id
-          user_name
+    classes {
+      ...classIdNameStatus
+      teachers {
+        ...userIdName
+        school_memberships {
+          school_id
         }
+      }
+      schools {
+        school_id
       }
     }
   }
+}
+
+fragment classIdNameStatus on Class {
+  class_id
+  class_name
+  status
+}
+
+fragment userIdName on User {
+  user_id
+  user_name
 }`;
 
-function getRoleBasedUsersByOrgnization(userEndpoint, orgID, accessCookie = '', singleTest = false) {
+function getTeacherByOrgId(userEndpoint, orgID, singleTest = false, accessCookie = '') {
 
   if (singleTest) {
     //initialise the cookies for this VU
@@ -31,7 +43,7 @@ function getRoleBasedUsersByOrgnization(userEndpoint, orgID, accessCookie = '', 
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'roleBasedUsersByOrgnization',
+    operationName: 'teacherByOrgId',
     variables: {
       organization_id: orgID
     }
@@ -49,8 +61,8 @@ export function setup() {
   return {
     userEndpoint: `https://api.${env.APP_URL}/user/`,
     orgID: orgID,
-    accessCookie: accessCookie,
-    singleTest: true
+    singleTest: true,
+    accessCookie: accessCookie
   };
 };
 
@@ -61,5 +73,5 @@ export default function main(data) {
     singleTest = false;
   }
 
-  return getRoleBasedUsersByOrgnization(data.userEndpoint, data.orgID, data.accessCookie, singleTest);
+  return getTeacherByOrgId(data.userEndpoint, data.orgID, singleTest, data.accessCookie);
 };

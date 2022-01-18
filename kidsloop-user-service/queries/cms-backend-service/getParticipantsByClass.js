@@ -1,25 +1,26 @@
-// Note: typo in 'Organization' has been preserved from CMS in order to align with what we'll see in the application
-
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
+import { default as getClassesByOrganization } from './getClassesByOrganization.js';
 
-const query = `query roleBasedUsersByOrgnization($organization_id: ID!) {
-  organization(organization_id: $organization_id) {
-    roles {
-      role_name
-      memberships {
-        user {
-          user_id
-          user_name
-        }
-      }
+const query = `query participantsByClass($class_id: ID!) {
+  class(class_id: $class_id) {
+    teachers {
+      ...userIdName
+    }
+    students {
+      ...userIdName
     }
   }
+}
+
+fragment userIdName on User {
+  user_id
+  user_name
 }`;
 
-function getRoleBasedUsersByOrgnization(userEndpoint, orgID, accessCookie = '', singleTest = false) {
+function getClassStudentsByOrganization(userEndpoint, classID, singleTest = false, accessCookie = '') {
 
   if (singleTest) {
     //initialise the cookies for this VU
@@ -31,9 +32,9 @@ function getRoleBasedUsersByOrgnization(userEndpoint, orgID, accessCookie = '', 
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'roleBasedUsersByOrgnization',
+    operationName: 'participantsByClass',
     variables: {
-      organization_id: orgID
+      class_id: classID
     }
   }), {
     headers: APIHeaders
@@ -46,11 +47,20 @@ export function setup() {
 
   const orgID = getOrgID(accessCookie);
 
-  return {
+  const classResp = getClassesByOrganization({
     userEndpoint: `https://api.${env.APP_URL}/user/`,
     orgID: orgID,
-    accessCookie: accessCookie,
-    singleTest: true
+    singleTest: true,
+    accessCookie: accessCookie
+  });
+  
+  const classID = classResp.json('data.organization.classes.0.class_id')
+
+  return {
+    userEndpoint: `https://api.${env.APP_URL}/user/`,
+    classID: classID,
+    singleTest: true,
+    accessCookie: accessCookie
   };
 };
 
@@ -59,7 +69,7 @@ export default function main(data) {
   let singleTest = data.singleTest;
   if (!singleTest) {
     singleTest = false;
-  }
+  };
 
-  return getRoleBasedUsersByOrgnization(data.userEndpoint, data.orgID, data.accessCookie, singleTest);
+  return getClassStudentsByOrganization(data.userEndpoint, data.orgID, singleTest, data.accessCookie)
 };
