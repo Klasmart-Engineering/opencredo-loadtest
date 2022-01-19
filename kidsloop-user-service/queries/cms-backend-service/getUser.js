@@ -3,14 +3,31 @@ import { loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 
-const query = `query organizations {
-  organizations {
-    organization_id
-    organization_name
+const query = `query getUser($filter: UserFilter, $direction: ConnectionDirection!, $directionArgs: ConnectionsDirectionArgs) {
+  usersConnection(direction: $direction, filter: $filter, directionArgs: $directionArgs) {
+    totalCount
+    edges {
+      node {
+        id
+        givenName
+        familyName
+        status
+        roles {
+          id
+          name
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
   }
 }`;
 
-function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
+function getUser(userEndpoint, singleTest = false, accessCookie = '') {
 
   if (singleTest) {
     //initialise the cookies for this VU
@@ -22,7 +39,10 @@ function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'organizations'
+    operationName: 'getUser',
+    variables: {
+      direction: "FORWARD"
+    }
   }), {
     headers: APIHeaders
   });
@@ -46,5 +66,5 @@ export default function main(data) {
     singleTest = false;
   };
 
-  return getOrganizations(data.userEndpoint, singleTest, data.accessCookie);
+  return getUser(data.userEndpoint, singleTest, data.accessCookie);
 };

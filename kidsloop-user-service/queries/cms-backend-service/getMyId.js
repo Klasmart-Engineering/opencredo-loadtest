@@ -3,14 +3,27 @@ import { loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 
-const query = `query organizations {
-  organizations {
-    organization_id
-    organization_name
+const query = `query getMyId {
+  myUser {
+    node {
+      id
+      familyName
+      givenName
+      schoolMembershipsConnection(direction: FORWARD) {
+        edges {
+          node {
+            school {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
   }
 }`;
 
-function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
+function getMyId(userEndpoint, singleTest = false, accessCookie = '') {
 
   if (singleTest) {
     //initialise the cookies for this VU
@@ -22,7 +35,7 @@ function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'organizations'
+    operationName: 'getMyId'
   }), {
     headers: APIHeaders
   });
@@ -46,5 +59,5 @@ export default function main(data) {
     singleTest = false;
   };
 
-  return getOrganizations(data.userEndpoint, singleTest, data.accessCookie);
+  return getMyId(data.userEndpoint, singleTest, data.accessCookie);
 };

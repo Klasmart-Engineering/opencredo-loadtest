@@ -1,16 +1,31 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 
-const query = `query organizations {
-  organizations {
-    organization_id
-    organization_name
+const query = `query schoolByOrgQuery($organization_id: ID!) {
+  organization(organization_id: $organization_id) {
+    schools {
+      school_id
+      school_name
+      classes {
+        status
+        class_id
+        class_name
+        teachers {
+          user_id
+          user_name
+        }
+        students {
+          user_id
+          user_name
+        }
+      }
+    }
   }
 }`;
 
-function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
+function getSchoolByOrgQuery(userEndpoint, orgID, singleTest = false, accessCookie = '') {
 
   if (singleTest) {
     //initialise the cookies for this VU
@@ -22,7 +37,10 @@ function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'organizations'
+    operationName: 'schoolByOrgQuery',
+    variables: {
+      organization_id: orgID
+    }
   }), {
     headers: APIHeaders
   });
@@ -32,8 +50,11 @@ export function setup() {
   
   const accessCookie = loginSetup();
 
+  const orgID = getOrgID(accessCookie);
+
   return {
     userEndpoint: `https://api.${env.APP_URL}/user/`,
+    orgID: orgID,
     singleTest: true,
     accessCookie: accessCookie
   };
@@ -46,5 +67,5 @@ export default function main(data) {
     singleTest = false;
   };
 
-  return getOrganizations(data.userEndpoint, singleTest, data.accessCookie);
+  return getSchoolByOrgQuery(data.userEndpoint, data.orgID, singleTest, data.accessCookie);
 };
