@@ -296,5 +296,17 @@
         }
       }
     }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
   }
 ]
