@@ -1,52 +1,31 @@
-import { loginSetup } from '../utils/setup.js'
-import { ecsOrgID, k8sOrgID, teacherTest } from './functions.js';
+import {
+  defaultOptions,
+  defaultSetup,
+  initCookieJar
+} from './common.js';
+import { getContentsFolders } from './endpoints/contents-folders.js';
+import { getAssessmentsSummary } from './endpoints/assessments-summary.js';
+import { getSchedulesTimeView } from './endpoints/schedules-time-view.js';
 
-export const options = {
-  vus: 1,
-  iterations: 1,
-
-  thresholds: {
-    http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<2000'] // 95% of the iteration duration below 2s
-  },
-
-  ext: {
-    loadimpact: {
-      projectID: 3560234,
-      distribution: {
-        mumbaiDistribution: {
-          loadZone: 'amazon:gb:london',
-          percent: 50
-        },
-        portlandDistribution: {
-          loadZone: 'amazon:ie:dublin',
-          percent: 50
-        },
-      }
-    }
-  },
-}
-
-const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-
-const TESTVAL = __ENV.test
+export const options = defaultOptions;
 
 export function setup() {
-  return loginSetup(APP_URL, USERNAME, 'dev');
+
+  return defaultSetup();
 }
 
 export default function main(data) {
 
-  const cmsUrl = `https://cms.${APP_URL}/v1`;
+  initCookieJar(data.accessCookie)
 
-  let orgID;
-  if (APP_URL.includes('k8s')) {
-    orgID = k8sOrgID
-  }
-  else {
-    orgID = ecsOrgID
-  }
+  teacherLandingTest(data.orgID);
+}
 
-  teacherTest(cmsUrl, data, orgID);
+function teacherLandingTest(orgID) {
+
+  getContentsFolders(orgID);
+
+  getAssessmentsSummary(orgID);
+
+  getSchedulesTimeView(orgID);
 }
