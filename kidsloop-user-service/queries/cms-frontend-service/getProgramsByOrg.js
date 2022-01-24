@@ -4,9 +4,9 @@ import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
 import { APIHeaders } from '../../../utils/common.js';
 
-export const query = `query($program_id: ID!) {
-  program(id: $program_id) {
-    age_ranges {
+export const query = `query($organization_id: ID!) {
+  organization(organization_id: $organization_id) {
+    programs {
       id
       name
       status
@@ -15,21 +15,12 @@ export const query = `query($program_id: ID!) {
   }
 }`;
 
-export function getAgeRangesByProgram(userEndpoint, programID, accessCookie = '', singleTest = false) {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  }
-
+export function getProgramsByOrg(userEndpoint, orgID, accessCookie = '', singleTest = false) {
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getAgeRangesByProgram',
+    operationName: 'getProgramsByOrg',
     variables: {
-      program_id: programID
+      organization_id: orgID
     }
   }), {
     headers: APIHeaders
@@ -39,11 +30,11 @@ export function getAgeRangesByProgram(userEndpoint, programID, accessCookie = ''
 export function setup() {
 
   const accessCookie = loginSetup();
-  const programID = ENV_DATA.programID;
+  const orgID = ENV_DATA.orgID;
 
   return {
     userEndpoint: `https://api.${env.APP_URL}/user/`,
-    programID: programID,
+    orgID: orgID,
     accessCookie: accessCookie,
     singleTest: true
   };
@@ -56,5 +47,5 @@ export default function main(data) {
     singleTest = false
   }
 
-  return getAgeRangesByProgram(data.userEndpoint, data.programID, data.accessCookie, singleTest)
+  return getProgramsByOrg(data.userEndpoint, data.orgID, data.accessCookie, singleTest)
 }

@@ -6,28 +6,19 @@ import { APIHeaders } from '../../../utils/common.js';
 
 export const query = `query($program_id: ID!) {
   program(id: $program_id) {
-    age_ranges {
+    subjects {
       id
       name
       status
       system
-    }
+    }			
   }
 }`;
 
-export function getAgeRangesByProgram(userEndpoint, programID, accessCookie = '', singleTest = false) {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  }
-
+export function getSubjectsByProgram(userEndpoint, programID, accessCookie = '', singleTest = false) {
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getAgeRangesByProgram',
+    operationName: 'getSubjectsByProgram',
     variables: {
       program_id: programID
     }
@@ -56,5 +47,5 @@ export default function main(data) {
     singleTest = false
   }
 
-  return getAgeRangesByProgram(data.userEndpoint, data.programID, data.accessCookie, singleTest)
+  return getSubjectsByProgram(data.userEndpoint, data.programID, data.accessCookie, singleTest)
 }

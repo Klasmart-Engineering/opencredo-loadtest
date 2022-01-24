@@ -4,18 +4,19 @@ import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
 import { APIHeaders } from '../../../utils/common.js';
 
-export const query = `query($program_id: ID!) {
-  program(id: $program_id) {
-    age_ranges {
-      id
-      name
-      status
-      system
+export const query = `query(
+  $user_id: ID!
+  $school_id: ID!
+  $permission_name: ID!
+) {
+  user(user_id: $user_id) {
+    school_membership(school_id: $school_id) {
+      checkAllowed(permission_name: $permission_name)
     }
   }
 }`;
 
-export function getAgeRangesByProgram(userEndpoint, programID, accessCookie = '', singleTest = false) {
+export function checkUserPermissionsInSchool(userEndpoint, userID, schoolID, permissionName, accessCookie = '', singleTest = false) {
 
   if (singleTest) {
     //initialise the cookies for this VU
@@ -27,9 +28,11 @@ export function getAgeRangesByProgram(userEndpoint, programID, accessCookie = ''
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getAgeRangesByProgram',
+    operationName: 'checkUserPermissionsInSchool',
     variables: {
-      program_id: programID
+      userID: userID,
+      schoolID: schoolID,
+      permissionNames: permissionNames
     }
   }), {
     headers: APIHeaders
@@ -39,11 +42,16 @@ export function getAgeRangesByProgram(userEndpoint, programID, accessCookie = ''
 export function setup() {
 
   const accessCookie = loginSetup();
-  const programID = ENV_DATA.programID;
+
+  const userID = ENV_DATA.userID;
+  const schoolID = ENV_DATA.schoolID;
+  const permissionName = ENV_DATA.permissionNames[0];
 
   return {
     userEndpoint: `https://api.${env.APP_URL}/user/`,
-    programID: programID,
+    userID: userID,
+    schoolID: schoolID,
+    permissionName: permissionName,
     accessCookie: accessCookie,
     singleTest: true
   };
@@ -56,5 +64,5 @@ export default function main(data) {
     singleTest = false
   }
 
-  return getAgeRangesByProgram(data.userEndpoint, data.programID, data.accessCookie, singleTest)
+  return checkUserPermissionsInSchool(data.userEndpoint, data.userID, data.schoolID, data.permissionName, data.accessCookie, singleTest)
 }
