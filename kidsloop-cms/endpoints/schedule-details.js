@@ -12,16 +12,18 @@ import {
 
 export const options = defaultOptions;
 
+const scheduleID = __ENV.scheduleID
+
 export function setup() {
 
   return defaultSetup();
-}
+};
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getScheduleDetails(data.orgID, scheduleID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,13 +31,14 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+//default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
+export function getScheduleDetails(orgID, scheduleID = '61efdf2de07ca5c42f12e99d') {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/schedules/${scheduleID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
-  
+
   isRequestSuccessful(response);
 
   return response;
-}
+};

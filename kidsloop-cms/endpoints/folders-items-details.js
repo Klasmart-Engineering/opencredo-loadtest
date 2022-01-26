@@ -12,16 +12,18 @@ import {
 
 export const options = defaultOptions;
 
+const folderID = __ENV.folderID
+
 export function setup() {
 
   return defaultSetup();
-}
+};
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getFoldersItemsDetails(data.orgID, folderID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,13 +31,14 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+//default folder ID refers to single folder in testing org in loadtest-k8s environment 
+export function getFoldersItemsDetails(orgID, folderID = '61eee8cf6a93400ab939883c') {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/folders/items/details/${folderID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
-  
+
   isRequestSuccessful(response);
 
   return response;
-}
+};

@@ -15,13 +15,13 @@ export const options = defaultOptions;
 export function setup() {
 
   return defaultSetup();
-}
+};
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getLessonTypes(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,13 +29,13 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+export function getLessonTypes(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/lesson_types?org_id=${orgID}`, {
       headers: APIHeaders
   });
-  
+
   isRequestSuccessful(response);
 
   return response;
-}
+};

@@ -15,13 +15,13 @@ export const options = defaultOptions;
 export function setup() {
 
   return defaultSetup();
-}
+};
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getContentsPrivate(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,13 +29,14 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+//returns 403 'undefined permission'
+export function getContentsPrivate(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/contents_private?org_id=${orgID}`, {
       headers: APIHeaders
   });
-  
+
   isRequestSuccessful(response);
 
   return response;
-}
+};

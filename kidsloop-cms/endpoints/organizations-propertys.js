@@ -21,7 +21,7 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getOrganizationsPropertys(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,9 +29,9 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+export function getOrganizationsPropertys(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/organizations_propertys/${orgID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
   

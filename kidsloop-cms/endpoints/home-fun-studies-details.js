@@ -12,16 +12,18 @@ import {
 
 export const options = defaultOptions;
 
+const studyID = __ENV.studyID
+
 export function setup() {
 
   return defaultSetup();
-}
+};
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getHomeFunStudyDetails(data.orgID, studyID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,13 +31,13 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+export function getHomeFunStudyDetails(orgID, studyID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/home_fun_studies/${studyID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
-  
+
   isRequestSuccessful(response);
 
   return response;
-}
+};

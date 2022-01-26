@@ -12,6 +12,15 @@ import {
 
 export const options = defaultOptions;
 
+const permsPayload = JSON.stringify({
+  'permission_name':[
+    'create_learning_outcome_421',
+    'edit_my_unpublished_learning_outcome_430',
+    'edit_org_unpublished_learning_outcome_431',
+    'edit_published_learning_outcome_436'
+  ]
+})
+
 export function setup() {
 
   return defaultSetup();
@@ -21,7 +30,7 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getSchedulesTimeViewList(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,9 +38,9 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+export function getSchedulesTimeViewList(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.post(`${CMSEndpoint}/organization_permissions?org_id=${orgID}`, permsPayload, {
       headers: APIHeaders
   });
   

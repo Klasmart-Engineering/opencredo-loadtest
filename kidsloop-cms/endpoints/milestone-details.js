@@ -12,16 +12,18 @@ import {
 
 export const options = defaultOptions;
 
+const milestoneID = __ENV.milestoneID
+
 export function setup() {
 
   return defaultSetup();
-}
+};
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getMilestoneDetails(data.orgID, milestoneID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,13 +31,14 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+//default milestone ID refers to single milestone in testing org in loadtest-k8s environment 
+export function getMilestoneDetails(orgID, milestoneID = '61eed4267a6bce688b2bd2ef') {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/milestones/${milestoneID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
-  
+
   isRequestSuccessful(response);
 
   return response;
-}
+};

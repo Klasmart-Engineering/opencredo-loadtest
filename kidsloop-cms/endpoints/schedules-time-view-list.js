@@ -12,6 +12,18 @@ import {
 
 export const options = defaultOptions;
 
+const scheduleViewPayload = JSON.stringify({
+  end_at_le: 1642636740,
+  order_by: "start_at",
+  page: 1,
+  page_size: 20,
+  start_at_ge: 1641340800,
+  time_at: 0,
+  time_boundary: "union",
+  time_zone_offset: 0,
+  view_type: "full_view",
+});
+
 export function setup() {
 
   return defaultSetup();
@@ -21,7 +33,7 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getSchedulesTimeViewList(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,9 +41,9 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+export function getSchedulesTimeViewList(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.post(`${CMSEndpoint}/schedules_time_view/list?org_id=${orgID}`, scheduleViewPayload, {
       headers: APIHeaders
   });
   

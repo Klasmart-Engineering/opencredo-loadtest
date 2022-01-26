@@ -21,7 +21,7 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeView(data.orgID);
+  const response = getSets(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -29,9 +29,10 @@ export default function main(data) {
   };
 };
 
-export function getSchedulesTimeView(orgID) {
+//requires permissions: create_learning_outcome_421,edit_my_unpublished_learning_outcome_430,edit_org_unpublished_learning_outcome_431,edit_published_learning_outcome_436
+export function getSets(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/schedules_time_view?view_type=year&time_at=0&org_id=${orgID}`, {
+  const response = http.get(`${CMSEndpoint}/sets?set_name=%27*%27&org_id=${orgID}`, {
       headers: APIHeaders
   });
   
