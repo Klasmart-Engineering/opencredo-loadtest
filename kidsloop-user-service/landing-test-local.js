@@ -1,5 +1,5 @@
-import { loginSetup } from '../utils/setup.js'
-import { landingTest } from './functions.js';
+import { initCookieJar } from './common.js';
+import { landingTest } from './landing-test.js';
 
 export const options = {
   vus: 1,
@@ -11,23 +11,13 @@ export const options = {
   }
 }
 
-const APP_URL = 'http://localhost:8080/user/'
-
-const TESTVAL = __ENV.test
-
 //This should be a JWT string
 const ACCESS_COOKIE = __ENV.ACCESS_COOKIE
 
 
 export default function main(data) {
 
-  let test;
-  if (!TESTVAL) {
-    test = 'all';
-  }
-  else {
-    test = TESTVAL
-  }
+  initCookieJar(ACCESS_COOKIE)
 
-  landingTest(APP_URL, ACCESS_COOKIE, test);
+  landingTest();
 }
