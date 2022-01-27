@@ -1,0 +1,52 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery ($organization_id: ID!) {\n\t\torganization(organization_id: $organization_id) {\n\t\t\tclasses{\n\t\t\t\tteachers{\n\t\t\t\t\tid: user_id\n\t\t\t\t\tname: user_name\n\t\t\t\t}\n\t\t\t}    \n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "organization": {
+            "classes": [
+              {
+                "teachers": [
+                  {
+                    "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+                    "name": "Max Flintoff"
+                  },
+                  {
+                    "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+                    "name": "Max Teacher"
+                  }
+                ]
+              },
+              {
+                "teachers": [
+                  {
+                    "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+                    "name": "Max Teacher"
+                  }
+                ]
+              },
+              {
+                "teachers": []
+              },
+              {
+                "teachers": []
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+]
