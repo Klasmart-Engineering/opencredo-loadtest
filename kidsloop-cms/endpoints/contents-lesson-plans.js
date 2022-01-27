@@ -12,18 +12,26 @@ import {
 
 export const options = defaultOptions;
 
-const contentID = __ENV.contentID
+const contentsLessonPlanPayload = JSON.stringify({
+  group_names: [
+    'Organization Content',
+    'Badanamu Content',
+    'More Featured Content'
+  ],
+  page: 1,
+  page_size: 20
+});
 
 export function setup() {
 
   return defaultSetup();
-};
+}
 
 export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getContentDetails(data.orgID, contentID);
+  const response = getContentsLessonPlans(data.orgID);
 
   if (response.timings.duration >= threshold ) {
 
@@ -31,14 +39,13 @@ export default function main(data) {
   };
 };
 
-//default content ID refers to a single content item in testing org in loadtest-k8s environment 
-export function getContentDetails(orgID, contentID = '61eee3fe1235cc9c6959e69d') {
+export function getContentsLessonPlans(orgID) {
 
-  const response = http.get(`${CMSEndpoint}/contents/${contentID}?org_id=${orgID}`, {
+  const response = http.post(`${CMSEndpoint}/contents_lesson_plans?org_id=${orgID}`, contentsLessonPlanPayload, {
       headers: APIHeaders
   });
-
+  
   isRequestSuccessful(response);
 
   return response;
-};
+}

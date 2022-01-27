@@ -1,0 +1,91 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query{\n\t\n\torg_0: organization(organization_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n\tsch_0: school(school_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: school_id\n    \tname: school_name\n\t\tstatus\n  \t}\n\t\n}",
+        "variables": null
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "org_0": {
+            "id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+            "name": "Open Credo",
+            "status": "active"
+          },
+          "sch_0": null
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "create_asset_page_301",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($category_id_0: ID!) {q0: category(id: $category_id_0) {id name status system}\n}",
+        "variables": {
+          "category_id_0": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+            "name": "Speech & Language Skills",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  }
+]
