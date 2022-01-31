@@ -1,0 +1,2578 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query{\n\t\n\torg_0: organization(organization_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n\tsch_0: school(school_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: school_id\n    \tname: school_name\n\t\tstatus\n  \t}\n\t\n}",
+        "variables": null
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "org_0": {
+            "id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+            "name": "Open Credo",
+            "status": "active"
+          },
+          "sch_0": null
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "create_asset_page_301",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($category_id_0: ID!) {q0: category(id: $category_id_0) {id name status system}\n}",
+        "variables": {
+          "category_id_0": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+            "name": "Speech & Language Skills",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID! $permission_name_3: ID! $permission_name_4: ID! $permission_name_5: ID! $permission_name_6: ID! $permission_name_7: ID! $permission_name_8: ID! $permission_name_9: ID! $permission_name_10: ID! $permission_name_11: ID! $permission_name_12: ID! $permission_name_13: ID! $permission_name_14: ID! $permission_name_15: ID! $permission_name_16: ID! $permission_name_17: ID! $permission_name_18: ID! $permission_name_19: ID! $permission_name_20: ID! $permission_name_21: ID! $permission_name_22: ID! $permission_name_23: ID! $permission_name_24: ID! $permission_name_25: ID! $permission_name_26: ID! $permission_name_27: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\nq3: checkAllowed(permission_name: $permission_name_3)\nq4: checkAllowed(permission_name: $permission_name_4)\nq5: checkAllowed(permission_name: $permission_name_5)\nq6: checkAllowed(permission_name: $permission_name_6)\nq7: checkAllowed(permission_name: $permission_name_7)\nq8: checkAllowed(permission_name: $permission_name_8)\nq9: checkAllowed(permission_name: $permission_name_9)\nq10: checkAllowed(permission_name: $permission_name_10)\nq11: checkAllowed(permission_name: $permission_name_11)\nq12: checkAllowed(permission_name: $permission_name_12)\nq13: checkAllowed(permission_name: $permission_name_13)\nq14: checkAllowed(permission_name: $permission_name_14)\nq15: checkAllowed(permission_name: $permission_name_15)\nq16: checkAllowed(permission_name: $permission_name_16)\nq17: checkAllowed(permission_name: $permission_name_17)\nq18: checkAllowed(permission_name: $permission_name_18)\nq19: checkAllowed(permission_name: $permission_name_19)\nq20: checkAllowed(permission_name: $permission_name_20)\nq21: checkAllowed(permission_name: $permission_name_21)\nq22: checkAllowed(permission_name: $permission_name_22)\nq23: checkAllowed(permission_name: $permission_name_23)\nq24: checkAllowed(permission_name: $permission_name_24)\nq25: checkAllowed(permission_name: $permission_name_25)\nq26: checkAllowed(permission_name: $permission_name_26)\nq27: checkAllowed(permission_name: $permission_name_27)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "delete_asset_340",
+          "permission_name_1": "create_lesson_material_220",
+          "permission_name_10": "edit_lesson_plan_metadata_237",
+          "permission_name_11": "edit_lesson_plan_content_238",
+          "permission_name_12": "edit_my_unpublished_content_230",
+          "permission_name_13": "remove_org_published_content_254",
+          "permission_name_14": "remove_my_schools_published_242",
+          "permission_name_15": "remove_all_schools_published_245",
+          "permission_name_16": "delete_org_archived_content_253",
+          "permission_name_17": "delete_my_schools_archived_243",
+          "permission_name_18": "delete_all_schools_archived_246",
+          "permission_name_19": "delete_my_unpublished_content_240",
+          "permission_name_2": "create_lesson_plan_221",
+          "permission_name_20": "delete_my_pending_251",
+          "permission_name_21": "delete_org_pending_content_252",
+          "permission_name_22": "delete_my_schools_pending_241",
+          "permission_name_23": "delete_all_schools_pending_244",
+          "permission_name_24": "approve_pending_content_271",
+          "permission_name_25": "reject_pending_content_272",
+          "permission_name_26": "republish_archived_content_274",
+          "permission_name_27": "full_content_management_294",
+          "permission_name_3": "create_my_schools_content_223",
+          "permission_name_4": "create_all_schools_content_224",
+          "permission_name_5": "edit_my_published_content_234",
+          "permission_name_6": "edit_org_published_content_235",
+          "permission_name_7": "edit_my_schools_published_247",
+          "permission_name_8": "edit_all_schools_published_249",
+          "permission_name_9": "edit_lesson_material_metadata_and_content_236",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true,
+              "q1": true,
+              "q2": true,
+              "q3": true,
+              "q4": true,
+              "q5": true,
+              "q6": true,
+              "q7": false,
+              "q8": true,
+              "q9": true,
+              "q10": true,
+              "q11": true,
+              "q12": true,
+              "q13": true,
+              "q14": false,
+              "q15": true,
+              "q16": true,
+              "q17": false,
+              "q18": true,
+              "q19": true,
+              "q20": true,
+              "q21": true,
+              "q22": false,
+              "q23": true,
+              "q24": true,
+              "q25": true,
+              "q26": true,
+              "q27": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query{\n\t\n\torg_0: organization(organization_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n\tsch_0: school(school_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: school_id\n    \tname: school_name\n\t\tstatus\n  \t}\n\t\n\torg_1: organization(organization_id: \"ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7\"){\n\t\tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n\tsch_1: school(school_id: \"ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7\"){\n\t\tid: school_id\n    \tname: school_name\n\t\tstatus\n  \t}\n\t\n}",
+        "variables": null
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "org_0": {
+            "id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+            "name": "Open Credo",
+            "status": "active"
+          },
+          "sch_0": null,
+          "org_1": null,
+          "sch_1": {
+            "id": "ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7",
+            "name": "Open Credo",
+            "status": "active"
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery(\n\t\t$user_id: ID! \n\t\t$organization_id: ID!\n\t\t$permission_name: ID!\n\t) {\n\t\tuser(user_id: $user_id) {\n\t\t\tmembership(organization_id: $organization_id) {\n\t\t\t\tcheckAllowed(permission_name: $permission_name)\n\t\t\t}\n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name": "create_folder_289",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "checkAllowed": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_all_schools_published_227",
+          "permission_name_1": "view_org_published_215",
+          "permission_name_2": "create_asset_page_301",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true,
+              "q1": true,
+              "q2": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID! $permission_name_3: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\nq3: checkAllowed(permission_name: $permission_name_3)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_org_published_215",
+          "permission_name_1": "view_my_school_published_218",
+          "permission_name_2": "view_all_schools_published_227",
+          "permission_name_3": "view_my_published_214",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true,
+              "q1": true,
+              "q2": true,
+              "q3": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subcategory_id_0: ID!) {q0: subcategory(id: $subcategory_id_0) {id name status system}\n}",
+        "variables": {
+          "subcategory_id_0": "f78c01f9-4b8a-480c-8c4b-80d1ec1747a7"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "f78c01f9-4b8a-480c-8c4b-80d1ec1747a7",
+            "name": "Complex Movements",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($category_id_0: ID! $category_id_1: ID!) {q0: category(id: $category_id_0) {id name status system}\nq1: category(id: $category_id_1) {id name status system}\n}",
+        "variables": {
+          "category_id_0": "2a637bea-c529-4868-8269-d0936696da7e",
+          "category_id_1": "bcfd9d76-cf05-4ccd-9a41-6b886da661be"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "2a637bea-c529-4868-8269-d0936696da7e",
+            "name": "Language and Numeracy Skills",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "bcfd9d76-cf05-4ccd-9a41-6b886da661be",
+            "name": "Gross Motor Skills",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subject_id_0: ID! $subject_id_1: ID!) {q0: subject(id: $subject_id_0) {id name status system}\nq1: subject(id: $subject_id_1) {id name status system}\n}",
+        "variables": {
+          "subject_id_0": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+          "subject_id_1": "66a453b0-d38f-472e-b055-7a94a94d66c4"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+            "name": "Math",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "66a453b0-d38f-472e-b055-7a94a94d66c4",
+            "name": "Language/Literacy",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($program_id_0: ID! $program_id_1: ID!) {q0: program(id: $program_id_0) {id name status system}\nq1: program(id: $program_id_1) {id name status system}\n}",
+        "variables": {
+          "program_id_0": "4591423a-2619-4ef8-a900-f5d924939d02",
+          "program_id_1": "b39edb9a-ab91-4245-94a4-eb2b5007c033"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "4591423a-2619-4ef8-a900-f5d924939d02",
+            "name": "Bada Math",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+            "name": "Bada Genius",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery(\n\t\t$user_id: ID! \n\t\t$organization_id: ID!\n\t\t$permission_name: ID!\n\t) {\n\t\tuser(user_id: $user_id) {\n\t\t\tmembership(organization_id: $organization_id) {\n\t\t\t\tcheckAllowed(permission_name: $permission_name)\n\t\t\t}\n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name": "create_folder_289",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "checkAllowed": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($grade_id_0: ID!) {q0: grade(id: $grade_id_0) {id name status system}\n}",
+        "variables": {
+          "grade_id_0": "e4d16af5-5b8f-4051-b065-13acf6c694be"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "e4d16af5-5b8f-4051-b065-13acf6c694be",
+            "name": "Grade 1",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($age_id_0: ID!) {q0: age_range(id: $age_id_0) {id name status system}\n}",
+        "variables": {
+          "age_id_0": "bb7982cd-020f-4e1a-93fc-4a6874917f07"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "bb7982cd-020f-4e1a-93fc-4a6874917f07",
+            "name": "4 - 5 year(s)",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subcategory_id_0: ID! $subcategory_id_1: ID!) {q0: subcategory(id: $subcategory_id_0) {id name status system}\nq1: subcategory(id: $subcategory_id_1) {id name status system}\n}",
+        "variables": {
+          "subcategory_id_0": "38c17083-2ef7-402b-824a-20c38e3c57f4",
+          "subcategory_id_1": "f78c01f9-4b8a-480c-8c4b-80d1ec1747a7"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "38c17083-2ef7-402b-824a-20c38e3c57f4",
+            "name": "Phonological Awareness & Phonics",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "f78c01f9-4b8a-480c-8c4b-80d1ec1747a7",
+            "name": "Complex Movements",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($category_id_0: ID! $category_id_1: ID! $category_id_2: ID!) {q0: category(id: $category_id_0) {id name status system}\nq1: category(id: $category_id_1) {id name status system}\nq2: category(id: $category_id_2) {id name status system}\n}",
+        "variables": {
+          "category_id_0": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+          "category_id_1": "2a637bea-c529-4868-8269-d0936696da7e",
+          "category_id_2": "bcfd9d76-cf05-4ccd-9a41-6b886da661be"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+            "name": "Speech & Language Skills",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "2a637bea-c529-4868-8269-d0936696da7e",
+            "name": "Language and Numeracy Skills",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "bcfd9d76-cf05-4ccd-9a41-6b886da661be",
+            "name": "Gross Motor Skills",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subject_id_0: ID! $subject_id_1: ID! $subject_id_2: ID!) {q0: subject(id: $subject_id_0) {id name status system}\nq1: subject(id: $subject_id_1) {id name status system}\nq2: subject(id: $subject_id_2) {id name status system}\n}",
+        "variables": {
+          "subject_id_0": "66a453b0-d38f-472e-b055-7a94a94d66c4",
+          "subject_id_1": "51189ac9-f206-469c-941c-3cda28af8788",
+          "subject_id_2": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "66a453b0-d38f-472e-b055-7a94a94d66c4",
+            "name": "Language/Literacy",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "51189ac9-f206-469c-941c-3cda28af8788",
+            "name": "ESL/EFL",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+            "name": "Math",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($program_id_0: ID! $program_id_1: ID! $program_id_2: ID!) {q0: program(id: $program_id_0) {id name status system}\nq1: program(id: $program_id_1) {id name status system}\nq2: program(id: $program_id_2) {id name status system}\n}",
+        "variables": {
+          "program_id_0": "4591423a-2619-4ef8-a900-f5d924939d02",
+          "program_id_1": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+          "program_id_2": "30de77f9-0da3-47d5-84a5-394aac654a07"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "4591423a-2619-4ef8-a900-f5d924939d02",
+            "name": "Bada Math",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+            "name": "Bada Genius",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "30de77f9-0da3-47d5-84a5-394aac654a07",
+            "name": "Tester",
+            "status": "active",
+            "system": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query orgs($orgIDs: [ID!]){\n\torganizations(organization_ids: $orgIDs){\n    \tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n}",
+        "variables": {
+          "orgIDs": [
+            "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+          ]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "organizations": [
+            {
+              "id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+              "name": "Open Credo",
+              "status": "active"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id_0: ID! $user_id_1: ID!) {q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}\nq1: user(user_id: $user_id_1) {id:user_id name:user_name given_name family_name email avatar}\n}",
+        "variables": {
+          "user_id_0": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+          "user_id_1": "527c2d4c-2454-4f25-b194-6c6c67fe5026"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+            "name": "Max Flintoff",
+            "given_name": "Max",
+            "family_name": "Flintoff",
+            "email": "max.flintoff+testbeta2@opencredo.com",
+            "avatar": null
+          },
+          "q1": {
+            "id": "527c2d4c-2454-4f25-b194-6c6c67fe5026",
+            "name": "Guy Richardson",
+            "given_name": "Guy",
+            "family_name": "Richardson",
+            "email": "guy.richardson@opencredo.com",
+            "avatar": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery($user_id: ID!) {\n\t\tuser(user_id: $user_id) {\n\t\t\tschool_memberships{\n\t\t\t\tschool {\n\t\t\t\t\tschool_id\n\t\t\t\t\tschool_name\n\t\t\t\t\tstatus\n\t\t\t\t\torganization {\n\t\t\t\t\t\torganization_id\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}",
+        "variables": {
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "school_memberships": []
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery($organization_id: ID!) {\n\t\torganization(organization_id: $organization_id) {\n\t\t\tschools{\n\t\t\t\tschool_id\n\t\t\t\tschool_name\n\t\t\t\tstatus\n\t\t\t}\n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "organization": {
+            "schools": [
+              {
+                "school_id": "ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7",
+                "school_name": "Open Credo",
+                "status": "active"
+              },
+              {
+                "school_id": "7875dd8c-0e3b-41dd-bf17-77d1ac072358",
+                "school_name": "K6-1k-Schools-000",
+                "status": "active"
+              },
+              {
+                "school_id": "cb9c2659-abbd-43da-8db5-8e7b36896a44",
+                "school_name": "K6-1k-Schools-001",
+                "status": "active"
+              },
+              {
+                "school_id": "2b23ffcd-f2f1-4351-883d-d4623c20cfa5",
+                "school_name": "K6-1k-Schools-002",
+                "status": "active"
+              },
+              {
+                "school_id": "ffde9914-653f-4444-acec-87351e7ed3bd",
+                "school_name": "K6-1k-Schools-003",
+                "status": "active"
+              },
+              {
+                "school_id": "edd08720-e370-4717-80c1-57a4c2dfe73a",
+                "school_name": "K6-1k-Schools-004",
+                "status": "active"
+              },
+              {
+                "school_id": "c1fc1151-8756-4e41-afce-765ac19cfc4d",
+                "school_name": "K6-1k-Schools-005",
+                "status": "active"
+              },
+              {
+                "school_id": "1959951d-9bba-4a6e-8a49-521c7db110a5",
+                "school_name": "K6-1k-Schools-006",
+                "status": "active"
+              },
+              {
+                "school_id": "233d66f0-dbbe-4ac8-876b-0d1fdbd2bcce",
+                "school_name": "K6-1k-Schools-007",
+                "status": "active"
+              },
+              {
+                "school_id": "45c9d4a6-8f8f-4ecd-93ad-17861b33af12",
+                "school_name": "K6-1k-Schools-008",
+                "status": "active"
+              },
+              {
+                "school_id": "636be005-7b26-498b-90f3-c68c1dc25b99",
+                "school_name": "K6-1k-Schools-009",
+                "status": "active"
+              },
+              {
+                "school_id": "c5105372-158b-44ca-9f13-f442f5b44ed2",
+                "school_name": "K6-1k-Schools-010",
+                "status": "active"
+              },
+              {
+                "school_id": "ece34b4d-0e04-4f6d-a3ce-ec2931bb1438",
+                "school_name": "K6-1k-Schools-011",
+                "status": "active"
+              },
+              {
+                "school_id": "f0bd96ca-f9c7-4dd1-aea7-e68a8f3844aa",
+                "school_name": "K6-1k-Schools-012",
+                "status": "active"
+              },
+              {
+                "school_id": "9eda289c-0f1f-41a3-82f2-cc3cb5a594c7",
+                "school_name": "K6-1k-Schools-013",
+                "status": "active"
+              },
+              {
+                "school_id": "5c8b3f71-1e1f-45d7-9813-5b0033d4137a",
+                "school_name": "K6-1k-Schools-014",
+                "status": "active"
+              },
+              {
+                "school_id": "95baf8ab-bb0f-4d7e-a92a-ab4a897ca104",
+                "school_name": "K6-1k-Schools-015",
+                "status": "active"
+              },
+              {
+                "school_id": "d7b6a67f-2f45-4a20-9c70-61a16b3cd934",
+                "school_name": "K6-1k-Schools-016",
+                "status": "active"
+              },
+              {
+                "school_id": "22ef5581-0b28-4664-b694-3ed10afba0b6",
+                "school_name": "K6-1k-Schools-017",
+                "status": "active"
+              },
+              {
+                "school_id": "0e5e1125-a64b-4381-9def-6077982a1ee2",
+                "school_name": "K6-1k-Schools-018",
+                "status": "active"
+              },
+              {
+                "school_id": "7e378595-3751-47fd-af4e-a120e55e824c",
+                "school_name": "K6-1k-Schools-019",
+                "status": "active"
+              },
+              {
+                "school_id": "bc9061f6-53da-451e-9948-3a325108765f",
+                "school_name": "K6-1k-Schools-020",
+                "status": "active"
+              },
+              {
+                "school_id": "585eabb6-82ca-45f4-8569-b4eeb072f14a",
+                "school_name": "K6-1k-Schools-021",
+                "status": "active"
+              },
+              {
+                "school_id": "29491466-12e9-46d5-97c2-cb4671bc6bfa",
+                "school_name": "K6-1k-Schools-022",
+                "status": "active"
+              },
+              {
+                "school_id": "ffe900ec-18b8-4c04-9a2e-4d654fab4c1f",
+                "school_name": "K6-1k-Schools-023",
+                "status": "active"
+              },
+              {
+                "school_id": "c8d40997-8b93-4658-9ba7-e4d13f6585d2",
+                "school_name": "K6-1k-Schools-024",
+                "status": "active"
+              },
+              {
+                "school_id": "5f7469be-4553-42f1-9f5c-c75901fab2fc",
+                "school_name": "K6-1k-Schools-025",
+                "status": "active"
+              },
+              {
+                "school_id": "6a18fdd1-309a-48f7-93d1-6b3c6283dd1b",
+                "school_name": "K6-1k-Schools-026",
+                "status": "active"
+              },
+              {
+                "school_id": "7e5fb926-cd79-4c99-9d7c-3bc8734f6e77",
+                "school_name": "K6-1k-Schools-027",
+                "status": "active"
+              },
+              {
+                "school_id": "682caff8-efe9-465d-817d-674df3b7c5e4",
+                "school_name": "K6-1k-Schools-028",
+                "status": "active"
+              },
+              {
+                "school_id": "7eaa9667-9702-4349-9051-c6488fb88700",
+                "school_name": "K6-1k-Schools-029",
+                "status": "active"
+              },
+              {
+                "school_id": "078058e1-23f5-4b6d-acf6-f761b26eb18b",
+                "school_name": "K6-1k-Schools-030",
+                "status": "active"
+              },
+              {
+                "school_id": "dca8c289-abb7-4dbb-97e2-98de6e7eb4fb",
+                "school_name": "K6-1k-Schools-031",
+                "status": "active"
+              },
+              {
+                "school_id": "368f8926-0245-4912-ad99-542d0c2b5b02",
+                "school_name": "K6-1k-Schools-032",
+                "status": "active"
+              },
+              {
+                "school_id": "314414a8-c9fb-4d8b-8cd0-af5cdebc1531",
+                "school_name": "K6-1k-Schools-033",
+                "status": "active"
+              },
+              {
+                "school_id": "e4a4cd8b-5c6f-4c01-9d5a-0c417242b3c7",
+                "school_name": "K6-1k-Schools-034",
+                "status": "active"
+              },
+              {
+                "school_id": "f8fb6c22-2658-4d56-8a10-faac2fc2fedd",
+                "school_name": "K6-1k-Schools-035",
+                "status": "active"
+              },
+              {
+                "school_id": "76fabd6b-eb97-49d0-bd0a-efa00c3964bd",
+                "school_name": "K6-1k-Schools-036",
+                "status": "active"
+              },
+              {
+                "school_id": "1bd0971f-3752-4b5a-8ab3-3fa8eb4bc710",
+                "school_name": "K6-1k-Schools-037",
+                "status": "active"
+              },
+              {
+                "school_id": "ef2cc4db-8e3e-476c-b214-82a099c8baa9",
+                "school_name": "K6-1k-Schools-038",
+                "status": "active"
+              },
+              {
+                "school_id": "945f907f-087e-4788-bb4a-2246b51a8d88",
+                "school_name": "K6-1k-Schools-039",
+                "status": "active"
+              },
+              {
+                "school_id": "6e5c55ad-9a12-4928-b48a-0e8571d2a38c",
+                "school_name": "K6-1k-Schools-040",
+                "status": "active"
+              },
+              {
+                "school_id": "dbb2ed40-31c1-41a4-84d1-cfdd9f7c617d",
+                "school_name": "K6-1k-Schools-041",
+                "status": "active"
+              },
+              {
+                "school_id": "7fab541c-8b7b-4f9e-bb8c-6d9a9d0d16d0",
+                "school_name": "K6-1k-Schools-042",
+                "status": "active"
+              },
+              {
+                "school_id": "e56bb713-28a3-48c2-9c33-e0521f754f78",
+                "school_name": "K6-1k-Schools-043",
+                "status": "active"
+              },
+              {
+                "school_id": "9d6d60c5-76e6-41c9-b377-b9ac73ca7b24",
+                "school_name": "K6-1k-Schools-044",
+                "status": "active"
+              },
+              {
+                "school_id": "8e21f8a5-a2f6-4351-a747-4ee1db413374",
+                "school_name": "K6-1k-Schools-045",
+                "status": "active"
+              },
+              {
+                "school_id": "4cdd80db-e7ca-49c6-b418-9d01df15f11e",
+                "school_name": "K6-1k-Schools-046",
+                "status": "active"
+              },
+              {
+                "school_id": "0cf5b610-edaf-4598-ab20-a1f2a0461b4c",
+                "school_name": "K6-1k-Schools-047",
+                "status": "active"
+              },
+              {
+                "school_id": "08505658-4e64-4b46-a665-46c534550fff",
+                "school_name": "K6-1k-Schools-048",
+                "status": "active"
+              },
+              {
+                "school_id": "c0a093ce-55ac-4157-9fa6-af7c7b5b9515",
+                "school_name": "K6-1k-Schools-049",
+                "status": "active"
+              },
+              {
+                "school_id": "6736a23d-178a-4d40-8e3d-26ea3f813289",
+                "school_name": "K6-1k-Schools-050",
+                "status": "active"
+              },
+              {
+                "school_id": "8bf0ff96-6e9b-4e56-9431-e5b7c7d5936c",
+                "school_name": "K6-1k-Schools-051",
+                "status": "active"
+              },
+              {
+                "school_id": "d383f38a-9059-4762-9053-f4035a3545c1",
+                "school_name": "K6-1k-Schools-052",
+                "status": "active"
+              },
+              {
+                "school_id": "d5d7906e-e1cd-477b-9c23-0671d10e4e96",
+                "school_name": "K6-1k-Schools-053",
+                "status": "active"
+              },
+              {
+                "school_id": "93b09be0-b916-466a-93a5-0409056702ba",
+                "school_name": "K6-1k-Schools-054",
+                "status": "active"
+              },
+              {
+                "school_id": "a48ff736-a3e6-449d-8901-64b91ac575df",
+                "school_name": "K6-1k-Schools-055",
+                "status": "active"
+              },
+              {
+                "school_id": "faebeace-0e4e-426b-8580-fe1b6a34797c",
+                "school_name": "K6-1k-Schools-056",
+                "status": "active"
+              },
+              {
+                "school_id": "1f82ca16-42d8-45ab-8840-8c1d01bdf88a",
+                "school_name": "K6-1k-Schools-057",
+                "status": "active"
+              },
+              {
+                "school_id": "4f1dc87d-2724-4aad-8d78-d2a57bd99946",
+                "school_name": "K6-1k-Schools-058",
+                "status": "active"
+              },
+              {
+                "school_id": "0d178b83-7152-4517-aabd-5a7c11961169",
+                "school_name": "K6-1k-Schools-059",
+                "status": "active"
+              },
+              {
+                "school_id": "bf872f06-1b19-4f3a-8aa8-beb31a5510d1",
+                "school_name": "K6-1k-Schools-060",
+                "status": "active"
+              },
+              {
+                "school_id": "0d3325ba-c095-4cad-ab35-27f9223e8de7",
+                "school_name": "K6-1k-Schools-061",
+                "status": "active"
+              },
+              {
+                "school_id": "fb4c9e34-fcac-4393-8a73-05c36c5ee8cd",
+                "school_name": "K6-1k-Schools-062",
+                "status": "active"
+              },
+              {
+                "school_id": "fb89e32b-da80-4c72-a826-f545b853707b",
+                "school_name": "K6-1k-Schools-063",
+                "status": "active"
+              },
+              {
+                "school_id": "f476a6fe-3bd5-417b-9b1c-367a13df18a2",
+                "school_name": "K6-1k-Schools-064",
+                "status": "active"
+              },
+              {
+                "school_id": "99bdd99e-9797-4dd6-9b35-5108671f98aa",
+                "school_name": "K6-1k-Schools-065",
+                "status": "active"
+              },
+              {
+                "school_id": "bb830a66-0214-4e65-9d13-7c459ae5cefa",
+                "school_name": "K6-1k-Schools-066",
+                "status": "active"
+              },
+              {
+                "school_id": "d4967876-01f0-4c94-8af2-cbcaf6bd0b3f",
+                "school_name": "K6-1k-Schools-067",
+                "status": "active"
+              },
+              {
+                "school_id": "2dbd567c-d537-4ce4-a23a-eb07642dae21",
+                "school_name": "K6-1k-Schools-068",
+                "status": "active"
+              },
+              {
+                "school_id": "367ae2cf-82cf-4496-bf25-ed27f825e1da",
+                "school_name": "K6-1k-Schools-069",
+                "status": "active"
+              },
+              {
+                "school_id": "06ad451f-4666-49be-9846-27b6e659f578",
+                "school_name": "K6-1k-Schools-070",
+                "status": "active"
+              },
+              {
+                "school_id": "2b155358-670e-4a20-b857-5990a9ad67bb",
+                "school_name": "K6-1k-Schools-071",
+                "status": "active"
+              },
+              {
+                "school_id": "da5e5bca-2370-401b-8a78-344b241d493f",
+                "school_name": "K6-1k-Schools-072",
+                "status": "active"
+              },
+              {
+                "school_id": "36355eb9-6114-4d61-800f-d3907574e796",
+                "school_name": "K6-1k-Schools-073",
+                "status": "active"
+              },
+              {
+                "school_id": "ccea9e85-7987-44c5-9648-0845b69097bd",
+                "school_name": "K6-1k-Schools-074",
+                "status": "active"
+              },
+              {
+                "school_id": "da3df8e4-bbec-41dd-b4c1-f4b43be16931",
+                "school_name": "K6-1k-Schools-075",
+                "status": "active"
+              },
+              {
+                "school_id": "3d2759c4-b283-44a3-9341-3fc9fd8f658d",
+                "school_name": "K6-1k-Schools-076",
+                "status": "active"
+              },
+              {
+                "school_id": "1fdd8dd4-2a61-4c2e-a6ab-bfee05369a8c",
+                "school_name": "K6-1k-Schools-077",
+                "status": "active"
+              },
+              {
+                "school_id": "97612c39-64bb-4dd0-b87c-7b76ebdb4fff",
+                "school_name": "K6-1k-Schools-078",
+                "status": "active"
+              },
+              {
+                "school_id": "5a72ccff-ba52-495d-9d4d-fc280cd9a683",
+                "school_name": "K6-1k-Schools-079",
+                "status": "active"
+              },
+              {
+                "school_id": "c251eca3-f75d-4a13-ae6e-b0b2449c19f6",
+                "school_name": "K6-1k-Schools-080",
+                "status": "active"
+              },
+              {
+                "school_id": "c59bf81f-462c-4dad-b486-f1f5e5cc6cda",
+                "school_name": "K6-1k-Schools-081",
+                "status": "active"
+              },
+              {
+                "school_id": "b6698ff4-6c3b-49db-a157-72e2c4f76b0f",
+                "school_name": "K6-1k-Schools-082",
+                "status": "active"
+              },
+              {
+                "school_id": "7dde836a-9ddd-4ebf-b5d6-5210d29e0ade",
+                "school_name": "K6-1k-Schools-083",
+                "status": "active"
+              },
+              {
+                "school_id": "3dbcfb88-8a39-4b3c-801e-c6470616a41b",
+                "school_name": "K6-1k-Schools-084",
+                "status": "active"
+              },
+              {
+                "school_id": "0e275980-a04e-41e8-b8c9-06307859b7b8",
+                "school_name": "K6-1k-Schools-085",
+                "status": "active"
+              },
+              {
+                "school_id": "bc213d6a-55bb-4f02-a32d-bbab5fc894c2",
+                "school_name": "K6-1k-Schools-086",
+                "status": "active"
+              },
+              {
+                "school_id": "ab49ed59-328c-4b56-8515-5d0cfd64143e",
+                "school_name": "K6-1k-Schools-087",
+                "status": "active"
+              },
+              {
+                "school_id": "ece4a9c8-da32-4cc6-8bcf-b84a21c4c1bf",
+                "school_name": "K6-1k-Schools-088",
+                "status": "active"
+              },
+              {
+                "school_id": "ae6683b1-29f2-4f5f-91e6-f0d5d693b043",
+                "school_name": "K6-1k-Schools-089",
+                "status": "active"
+              },
+              {
+                "school_id": "b5726055-af7b-4dbf-ad83-4d12fd10c754",
+                "school_name": "K6-1k-Schools-090",
+                "status": "active"
+              },
+              {
+                "school_id": "ba404650-55aa-4bed-8cf3-ac05e828e848",
+                "school_name": "K6-1k-Schools-091",
+                "status": "active"
+              },
+              {
+                "school_id": "7cdcee05-b235-4b7c-ab58-1d14a56d27f0",
+                "school_name": "K6-1k-Schools-092",
+                "status": "active"
+              },
+              {
+                "school_id": "9ff20edc-31ab-4a40-b816-d4b2723c5ea1",
+                "school_name": "K6-1k-Schools-093",
+                "status": "active"
+              },
+              {
+                "school_id": "140fc0d2-7046-456c-985c-90509acffe16",
+                "school_name": "K6-1k-Schools-094",
+                "status": "active"
+              },
+              {
+                "school_id": "11ca4664-1c58-4a87-9440-11e68c5a078e",
+                "school_name": "K6-1k-Schools-095",
+                "status": "active"
+              },
+              {
+                "school_id": "4770c60b-0044-4350-97eb-1b7e0ce097de",
+                "school_name": "K6-1k-Schools-096",
+                "status": "active"
+              },
+              {
+                "school_id": "c4adf24d-86df-473d-bfb2-f6a985fd193e",
+                "school_name": "K6-1k-Schools-097",
+                "status": "active"
+              },
+              {
+                "school_id": "d0d84d86-cbf4-4e16-8fce-4d100a711c37",
+                "school_name": "K6-1k-Schools-098",
+                "status": "active"
+              },
+              {
+                "school_id": "ad77f948-9476-4b0a-be13-c8ad610a3f52",
+                "school_name": "K6-1k-Schools-099",
+                "status": "active"
+              },
+              {
+                "school_id": "0bb8c6c6-8757-48d7-8e15-f04fb393e871",
+                "school_name": "School K6 - 1",
+                "status": "active"
+              },
+              {
+                "school_id": "36b66cd2-4171-43ec-a240-77080a35b70b",
+                "school_name": "School K6 - 2",
+                "status": "active"
+              },
+              {
+                "school_id": "1d88e87e-a951-4732-8819-edecc3a23d65",
+                "school_name": "School K6 - 3",
+                "status": "active"
+              },
+              {
+                "school_id": "584e9cc8-d691-4983-a01d-179ad34edcd4",
+                "school_name": "School K6 - 4",
+                "status": "active"
+              },
+              {
+                "school_id": "38e2316e-5a77-44a0-8649-45cf8f300c9f",
+                "school_name": "School K6 - 5",
+                "status": "active"
+              },
+              {
+                "school_id": "e3840210-8b53-4e75-85bd-fa535d03fb8e",
+                "school_name": "School K6 - 6",
+                "status": "active"
+              },
+              {
+                "school_id": "c59a235d-afc5-44cd-8e39-dcc6cc98f09b",
+                "school_name": "School K6 - 7",
+                "status": "active"
+              },
+              {
+                "school_id": "f75cbc8a-f1f8-42a1-b8e1-e843195d86e1",
+                "school_name": "School K6 - 8",
+                "status": "active"
+              },
+              {
+                "school_id": "6c17d681-db0f-45a4-aca0-61cde360a524",
+                "school_name": "School K6 - 9",
+                "status": "active"
+              },
+              {
+                "school_id": "2966ced5-7cc6-4bac-bc8b-ca5cefefa2d0",
+                "school_name": "School K6 - 10",
+                "status": "active"
+              },
+              {
+                "school_id": "8694dbcf-50a7-45bf-bb18-5e63213ffe85",
+                "school_name": "School K6 - 11",
+                "status": "active"
+              },
+              {
+                "school_id": "4225d1cc-6ef1-4c40-b629-e1ca2fe581a0",
+                "school_name": "School K6 - 12",
+                "status": "active"
+              },
+              {
+                "school_id": "662651de-d7d3-48f0-9ff2-a3fe41b7e479",
+                "school_name": "School K6 - 13",
+                "status": "active"
+              },
+              {
+                "school_id": "ca558754-c8d1-495e-af72-0ba954a86968",
+                "school_name": "School K6 - 14",
+                "status": "active"
+              },
+              {
+                "school_id": "369665c0-e6fe-4f68-98bf-2ae220193137",
+                "school_name": "School K6 - 15",
+                "status": "active"
+              },
+              {
+                "school_id": "6fd4e513-00bd-4665-bf3c-b1303500d1a9",
+                "school_name": "School K6 - 16",
+                "status": "active"
+              },
+              {
+                "school_id": "239c2072-1ef1-411c-8b24-11ce94a78e51",
+                "school_name": "School K6 - 17",
+                "status": "active"
+              },
+              {
+                "school_id": "83efb603-6aba-4efa-9498-424a074cf385",
+                "school_name": "School K6 - 18",
+                "status": "active"
+              },
+              {
+                "school_id": "773ab7de-7b86-4295-b313-a95e4359d718",
+                "school_name": "School K6 - 19",
+                "status": "active"
+              },
+              {
+                "school_id": "fb7b117f-b602-491d-904e-0fe95f26bf35",
+                "school_name": "School K6 - 20",
+                "status": "active"
+              },
+              {
+                "school_id": "b49bff62-5bfe-4550-88ba-e0dfaf93dbf0",
+                "school_name": "School K6 - 21",
+                "status": "active"
+              },
+              {
+                "school_id": "ec78d574-feae-4e0e-a250-332b909a2f3b",
+                "school_name": "School K6 - 22",
+                "status": "active"
+              },
+              {
+                "school_id": "deb7e947-6848-4a62-9124-205cf85857d8",
+                "school_name": "School K6 - 23",
+                "status": "active"
+              },
+              {
+                "school_id": "48080561-ef14-427c-87cc-a3d929d1274c",
+                "school_name": "School K6 - 24",
+                "status": "active"
+              },
+              {
+                "school_id": "49c0eaec-6f91-4632-ab4a-e743674dc98c",
+                "school_name": "School K6 - 25",
+                "status": "active"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query{\n\t\n\torg_0: organization(organization_id: \"ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7\"){\n\t\tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n\tsch_0: school(school_id: \"ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7\"){\n\t\tid: school_id\n    \tname: school_name\n\t\tstatus\n  \t}\n\t\n\torg_1: organization(organization_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: organization_id\n    \tname: organization_name\n\t\tstatus\n  \t}\n\tsch_1: school(school_id: \"5956e9e9-d73c-499d-b42c-b88136fbbe56\"){\n\t\tid: school_id\n    \tname: school_name\n\t\tstatus\n  \t}\n\t\n}",
+        "variables": null
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "org_0": null,
+          "sch_0": {
+            "id": "ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7",
+            "name": "Open Credo",
+            "status": "active"
+          },
+          "org_1": {
+            "id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+            "name": "Open Credo",
+            "status": "active"
+          },
+          "sch_1": null
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subject_id_0: ID! $subject_id_1: ID! $subject_id_2: ID!) {q0: subject(id: $subject_id_0) {id name status system}\nq1: subject(id: $subject_id_1) {id name status system}\nq2: subject(id: $subject_id_2) {id name status system}\n}",
+        "variables": {
+          "subject_id_0": "51189ac9-f206-469c-941c-3cda28af8788",
+          "subject_id_1": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+          "subject_id_2": "66a453b0-d38f-472e-b055-7a94a94d66c4"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "51189ac9-f206-469c-941c-3cda28af8788",
+            "name": "ESL/EFL",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+            "name": "Math",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "66a453b0-d38f-472e-b055-7a94a94d66c4",
+            "name": "Language/Literacy",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($category_id_0: ID! $category_id_1: ID! $category_id_2: ID!) {q0: category(id: $category_id_0) {id name status system}\nq1: category(id: $category_id_1) {id name status system}\nq2: category(id: $category_id_2) {id name status system}\n}",
+        "variables": {
+          "category_id_0": "2a637bea-c529-4868-8269-d0936696da7e",
+          "category_id_1": "bcfd9d76-cf05-4ccd-9a41-6b886da661be",
+          "category_id_2": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "2a637bea-c529-4868-8269-d0936696da7e",
+            "name": "Language and Numeracy Skills",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "bcfd9d76-cf05-4ccd-9a41-6b886da661be",
+            "name": "Gross Motor Skills",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+            "name": "Speech & Language Skills",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($program_id_0: ID! $program_id_1: ID! $program_id_2: ID!) {q0: program(id: $program_id_0) {id name status system}\nq1: program(id: $program_id_1) {id name status system}\nq2: program(id: $program_id_2) {id name status system}\n}",
+        "variables": {
+          "program_id_0": "30de77f9-0da3-47d5-84a5-394aac654a07",
+          "program_id_1": "4591423a-2619-4ef8-a900-f5d924939d02",
+          "program_id_2": "b39edb9a-ab91-4245-94a4-eb2b5007c033"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "30de77f9-0da3-47d5-84a5-394aac654a07",
+            "name": "Tester",
+            "status": "active",
+            "system": false
+          },
+          "q1": {
+            "id": "4591423a-2619-4ef8-a900-f5d924939d02",
+            "name": "Bada Math",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+            "name": "Bada Genius",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($program_id_0: ID! $program_id_1: ID! $program_id_2: ID!) {q0: program(id: $program_id_0) {id name status system}\nq1: program(id: $program_id_1) {id name status system}\nq2: program(id: $program_id_2) {id name status system}\n}",
+        "variables": {
+          "program_id_0": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+          "program_id_1": "30de77f9-0da3-47d5-84a5-394aac654a07",
+          "program_id_2": "4591423a-2619-4ef8-a900-f5d924939d02"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+            "name": "Bada Genius",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "30de77f9-0da3-47d5-84a5-394aac654a07",
+            "name": "Tester",
+            "status": "active",
+            "system": false
+          },
+          "q2": {
+            "id": "4591423a-2619-4ef8-a900-f5d924939d02",
+            "name": "Bada Math",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($category_id_0: ID! $category_id_1: ID! $category_id_2: ID!) {q0: category(id: $category_id_0) {id name status system}\nq1: category(id: $category_id_1) {id name status system}\nq2: category(id: $category_id_2) {id name status system}\n}",
+        "variables": {
+          "category_id_0": "bcfd9d76-cf05-4ccd-9a41-6b886da661be",
+          "category_id_1": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+          "category_id_2": "2a637bea-c529-4868-8269-d0936696da7e"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "bcfd9d76-cf05-4ccd-9a41-6b886da661be",
+            "name": "Gross Motor Skills",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "0f4810e7-5ce1-47e1-8aeb-43b73f15b007",
+            "name": "Speech & Language Skills",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "2a637bea-c529-4868-8269-d0936696da7e",
+            "name": "Language and Numeracy Skills",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id_0: ID! $user_id_1: ID!) {q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}\nq1: user(user_id: $user_id_1) {id:user_id name:user_name given_name family_name email avatar}\n}",
+        "variables": {
+          "user_id_0": "527c2d4c-2454-4f25-b194-6c6c67fe5026",
+          "user_id_1": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "527c2d4c-2454-4f25-b194-6c6c67fe5026",
+            "name": "Guy Richardson",
+            "given_name": "Guy",
+            "family_name": "Richardson",
+            "email": "guy.richardson@opencredo.com",
+            "avatar": null
+          },
+          "q1": {
+            "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+            "name": "Max Flintoff",
+            "given_name": "Max",
+            "family_name": "Flintoff",
+            "email": "max.flintoff+testbeta2@opencredo.com",
+            "avatar": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subject_id_0: ID! $subject_id_1: ID! $subject_id_2: ID!) {q0: subject(id: $subject_id_0) {id name status system}\nq1: subject(id: $subject_id_1) {id name status system}\nq2: subject(id: $subject_id_2) {id name status system}\n}",
+        "variables": {
+          "subject_id_0": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+          "subject_id_1": "66a453b0-d38f-472e-b055-7a94a94d66c4",
+          "subject_id_2": "51189ac9-f206-469c-941c-3cda28af8788"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "36c4f793-9aa3-4fb8-84f0-68a2ab920d5a",
+            "name": "Math",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "66a453b0-d38f-472e-b055-7a94a94d66c4",
+            "name": "Language/Literacy",
+            "status": "active",
+            "system": true
+          },
+          "q2": {
+            "id": "51189ac9-f206-469c-941c-3cda28af8788",
+            "name": "ESL/EFL",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subcategory_id_0: ID! $subcategory_id_1: ID!) {q0: subcategory(id: $subcategory_id_0) {id name status system}\nq1: subcategory(id: $subcategory_id_1) {id name status system}\n}",
+        "variables": {
+          "subcategory_id_0": "f78c01f9-4b8a-480c-8c4b-80d1ec1747a7",
+          "subcategory_id_1": "38c17083-2ef7-402b-824a-20c38e3c57f4"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "f78c01f9-4b8a-480c-8c4b-80d1ec1747a7",
+            "name": "Complex Movements",
+            "status": "active",
+            "system": true
+          },
+          "q1": {
+            "id": "38c17083-2ef7-402b-824a-20c38e3c57f4",
+            "name": "Phonological Awareness & Phonics",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id_0: ID!) {q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}\n}",
+        "variables": {
+          "user_id_0": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+            "name": "Max Flintoff",
+            "given_name": "Max",
+            "family_name": "Flintoff",
+            "email": "max.flintoff+testbeta2@opencredo.com",
+            "avatar": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID! $permission_name_3: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\nq3: checkAllowed(permission_name: $permission_name_3)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_org_published_215",
+          "permission_name_1": "view_my_school_published_218",
+          "permission_name_2": "view_all_schools_published_227",
+          "permission_name_3": "view_my_published_214",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true,
+              "q1": true,
+              "q2": false,
+              "q3": false
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery($organization_id: ID!) {\n\t\torganization(organization_id: $organization_id) {\n\t\t\tprograms {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tstatus\n\t\t\t\tsystem\n\t\t\t}\t\t\t\n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "organization": {
+            "programs": [
+              {
+                "id": "0d0a3d65-e6e8-44f7-9dc4-173f2b16b8a0",
+                "name": "Program K6 001",
+                "status": "active",
+                "system": false
+              },
+              {
+                "id": "30de77f9-0da3-47d5-84a5-394aac654a07",
+                "name": "Tester",
+                "status": "active",
+                "system": false
+              },
+              {
+                "id": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+                "name": "Bada Genius",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "4591423a-2619-4ef8-a900-f5d924939d02",
+                "name": "Bada Math",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "7a8c5021-142b-44b1-b60b-275c29d132fe",
+                "name": "Bada Read",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "93f293e8-2c6a-47ad-bc46-1554caac99e4",
+                "name": "Bada Rhyme",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "56e24fa0-e139-4c80-b365-61c9bc42cd3f",
+                "name": "Bada Sound",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "d1bbdcc5-0d80-46b0-b98e-162e7439058f",
+                "name": "Bada STEM",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "f6617737-5022-478d-9672-0354667e0338",
+                "name": "Bada Talk",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "cdba0679-5719-47dc-806d-78de42026db6",
+                "name": "Bada STEAM 1",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "3f98d4a7-6ceb-4a9a-b13a-4f4307ff64d7",
+                "name": "C ECE",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "7565ae11-8130-4b7d-ac24-1d9dd6f792f2",
+                "name": "None Specified",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "75004121-0c0d-486c-ba65-4c57deacb44b",
+                "name": "ESL",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "14d350f1-a7ba-4f46-bef9-dc847f0cbac5",
+                "name": "Math",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "04c630cc-fabe-4176-80f2-30a029907a33",
+                "name": "Science",
+                "status": "active",
+                "system": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "query": "query organizations {\n  organizations {\n    organization_id\n    organization_name\n  }\n}",
+          "operationName": "organizations"
+        },
+        "matchType": "STRICT"
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "organizations": [
+            {
+              "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+              "organization_name": "Open Credo"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "{\n  my_users {\n    memberships {\n      organization_id\n      status\n    }\n  }\n}",
+        "variables": {}
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "my_users": [
+            {
+              "memberships": [
+                {
+                  "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+                  "status": "active"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "{\n  my_users {\n    user_id\n  }\n}"
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "my_users": [
+            {
+              "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID! $permission_name_3: ID! $permission_name_4: ID! $permission_name_5: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\nq3: checkAllowed(permission_name: $permission_name_3)\nq4: checkAllowed(permission_name: $permission_name_4)\nq5: checkAllowed(permission_name: $permission_name_5)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_completed_assessments_414",
+          "permission_name_1": "view_in_progress_assessments_415",
+          "permission_name_2": "view_org_completed_assessments_424",
+          "permission_name_3": "view_org_in_progress_assessments_425",
+          "permission_name_4": "view_school_completed_assessments_426",
+          "permission_name_5": "view_school_in_progress_assessments_427",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": false,
+              "q1": false,
+              "q2": false,
+              "q3": false,
+              "q4": false,
+              "q5": false
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($organization_id: ID!) {\n  organization(organization_id: $organization_id) {\n    classes {\n      teachers {\n        id: user_id\n        name: user_name\n      }\n    }\n  }\n}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "organization": {
+            "classes": [
+              {
+                "teachers": [
+                  {
+                    "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+                    "name": "Max Flintoff"
+                  },
+                  {
+                    "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+                    "name": "Max Teacher"
+                  }
+                ]
+              },
+              {
+                "teachers": [
+                  {
+                    "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+                    "name": "Max Teacher"
+                  }
+                ]
+              },
+              {
+                "teachers": []
+              },
+              {
+                "teachers": []
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id: ID!) {\n  user(user_id: $user_id) {\n    school_memberships {\n      school {\n        school_id\n        school_name\n        status\n        organization {\n          organization_id\n        }\n      }\n    }\n  }\n}",
+        "variables": {
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "user": {
+            "school_memberships": [
+              {
+                "school": {
+                  "school_id": "ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7",
+                  "school_name": "Open Credo",
+                  "status": "active",
+                  "organization": {
+                    "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($school_id_0: ID!) {\n  q0: school(school_id: $school_id_0) {\n    classes {\n      teachers {\n        id: user_id\n        name: user_name\n      }\n    }\n  }\n}",
+        "variables": {
+          "school_id_0": "ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "q0": {
+            "classes": [
+              {
+                "teachers": [
+                  {
+                    "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+                    "name": "Max Flintoff"
+                  },
+                  {
+                    "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+                    "name": "Max Teacher"
+                  }
+                ]
+              },
+              {
+                "teachers": [
+                  {
+                    "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+                    "name": "Max Teacher"
+                  }
+                ]
+              },
+              {
+                "teachers": []
+              },
+              {
+                "teachers": []
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_org_calendar_511",
+          "permission_name_1": "view_school_calendar_512",
+          "permission_name_2": "view_my_calendar_510",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": false,
+              "q1": false,
+              "q2": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery(\n\t\t$user_id: ID! \n\t\t$organization_id: ID!\n\t\t$permission_name: ID!\n\t) {\n\t\tuser(user_id: $user_id) {\n\t\t\tmembership(organization_id: $organization_id) {\n\t\t\t\tcheckAllowed(permission_name: $permission_name)\n\t\t\t}\n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name": "view_teacher_feedback_670",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "checkAllowed": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_org_calendar_511",
+          "permission_name_1": "view_school_calendar_512",
+          "permission_name_2": "view_my_calendar_510",
+          "user_id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true,
+              "q1": true,
+              "q2": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id_0: ID! $user_id_1: ID! $user_id_2: ID!) {q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}\nq1: user(user_id: $user_id_1) {id:user_id name:user_name given_name family_name email avatar}\nq2: user(user_id: $user_id_2) {id:user_id name:user_name given_name family_name email avatar}\n}",
+        "variables": {
+          "user_id_0": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+          "user_id_1": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+          "user_id_2": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+            "name": "Max Flintoff",
+            "given_name": "Max",
+            "family_name": "Flintoff",
+            "email": "max.flintoff+testbeta2@opencredo.com",
+            "avatar": null
+          },
+          "q1": {
+            "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+            "name": "Max Teacher",
+            "given_name": "Max",
+            "family_name": "Teacher",
+            "email": "max.flintoff+testbeta@opencredo.com",
+            "avatar": null
+          },
+          "q2": {
+            "id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1",
+            "name": "Test Login",
+            "given_name": "Test",
+            "family_name": "Login",
+            "email": "max.flintoff+testlogin@opencredo.com",
+            "avatar": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id_0: ID! $user_id_1: ID! $user_id_2: ID!) {q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}\nq1: user(user_id: $user_id_1) {id:user_id name:user_name given_name family_name email avatar}\nq2: user(user_id: $user_id_2) {id:user_id name:user_name given_name family_name email avatar}\n}",
+        "variables": {
+          "user_id_0": "b4479424-a9d7-46a5-8ee6-40db4ed264b1",
+          "user_id_1": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+          "user_id_2": "182c6e98-6628-427e-a9ad-c2ed60a2bb83"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1",
+            "name": "Test Login",
+            "given_name": "Test",
+            "family_name": "Login",
+            "email": "max.flintoff+testlogin@opencredo.com",
+            "avatar": null
+          },
+          "q1": {
+            "id": "0c6b98f0-1a68-45c8-a949-60711c0b2a50",
+            "name": "Max Flintoff",
+            "given_name": "Max",
+            "family_name": "Flintoff",
+            "email": "max.flintoff+testbeta2@opencredo.com",
+            "avatar": null
+          },
+          "q2": {
+            "id": "182c6e98-6628-427e-a9ad-c2ed60a2bb83",
+            "name": "Max Teacher",
+            "given_name": "Max",
+            "family_name": "Teacher",
+            "email": "max.flintoff+testbeta@opencredo.com",
+            "avatar": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($subject_id_0: ID!) {q0: subject(id: $subject_id_0) {id name status system}\n}",
+        "variables": {
+          "subject_id_0": "51189ac9-f206-469c-941c-3cda28af8788"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "51189ac9-f206-469c-941c-3cda28af8788",
+            "name": "ESL/EFL",
+            "status": "active",
+            "system": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($program_id_0: ID!) {q0: program(id: $program_id_0) {id name status system}\n}",
+        "variables": {
+          "program_id_0": "30de77f9-0da3-47d5-84a5-394aac654a07"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "id": "30de77f9-0da3-47d5-84a5-394aac654a07",
+            "name": "Tester",
+            "status": "active",
+            "system": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query{\n\t\n\tindex_0: class(class_id: \"8b09033d-7db9-46c3-aeb8-138c9e7eff96\"){\n\t\tid: class_id\n    \tname: class_name\n\t\tstatus\n\t\tstudents{\n\t\t\tid: user_id\n\t\t\tname: user_name\t\t\t\n\t\t}\n  \t}\n\t\n}",
+        "variables": null
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "index_0": {
+            "id": "8b09033d-7db9-46c3-aeb8-138c9e7eff96",
+            "name": "OC Tester",
+            "status": "active",
+            "students": [
+              {
+                "id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1",
+                "name": "Test Login"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery(\n\t\t$user_id: ID!\n\t\t$permission_name: String!\n\t) {\n\t\tuser(user_id: $user_id) {\n\t\t\tschoolsWithPermission(permission_name: $permission_name) {\n\t\t\t\tschool {\n\t\t\t\t\tschool_id\n\t\t\t\t\tschool_name\n\t\t\t\t\tstatus\n\t\t\t\t\torganization {\n\t\t\t\t\t\torganization_id\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}",
+        "variables": {
+          "permission_name": "create_my_schools_schedule_events_522",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "schoolsWithPermission": []
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($user_id_0: ID!) {q0: user(user_id: $user_id_0) {\nclassesTeaching {id:class_id name:class_name status}\nclassesStudying {id:class_id name:class_name status}}\n}",
+        "variables": {
+          "user_id_0": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "classesTeaching": [],
+            "classesStudying": [
+              {
+                "id": "8b09033d-7db9-46c3-aeb8-138c9e7eff96",
+                "name": "OC Tester",
+                "status": "active"
+              },
+              {
+                "id": "8f4f696a-f935-412d-8134-d53062cea38e",
+                "name": "Load test",
+                "status": "active"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "create_event_520",
+          "permission_name_1": "create_my_schools_schedule_events_522",
+          "permission_name_2": "create_my_schedule_events_521",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": false,
+              "q1": false,
+              "q2": false
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query ($class_id_0: ID!) {q0: class(class_id: $class_id_0) {schools{id:school_id name:school_name status}}}",
+        "variables": {
+          "class_id_0": "8b09033d-7db9-46c3-aeb8-138c9e7eff96"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "q0": {
+            "schools": [
+              {
+                "id": "ed74f70f-ff41-48ec-91f3-7d9e7dcea7a7",
+                "name": "Open Credo",
+                "status": "active"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  }
+]

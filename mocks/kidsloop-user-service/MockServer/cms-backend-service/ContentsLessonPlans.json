@@ -1,0 +1,161 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "query($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID! $permission_name_3: ID!) {user(user_id: $user_id) {membership(organization_id: $organization_id) {q0: checkAllowed(permission_name: $permission_name_0)\nq1: checkAllowed(permission_name: $permission_name_1)\nq2: checkAllowed(permission_name: $permission_name_2)\nq3: checkAllowed(permission_name: $permission_name_3)\n}}}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56",
+          "permission_name_0": "view_org_published_215",
+          "permission_name_1": "view_my_school_published_218",
+          "permission_name_2": "view_all_schools_published_227",
+          "permission_name_3": "view_my_published_214",
+          "user_id": "b4479424-a9d7-46a5-8ee6-40db4ed264b1"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "user": {
+            "membership": {
+              "q0": true,
+              "q1": true,
+              "q2": false,
+              "q3": false
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/",
+      "body": {
+        "query": "\n\tquery($organization_id: ID!) {\n\t\torganization(organization_id: $organization_id) {\n\t\t\tprograms {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tstatus\n\t\t\t\tsystem\n\t\t\t}\t\t\t\n\t\t}\n\t}",
+        "variables": {
+          "organization_id": "5956e9e9-d73c-499d-b42c-b88136fbbe56"
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "reasonPhrase": "OK",
+      "body": {
+        "data": {
+          "organization": {
+            "programs": [
+              {
+                "id": "0d0a3d65-e6e8-44f7-9dc4-173f2b16b8a0",
+                "name": "Program K6 001",
+                "status": "active",
+                "system": false
+              },
+              {
+                "id": "30de77f9-0da3-47d5-84a5-394aac654a07",
+                "name": "Tester",
+                "status": "active",
+                "system": false
+              },
+              {
+                "id": "b39edb9a-ab91-4245-94a4-eb2b5007c033",
+                "name": "Bada Genius",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "4591423a-2619-4ef8-a900-f5d924939d02",
+                "name": "Bada Math",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "7a8c5021-142b-44b1-b60b-275c29d132fe",
+                "name": "Bada Read",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "93f293e8-2c6a-47ad-bc46-1554caac99e4",
+                "name": "Bada Rhyme",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "56e24fa0-e139-4c80-b365-61c9bc42cd3f",
+                "name": "Bada Sound",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "d1bbdcc5-0d80-46b0-b98e-162e7439058f",
+                "name": "Bada STEM",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "f6617737-5022-478d-9672-0354667e0338",
+                "name": "Bada Talk",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "cdba0679-5719-47dc-806d-78de42026db6",
+                "name": "Bada STEAM 1",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "3f98d4a7-6ceb-4a9a-b13a-4f4307ff64d7",
+                "name": "C ECE",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "7565ae11-8130-4b7d-ac24-1d9dd6f792f2",
+                "name": "None Specified",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "75004121-0c0d-486c-ba65-4c57deacb44b",
+                "name": "ESL",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "14d350f1-a7ba-4f46-bef9-dc847f0cbac5",
+                "name": "Math",
+                "status": "active",
+                "system": true
+              },
+              {
+                "id": "04c630cc-fabe-4176-80f2-30a029907a33",
+                "name": "Science",
+                "status": "active",
+                "system": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/user/"
+    },
+    "httpForward": {
+      "host": "kidsloop-user-service-svc.kl-apps.svc.cluster.local",
+      "port": 80,
+      "scheme": "HTTP"
+    },
+    "priority": -1
+  }
+]
