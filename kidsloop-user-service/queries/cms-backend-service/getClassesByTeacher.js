@@ -3,6 +3,9 @@ import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 import { default as getTeacherByOrgId } from './getTeacherByOrgId.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query classesByTeacher($user_id: ID!) {
   user(user_id: $user_id) {

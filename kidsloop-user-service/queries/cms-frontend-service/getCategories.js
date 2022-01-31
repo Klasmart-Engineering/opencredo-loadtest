@@ -3,6 +3,9 @@ import { loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 export const query = `query ($category_id_0: ID! $category_id_1: ID! $category_id_2: ID! $category_id_3: ID! $category_id_4: ID!) {
   q0: category(id: $category_id_0) {id name status system}

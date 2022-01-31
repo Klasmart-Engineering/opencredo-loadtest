@@ -2,6 +2,9 @@ import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query classesByOrganization($organization_id: ID!) {
   organization(organization_id: $organization_id) {

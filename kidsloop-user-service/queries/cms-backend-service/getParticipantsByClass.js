@@ -3,6 +3,9 @@ import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 import { default as getClassesByOrganization } from './getClassesByOrganization.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query participantsByClass($class_id: ID!) {
   class(class_id: $class_id) {

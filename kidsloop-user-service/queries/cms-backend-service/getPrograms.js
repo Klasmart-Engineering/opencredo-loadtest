@@ -3,6 +3,9 @@ import { loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
 import { default as getProgramsAndSubjects } from './getProgramsAndSubjects.js'
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query getPrograms($program_id: ID!) {
   program(id: $program_id) {

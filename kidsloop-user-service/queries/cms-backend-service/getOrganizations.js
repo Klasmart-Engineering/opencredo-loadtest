@@ -2,6 +2,9 @@ import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query organizations {
   organizations {
@@ -9,6 +12,8 @@ const query = `query organizations {
     organization_name
   }
 }`;
+
+export const options = defaultOptions
 
 function getOrganizations(userEndpoint, singleTest = false, accessCookie = '') {
 

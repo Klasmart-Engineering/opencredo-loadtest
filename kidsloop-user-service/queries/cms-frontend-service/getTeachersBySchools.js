@@ -3,6 +3,9 @@ import { loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 export const query = `query ($school_id_0: ID! $school_id_1: ID! $school_id_2: ID!) {
   q0: school(school_id: $school_id_0) {classes{teachers{id:user_id name:user_name}}}

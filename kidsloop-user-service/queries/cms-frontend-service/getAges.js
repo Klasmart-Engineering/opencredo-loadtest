@@ -3,6 +3,9 @@ import { loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 export const query = `query ($age_id_0: ID! $age_id_1: ID!) {
   q0: age_range(id: $age_id_0) {id name status system}

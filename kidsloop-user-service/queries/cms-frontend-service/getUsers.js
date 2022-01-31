@@ -3,6 +3,9 @@ import { loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 export const query = `query ($user_id_0: ID! $user_id_1: ID! $user_id_2: ID! $user_id_3: ID! $user_id_4: ID! $user_id_5: ID!) {
   q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}

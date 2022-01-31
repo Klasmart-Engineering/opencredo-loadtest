@@ -2,6 +2,9 @@ import http from 'k6/http';
 import { getOrgID, loginSetup, getUserID } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query schoolByUserQuery($user_id: ID!, $organization_id: ID!) {
   user(user_id: $user_id) {

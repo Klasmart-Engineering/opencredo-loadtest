@@ -2,6 +2,9 @@ import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
 import { APIHeaders } from '../../../utils/common.js';
+import { defaultOptions } from '../../common.js';
+
+export const options = defaultOptions
 
 const query = `query getClassByInfo($filter: ClassFilter, $direction: ConnectionDirection!, $studentFilter: UserFilter, $teacherFilter: UserFilter, $studentCursor: String, $studentDirection: ConnectionDirection, $teacherCursor: String, $teacherDirection: ConnectionDirection) {
   classesConnection(filter: $filter, direction: $direction) {
