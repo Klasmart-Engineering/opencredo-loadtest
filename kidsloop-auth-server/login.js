@@ -1,4 +1,4 @@
-import { amsLogin, GetUserID } from '../utils/setup.js'
+import { amsLogin, getUserID } from '../utils/setup.js'
 import { loginTest } from './functions.js'
 import * as env from '../utils/env.js'
 
