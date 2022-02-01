@@ -1,5 +1,6 @@
 import { amsLogin, getUserID } from '../utils/setup.js'
 import { loginTest } from './functions.js'
+import * as env from '../utils/env.js'
 
 export const options = {
   vus: 1,
@@ -10,13 +11,11 @@ export const options = {
   }
 }
 
-const APP_URL = __ENV.APP_URL
-
 export function setup() {
 
   const token = amsLogin();
 
-  const userID = getUserID(token);
+  const userID = GetUserID(token);
 
   return {
     token: token,
@@ -26,7 +25,7 @@ export function setup() {
 
 export default function main(data) {
 
-  const authURL = `https://auth.${APP_URL}`;
+  const authURL = `https://auth.${env.APP_URL}`;
 
   loginTest(authURL, data.token, data.userID);
 }

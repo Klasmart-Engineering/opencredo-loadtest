@@ -1,3 +1,5 @@
+import http from 'k6/http';
+
 const userAgent = 'k6 - open credo loadtest';
 
 export const defaultHeaders = {
@@ -20,3 +22,11 @@ export function isRequestSuccessful(response, expectedStatus = 200) {
     }
   }
 }
+
+export function initCookieJar(userEndpoint, accessCookieData) {
+  //initialise the cookies for this VU
+  const cookieJar = http.cookieJar();
+  cookieJar.set(userEndpoint, 'access', accessCookieData);
+  cookieJar.set(userEndpoint, 'locale', 'en');
+  cookieJar.set(userEndpoint, 'privacy', 'true');
+};
