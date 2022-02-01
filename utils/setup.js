@@ -55,15 +55,7 @@ export function amsLogin() {
   return loginResp.json('accessToken');
 }
 
-export function getAccessCookie(token) {
-
-  const payload = JSON.stringify({
-    token: token
-    });
-
-  const response = http.post(`https://auth.${env.APP_URL}/transfer`, payload, {
-      headers: APIHeaders
-    });
+function checkAccessCookieResponse(response) {
 
   if (
     !check(response, {
@@ -82,34 +74,39 @@ export function getAccessCookie(token) {
     console.error(JSON.stringify(response))
     fail('Transfer did not return an access cookie')
   }
+}
+
+export function getAccessCookie(token) {
+
+  const payload = JSON.stringify({
+    token: token
+  });
+
+  const response = http.post(`https://auth.${env.APP_URL}/transfer`, payload, {
+    headers: APIHeaders
+  });
+
+  checkAccessCookieResponse(response);
   
   return response.cookies.access[0].value;
 }
 
-export function getUserID(token, cookie = undefined) {
+export function getAccessCookieB2C(token) {
 
-  let accessCookie;
-  if (cookie) {
-    accessCookie = cookie
-  }
-  else {
-    accessCookie = getAccessCookie(token);
-  }
+  const authHeader = {
+    Authorization: `Bearer ${token}`
+  };
 
-  const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
-    query: `{
-      myUser {
-        profiles {
-          id
-        }
-      }
-    }`
-  }), {
-    headers: APIHeaders,
-    cookies: {
-      access: accessCookie
-    }
+  const response = http.post(`https://auth.${env.APP_URL}/transfer`, null, {
+    headers: Object.assign({}, APIHeaders, authHeader),
   });
+
+  checkAccessCookieResponse(response);
+
+  return response.cookies.access[0].value;
+}
+
+function checkUserIDResponse(response) {
 
   if (
     !check(response, {
@@ -126,6 +123,55 @@ export function getUserID(token, cookie = undefined) {
   ) {
     fail('No User ID value returned')
   }
+}
+
+export function getUserID(token, cookie = undefined) {
+
+  let accessCookie;
+  if (cookie) {
+    accessCookie = cookie
+  }
+  else {
+    accessCookie = getAccessCookie(token);
+  };
+
+  const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
+    query: `{
+      myUser {
+        profiles {
+          id
+        }
+      }
+    }`
+  }), {
+    headers: APIHeaders,
+    cookies: {
+      access: accessCookie
+    }
+  });
+
+  checkUserIDResponse(response);
+
+  return response.json('data.myUser.profiles.0.id');
+}
+
+export function getUserIDB2C(token) {
+
+  getAccessCookieB2C(token);
+
+  const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
+    query: `{
+      myUser {
+        profiles {
+          id
+        }
+      }
+    }`
+  }), {
+    headers: APIHeaders,
+  });
+
+  checkUserIDResponse(response);
 
   return response.json('data.myUser.profiles.0.id');
 }

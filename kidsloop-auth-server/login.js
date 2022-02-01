@@ -1,4 +1,4 @@
-import { amsLogin, GetUserID } from '../utils/setup.js'
+import { amsLogin, getUserID } from '../utils/setup.js'
 import { loginTest } from './functions.js'
 
 export const options = {
@@ -11,15 +11,12 @@ export const options = {
 }
 
 const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-
-const TESTVAL = __ENV.test
 
 export function setup() {
 
-  const token = amsLogin(USERNAME);
+  const token = amsLogin();
 
-  const userID = GetUserID(APP_URL, token)
+  const userID = getUserID(token);
 
   return {
     token: token,
