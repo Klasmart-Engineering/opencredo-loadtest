@@ -2,6 +2,7 @@ import http from 'k6/http';
 import { check, fail } from 'k6';
 import { APIHeaders } from './common.js';
 import * as env from './env.js';
+import { loginToB2C } from '../azure-b2c-auth/functions.js';
 
 export function amsLogin() {
   const loginPay = JSON.stringify({
@@ -55,15 +56,7 @@ export function amsLogin() {
   return loginResp.json('accessToken');
 }
 
-export function getAccessCookie(token) {
-
-  const payload = JSON.stringify({
-    token: token
-    });
-
-  const response = http.post(`https://auth.${env.APP_URL}/transfer`, payload, {
-      headers: APIHeaders
-    });
+function checkAccessCookieResponse(response) {
 
   if (
     !check(response, {
@@ -82,8 +75,55 @@ export function getAccessCookie(token) {
     console.error(JSON.stringify(response))
     fail('Transfer did not return an access cookie')
   }
+}
+
+export function getAccessCookie(token) {
+
+  const payload = JSON.stringify({
+    token: token
+  });
+
+  const response = http.post(`https://auth.${env.APP_URL}/transfer`, payload, {
+    headers: APIHeaders
+  });
+
+  checkAccessCookieResponse(response);
   
   return response.cookies.access[0].value;
+}
+
+export function getAccessCookieB2C(token) {
+
+  const authHeader = {
+    Authorization: `Bearer ${token}`
+  };
+
+  const response = http.post(`https://auth.${env.APP_URL}/transfer`, null, {
+    headers: Object.assign({}, APIHeaders, authHeader),
+  });
+
+  checkAccessCookieResponse(response);
+
+  return response.cookies.access[0].value;
+}
+
+function checkUserIDResponse(response) {
+
+  if (
+    !check(response, {
+      'UserID status code was 200': (r) => r.status === 200,
+    })
+  ) {
+    fail('UserID status code was *not* 200')
+  }
+
+  if (
+    !check(response, {
+      'User ID value returned': (r) => r.json('data.myUser.profiles.0.id'),
+    })
+  ) {
+    fail('No User ID value returned')
+  }
 }
 
 export function getUserID(token, cookie = undefined) {
@@ -94,6 +134,36 @@ export function getUserID(token, cookie = undefined) {
   }
   else {
     accessCookie = getAccessCookie(token);
+  };
+
+  const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
+    query: `{
+      myUser {
+        profiles {
+          id
+        }
+      }
+    }`
+  }), {
+    headers: APIHeaders,
+    cookies: {
+      access: accessCookie
+    }
+  });
+
+  checkUserIDResponse(response);
+
+  return response.json('data.myUser.profiles.0.id');
+}
+
+export function getUserIDB2C(token, cookie = undefined) {
+
+  let accessCookie;
+  if (cookie) {
+    accessCookie = cookie;
+  }
+  else {
+    accessCookie = getAccessCookieB2C(token);
   }
 
   const response = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
@@ -111,26 +181,40 @@ export function getUserID(token, cookie = undefined) {
     }
   });
 
-  if (
-    !check(response, {
-      'UserID status code was 200': (r) => r.status === 200,
-    })
-  ) {
-    fail('UserID status code was *not* 200')
-  }
-
-  if (
-    !check(response, {
-      'User ID value returned': (r) => r.json('data.myUser.profiles.0.id'),
-    })
-  ) {
-    fail('No User ID value returned')
-  }
+  checkUserIDResponse(response);
 
   return response.json('data.myUser.profiles.0.id');
 }
 
 export function loginSetup() {
+
+  if (env.B2C) {
+    return loginSetupB2C();
+  }
+  else {
+    return loginSetupAMS();
+  }
+}
+
+function checkSwitchResponse(response) {
+  if (
+    !check(response, {
+      'Switch status code was 200': (r) => r.status === 200,
+    })
+  ) {
+    fail('Switch status code was *not* 200')
+  }
+
+  if (
+    !check(response, {
+      'Switch returned an access cookie': (r) => r.cookies.access[0],
+    })
+  ) {
+    fail('Switch did not return an access cookie')
+  }
+}
+
+function loginSetupAMS() {
 
   const accessToken = amsLogin();
   const accessCookie = getAccessCookie(accessToken);
@@ -147,24 +231,31 @@ export function loginSetup() {
     }
   });
 
-  if (
-    !check(switchResp, {
-      'Switch status code was 200': (r) => r.status === 200,
-    })
-  ) {
-    fail('Switch status code was *not* 200')
-  }
-
-  if (
-    !check(switchResp, {
-      'Switch returned an access cookie': (r) => r.cookies.access[0],
-    })
-  ) {
-    fail('Switch did not return an access cookie')
-  }
+  checkSwitchResponse(switchResp);
 
   return switchResp.cookies.access[0].value;
 };
+
+function loginSetupB2C() {
+  const loginResp = loginToB2C();
+  const accessCookie = getAccessCookieB2C(loginResp.json('access_token'));
+  const userID = getUserIDB2C('', accessCookie);
+
+  const switchPayload = JSON.stringify({
+    user_id: userID
+  })
+
+  const switchResp = http.post(`https://auth.${env.APP_URL}/switch`, switchPayload, {
+    headers: APIHeaders,
+    cookies: {
+      access: accessCookie
+    }
+  });
+
+  checkSwitchResponse(switchResp);
+
+  return switchResp.cookies.access[0].value;
+}
 
 export function getOrgID(accessCookie) {
 

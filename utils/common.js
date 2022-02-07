@@ -12,6 +12,16 @@ export const APIHeaders = Object.assign({
   'content-type': 'application/json',
 }, defaultHeaders)
 
+export function isRequestSuccessful(response, expectedStatus = 200) {
+
+  if (response.status !== expectedStatus) {
+    console.error(response.status)
+    console.error(JSON.stringify(response))
+    if (response.status == 502) {
+      console.error(JSON.stringify(response))
+    }
+  }
+}
 
 export function initCookieJar(userEndpoint, accessCookieData) {
   //initialise the cookies for this VU
@@ -19,11 +29,4 @@ export function initCookieJar(userEndpoint, accessCookieData) {
   cookieJar.set(userEndpoint, 'access', accessCookieData);
   cookieJar.set(userEndpoint, 'locale', 'en');
   cookieJar.set(userEndpoint, 'privacy', 'true');
-};
-
-export function isRequestSuccessful(response) {
-  if (response.status !== 200) {
-    console.error(response.status)
-    console.error(JSON.stringify(response))
-  }
 };

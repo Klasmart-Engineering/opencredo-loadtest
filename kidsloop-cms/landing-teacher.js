@@ -16,9 +16,6 @@ export function setup() {
 
 export default function main(data) {
 
-<<<<<<< HEAD
-  teacherTest(`https://${env.CMS_PREFIX}.${env.APP_URL}/v1`, data.accessCookie, data.orgID);
-=======
   initCookieJar(data.accessCookie)
 
   teacherLandingTest(data.orgID);
@@ -31,5 +28,4 @@ function teacherLandingTest(orgID) {
   getAssessmentsSummary(orgID);
 
   getSchedulesTimeView(orgID);
->>>>>>> d60bb60c043b0a2cffad271322d7bb2b6ebbd653
 }
