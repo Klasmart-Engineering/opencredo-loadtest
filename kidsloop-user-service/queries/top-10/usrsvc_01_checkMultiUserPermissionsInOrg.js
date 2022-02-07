@@ -7,7 +7,7 @@ import { defaultOptions } from '../../common.js';
 
 export const options = defaultOptions
 
-export function checkMultiUserPermissionInOrg(userEndpoint, userID, orgID, permissionNames, accessCookie = '', singleTest = false) {
+export function checkMultiUserPermissionInOrg(userEndpoint, userID, orgID, permissionNames) {
   return http.post(userEndpoint, JSON.stringify({
     query: `query checkMultiUserPermissionInOrg($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {
       user(user_id: $user_id) {

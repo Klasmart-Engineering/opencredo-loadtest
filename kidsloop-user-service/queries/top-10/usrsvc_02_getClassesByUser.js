@@ -7,7 +7,7 @@ import { defaultOptions } from '../../common.js';
 
 export const options = defaultOptions
 
-export function getClassesByUser(userEndpoint, userID, accessCookie = '', singleTest = false) {
+export function getClassesByUser(userEndpoint, userID) {
   return http.post(userEndpoint, JSON.stringify({
     query: `query getClassesByUser($user_id: ID!) {
       user(user_id: $user_id) {
@@ -36,9 +36,7 @@ export function setup() {
 export default function main(data) {
   const response = getClassesByUser(
     data.userEndpoint, 
-    data.userID, 
-    data.accessCookie, 
-    Boolean(data.singleTest)
+    data.userID
     );
   isRequestSuccessful(response);
   return response;
