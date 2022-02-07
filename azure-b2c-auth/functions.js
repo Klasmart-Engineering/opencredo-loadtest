@@ -113,6 +113,15 @@ export function loginToB2C() {
   });
 
   group('Token', function() {
+    //second openID configuration check
+    response = http.get(`${baseURL}/v2.0/.well-known/openid-configuration`, {
+      headers: defaultHeaders
+    });
+    check(response, {
+      'is openid-configuration status 200': r => r.status === 200,
+    })
+    isRequestSuccessful(response);
+    isResponse429(response, count429);
 
     const tokenPayload = {
       client_id: hubClientID,
