@@ -16,6 +16,7 @@ export function contentParamsTest(h5pEndpoint) {
 
     if (response.status !== 200) {
         console.error(`${response.status}: ${url}`)
+        console.error(JSON.stringify(response))
     }
 
 }

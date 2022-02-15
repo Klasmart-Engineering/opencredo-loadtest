@@ -11,12 +11,13 @@ export function librariesAjaxTest(h5pEndpoint) {
     const library = chooseRandom(libraries)
     const ajaxPath = `h5p/ajax?action=libraries&machineName=${library.name}&majorVersion=${library.major}&minorVersion=${library.minor}`
     
-    const url1  = `${h5pEndpoint}/${ajaxPath}`
-    const response1 = http.get(url1, {
+    const url  = `${h5pEndpoint}/${ajaxPath}`
+    const response = http.get(url, {
         headers: apiHeaders
     });
-    if (response1.status !== 200) {
-        console.error(`${response1.status}: ${url1}`)
+    if (response.status !== 200) {
+        console.error(`${response.status}: ${url}`)
+        console.error(JSON.stringify(response))
     }
   
   }

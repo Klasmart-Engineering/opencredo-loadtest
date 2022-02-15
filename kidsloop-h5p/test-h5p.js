@@ -40,10 +40,10 @@ const APP_URL = __ENV.APP_URL
 
 export default function main(data) {
   var url_root = `https://h5p.${APP_URL}`
-  //contentParamsTest(url_root);
+  contentParamsTest(url_root);
   //contentPlayTest(url_root);
   //contentTypeCacheTest(url_root);
   //coreTest(url_root);
-  librariesTest(url_root);
-  librariesAjaxTest(url_root);
+  //librariesTest(url_root);
+  //librariesAjaxTest(url_root);
 }

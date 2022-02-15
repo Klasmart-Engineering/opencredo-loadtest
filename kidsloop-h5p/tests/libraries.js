@@ -16,6 +16,7 @@ export function librariesTest(h5pEndpoint) {
     });
     if (response2.status !== 200) {
         console.error(`${response2.status}: ${url2}`)
+        console.error(JSON.stringify(response))
     }
 
   }
