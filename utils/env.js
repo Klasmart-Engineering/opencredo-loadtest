@@ -8,10 +8,13 @@ export const ACCESS_COOKIE = __ENV.ACCESS_COOKIE //string
 export const CMS_PREFIX = __ENV.CMS_PREFIX ? __ENV.CMS_PREFIX : 'cms' //string
 export const THRESHOLD = __ENV.THRESHOLD //integer
 
-//AZURE B2C
+//Azure B2C
 export const TENANT_ID = __ENV.TENANT_ID //string
 export const HUB_CLIENT_ID = __ENV.HUB_CLIENT_ID //string
 export const AUTH_CLIENT_ID = __ENV.AUTH_CLIENT_ID //string
 export const POLICY_NAME = __ENV.POLICY_NAME //string
 // Whether to use B2C to authenticate for tests
 export const B2C = __ENV.B2C ? __ENV.B2C : false //boolean
+
+//Assessment
+export const ROOM_ID = __ENV.ROOM_ID //string
