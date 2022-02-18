@@ -14,6 +14,11 @@ export function contentPlayTest(h5pEndpoint) {
         headers: apiHeaders
     });
 
+    const cfCache = response.headers["X-Cache"]
+    if (cfCache != "Hit from cloudfront") {
+        console.log(cfCache)
+    }
+
     if (response.status !== 200) {
         console.error(`${response.status}: ${url}`)
         console.error(JSON.stringify(response))
