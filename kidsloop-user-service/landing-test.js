@@ -24,7 +24,7 @@ export default function main(data) {
   landingTest();
 }
 
-function landingTest() {
+export function landingTest() {
 
   let testValue = env.TESTVAL;
 
