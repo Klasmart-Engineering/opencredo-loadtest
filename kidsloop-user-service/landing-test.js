@@ -5,6 +5,7 @@ import {
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
+  requestOverThreshold,
   threshold,
   userEndpoint
 } from './common.js';

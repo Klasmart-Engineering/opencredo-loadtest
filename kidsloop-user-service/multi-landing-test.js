@@ -5,6 +5,9 @@ import { scenario } from 'k6/execution';
 import { landingTest } from "./landing-test.js";
 import { loginSetupB2C } from "../utils/setup.js";
 
+const vus = __ENV.vus ? __ENV.vus : 1;
+const duration = __ENV.duration ? __ENV.duration : '1m';
+
 export const options = {
   thresholds: {
     http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
@@ -14,8 +17,8 @@ export const options = {
   scenarios: {
     main: {
       executor: 'constant-vus',
-      vus: 10,
-      duration: '1m'
+      vus: vus,
+      duration: duration
     }
   }
 }
