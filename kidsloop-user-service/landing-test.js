@@ -5,6 +5,7 @@ import {
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
+  requestOverThreshold,
   threshold,
   userEndpoint
 } from './common.js';
@@ -24,7 +25,7 @@ export default function main(data) {
   landingTest();
 }
 
-function landingTest() {
+export function landingTest() {
 
   let testValue = env.TESTVAL;
 

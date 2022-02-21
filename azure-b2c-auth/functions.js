@@ -16,7 +16,7 @@ import { defaultHeaders, isRequestSuccessful } from '../utils/common.js'
 // Initialise counter for HTTP 429 errors
 export const count429 = new Counter('http_429_errors');
 
-export function loginToB2C() {
+export function loginToB2C(username) {
 
   //initalise variables for B2C from env - if not set load the loadtest environment defaults
   const tenantID = env.TENANT_ID ? env.TENANT_ID : '8d922fec-c1fc-4772-b37e-18d2ce6790df';
@@ -85,7 +85,7 @@ export function loginToB2C() {
 
     const selfAssertedFormData = {
       request_type: 'RESPONSE',
-      signInName: env.USERNAME,
+      signInName: username,
       password: env.PASSWORD,
     };
 

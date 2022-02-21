@@ -236,8 +236,11 @@ function loginSetupAMS() {
   return switchResp.cookies.access[0].value;
 };
 
-function loginSetupB2C() {
-  const loginResp = loginToB2C();
+export function loginSetupB2C(username = undefined) {
+
+  let signInName = username ? username : env.USERNAME;
+
+  const loginResp = loginToB2C(signInName);
   const accessCookie = getAccessCookieB2C(loginResp.json('access_token'));
   const userID = getUserIDB2C('', accessCookie);
 
