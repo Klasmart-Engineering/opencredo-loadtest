@@ -4,24 +4,9 @@ import {
 import { scenario } from 'k6/execution';
 import { landingTest } from "./landing-test.js";
 import { loginSetupB2C } from "../utils/setup.js";
+import { defaultRateOptions } from "../utils/common.js";
 
-const vus = __ENV.vus ? __ENV.vus : 1;
-const duration = __ENV.duration ? __ENV.duration : '1m';
-
-export const options = {
-  thresholds: {
-    http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<3000'] // 95% of the iteration duration below 2s
-  },
-
-  scenarios: {
-    main: {
-      executor: 'constant-vus',
-      vus: vus,
-      duration: duration
-    }
-  }
-}
+export const options = defaultRateOptions;
 
 export function setup() {};
 
