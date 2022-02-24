@@ -1,7 +1,6 @@
 import http from 'k6/http';
 import {
   APIHeaders,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -11,8 +10,9 @@ import {
 } from './common.js';
 import * as queries from './queries/landing.js'
 import * as env from '../utils/env.js';
+import { defaultRateOptions } from '../utils/common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 export function setup() {
   return defaultSetup();
