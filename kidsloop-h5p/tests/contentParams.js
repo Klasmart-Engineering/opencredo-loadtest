@@ -1,14 +1,13 @@
-import http  from 'k6/http';
-
-import { chooseRandom } from './_functions.js';
-import { apiHeaders }   from './envs/_shared.js';
-import { contentIds }   from './envs/loadtest-k8s.js';
+import http           from 'k6/http';
+import {chooseRandom} from './_functions.js';
+import {apiHeaders}   from './envs/_shared.js';
+import {contentIds}   from './envs/loadtest-k8s.js';
 
 // GET  /h5p/play/:contentId
 // GET  https://h5p.loadtest-k8s.kidsloop.live/h5p/play/61e5ab9293c3e70013dfa9a
-export function contentParamsTest(h5pEndpoint) {
+export function contentParamsTest(h5pEndpoint, token) {
 
-    const url = `${h5pEndpoint}/h5p/params/${chooseRandom(contentIds)}`
+    const url = `${h5pEndpoint}/h5p/params/${chooseRandom(contentIds)}?jwt=${token}`
 
     const response = http.get(url, {
         headers: apiHeaders
