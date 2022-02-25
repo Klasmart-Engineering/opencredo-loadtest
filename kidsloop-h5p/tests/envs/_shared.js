@@ -1,6 +1,5 @@
 // import k6 specific packages
-import {loginSetup} from "../../../utils/setup.js";
-import * as env     from "../../../utils/env.js";
+import * as env from "../../../utils/env.js";
 
 
 export const apiHeaders = {
@@ -59,16 +58,6 @@ export const libraries = [
 ]
 
 export const h5pEndpoint = `https://h5p.${env.APP_URL}`;
-
-
-export function setupAuth() {
-
-  const token = loginSetup();
-
-  return {
-    token: token
-  }
-}
 
 // TOKEN STUFF
 // GET  https://h5p.loadtest-k8s.kidsloop.live/h5p/token/eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJINVAiLCJleHAiOjE2NDI0NDIyNjAsImp0aSI6IjYxZTU5MWE4OTNjM2U3MDAxM2RmYTlhMyIsImlhdCI6MTY0MjQzNTA2MCwiaXNzIjoia2wyLWg1cCIsInN1YiI6InZpZXciLCJjb250ZW50SWQiOiI2MWU1OTFhODkzYzNlNzAwMTNkZmE5YTMifQ.pCTAJ-7IC4L4_-Vwv5CVtU-myJtY-3spiIReYYw6-TOwsCK2oNNHgOcee11GYfr4c6s-njK8NSUkjNHl6EnWZJ9We2RMprbTozWo6YYYGRgjXcW4tjXo4LcOZ6LWLxyv55NKqUXdR8fyAVImf90SbSoHHEB5TAZGYwmWheRFi3Br3obyRpeXzPtb-2coxcTE2AcusA9zl2wwBIFT1f_EffJ5g92v8NwYtbYK15rfmDdMqfbjtDI8MEQn-NXm01iH2GW1kaIL-ekhFFaqQXwi7Fr6W1iGGBgSspjuO0uyTys5-SggU5yryO_ZWeLhZGFoSBiOPnrF1udpkdiJGJ8a_w

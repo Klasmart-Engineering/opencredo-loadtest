@@ -4,13 +4,16 @@ import { contentParamsTest }    from './tests/contentParams.js';
 import { contentPlayTest }      from './tests/contentPlay.js';
 import { contentTypeCacheTest } from './tests/contentTypeCache.js';
 import { librariesAjaxTest }    from './tests/librariesAjax.js';
-import {h5pEndpoint, setupAuth} from "./tests/envs/_shared.js";
+import {h5pEndpoint}            from "./tests/envs/_shared.js";
 import { defaultRateOptions }   from '../utils/common.js';
+import {loginSetup}             from "../utils/setup.js";
 
 export const options = defaultRateOptions;
 
 export function setup() {
-  return setupAuth();
+  return {
+    token: loginSetup()
+  }
 }
 
 export default function main(data) {
