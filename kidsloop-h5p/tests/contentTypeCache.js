@@ -1,11 +1,10 @@
-import http  from 'k6/http';
-
-import { apiHeaders, libraries } from './envs/_shared.js';
+import http         from 'k6/http';
+import {apiHeaders} from './envs/_shared.js';
 
 // GET  https://h5p.loadtest-k8s.kidsloop.live/h5p/ajax?action=content-type-cache
-export function contentTypeCacheTest(h5pEndpoint) {
+export function contentTypeCacheTest(h5pEndpoint, token) {
 
-    const url = `${h5pEndpoint}/h5p/ajax?action=content-type-cache`
+    const url = `${h5pEndpoint}/h5p/ajax?action=content-type-cache&jwt=${token}`
     
     const response = http.get(url, {
         headers: apiHeaders
