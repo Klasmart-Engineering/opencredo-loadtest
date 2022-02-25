@@ -1,10 +1,9 @@
 import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 function getMyId(userEndpoint, accessCookie = '', singleTest = false) {
 

@@ -1,11 +1,10 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
+import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
-import { ENV_DATA, permissionNames } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions
 
 export function checkMultiUserPermissionInOrg(userEndpoint, userID, orgID, permissionNames) {
   return http.post(userEndpoint, JSON.stringify({
@@ -32,12 +31,16 @@ export function checkMultiUserPermissionInOrg(userEndpoint, userID, orgID, permi
 }
 
 export function setup() {
+
+  const loginData = loginSetupWithUserID();
+  const orgID = getOrgID(loginData.cookie);
+
   return {
     userEndpoint:    `https://api.${env.APP_URL}/user/`,
-    userID:          ENV_DATA.userID,
-    orgID:           ENV_DATA.orgID,
+    userID:          loginData.id,
+    orgID:           orgID,
     permissionNames: ENV_DATA.permissionNames,
-    accessCookie:    loginSetup(),
+    accessCookie:    loginData.cookie,
     singleTest:      true
   };
 }

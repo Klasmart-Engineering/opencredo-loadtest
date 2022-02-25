@@ -1,12 +1,9 @@
-// Note: typo in 'Query' has been preserved from CMS in order to align with what we'll see in the application
-
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import * as env from '../../../utils/env.js';
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 function getQueryMe(userEndpoint, orgID, accessCookie = '', singleTest = false) {
 

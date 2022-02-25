@@ -186,6 +186,17 @@ export function getUserIDB2C(token, cookie = undefined) {
   return response.json('data.myUser.profiles.0.id');
 }
 
+export function loginSetupWithUserID(username = undefined) {
+
+  if (env.B2C) {
+    let signInName = username ? username : env.USERNAME;
+    return loginSetupB2C(signInName, true);
+  }
+  else {
+    return loginSetupAMS(true);
+  }
+}
+
 export function loginSetup() {
 
   if (env.B2C) {
@@ -214,7 +225,7 @@ function checkSwitchResponse(response) {
   }
 }
 
-function loginSetupAMS() {
+function loginSetupAMS(returnID = false) {
 
   const accessToken = amsLogin();
   const accessCookie = getAccessCookie(accessToken);
@@ -232,11 +243,18 @@ function loginSetupAMS() {
   });
 
   checkSwitchResponse(switchResp);
+  
+  if (returnID) {
+    return {
+      cookie: switchResp.cookies.access[0].value,
+      id: userID
+    }
+  }
 
   return switchResp.cookies.access[0].value;
 };
 
-export function loginSetupB2C(username = undefined) {
+export function loginSetupB2C(username = undefined, returnID = false) {
 
   let signInName = username ? username : env.USERNAME;
 
@@ -256,6 +274,13 @@ export function loginSetupB2C(username = undefined) {
   });
 
   checkSwitchResponse(switchResp);
+  
+  if (returnID) {
+    return {
+      cookie: switchResp.cookies.access[0].value,
+      id: userID
+    }
+  }
 
   return switchResp.cookies.access[0].value;
 }
@@ -263,7 +288,7 @@ export function loginSetupB2C(username = undefined) {
 export function getOrgID(accessCookie) {
 
   const orgResp = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
-    query: '{\n  my_users {\n    memberships {\n      organization_id\n      status\n    }\n  }\n}',
+    query: '{my_users { memberships { organization_id }}}',
     variables: {},
   }), {
     headers: APIHeaders,

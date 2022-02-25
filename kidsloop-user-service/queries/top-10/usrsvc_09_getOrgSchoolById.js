@@ -1,13 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
+import { getOrgID, loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export function getOrgSchoolById(userEndpoint, orgID, schoolID, accessCookie = '', singleTest = false) {
+export function getOrgSchoolById(userEndpoint, orgID, schoolID) {
 
     return http.post(userEndpoint, JSON.stringify({
       query: `query getOrgSchoolById($organization_id: ID!, $school_id: ID!) {
@@ -29,11 +28,14 @@ export function getOrgSchoolById(userEndpoint, orgID, schoolID, accessCookie = '
 }
 
 export function setup() {
+
+  const accessCookie = loginSetup();
+
   return {
     userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID:        ENV_DATA.orgID,
+    orgID:        getOrgID(accessCookie),
     schoolID:     ENV_DATA.schoolID,
-    accessCookie: loginSetup(),
+    accessCookie: accessCookie,
     singleTest:   true
   };
 }
@@ -42,9 +44,7 @@ export default function main(data) {
   const response = getOrgSchoolById(
     data.userEndpoint, 
     data.orgID, 
-    data.schoolID,
-    data.accessCookie,
-    Boolean(data.singleTest));
+    data.schoolID);
   isRequestSuccessful(response);
   return response;
 }

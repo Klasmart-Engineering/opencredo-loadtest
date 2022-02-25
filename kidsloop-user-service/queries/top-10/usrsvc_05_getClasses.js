@@ -2,12 +2,11 @@ import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export function getClasses(userEndpoint, classID, accessCookie = '', singleTest = false) {
+export function getClasses(userEndpoint, classID) {
   return http.post(userEndpoint, JSON.stringify({
     query: `query getClasses($class_id: ID!) {
       class(class_id: $class_id) {
@@ -37,9 +36,7 @@ export function setup() {
 export default function main(data) {
   const response = getClasses(
     data.userEndpoint, 
-    data.classID, 
-    data.accessCookie,
-    Boolean(data.singleTest));
+    data.classID);
   isRequestSuccessful(response);
   return response;
 }

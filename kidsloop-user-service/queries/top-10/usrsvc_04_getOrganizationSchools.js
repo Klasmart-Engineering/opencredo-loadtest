@@ -1,13 +1,11 @@
 import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export function getSchoolsConnection(userEndpoint, accessCookie = '', singleTest = false) {
+export function getSchoolsConnection(userEndpoint) {
   return http.post(userEndpoint, JSON.stringify({
     query: `query getSchoolsConnection {
       schoolsConnection(direction: FORWARD) {
@@ -45,10 +43,7 @@ export function setup() {
 }
 
 export default function main(data) {
-  const response = getSchoolsConnection(
-    data.userEndpoint, 
-    data.accessCookie, 
-    Boolean(data.singleTest));
+  const response = getSchoolsConnection(data.userEndpoint);
   isRequestSuccessful(response);
   return response;
 }

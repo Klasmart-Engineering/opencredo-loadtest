@@ -1,11 +1,9 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
+import { loginSetupWithUserID } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 export function getClassesByUser(userEndpoint, userID) {
   return http.post(userEndpoint, JSON.stringify({
@@ -25,10 +23,13 @@ export function getClassesByUser(userEndpoint, userID) {
 }
 
 export function setup() {
+
+  const loginData = loginSetupWithUserID();
+
   return {
     userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID:       ENV_DATA.userID,
-    accessCookie: loginSetup(),
+    userID:       loginData.id,
+    accessCookie: loginData.cookie,
     singleTest:   true
   };
 }

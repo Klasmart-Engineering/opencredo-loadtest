@@ -1,13 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
+import { loginSetupWithUserID } from '../../../utils/setup.js'
 import * as env from '../../../utils/env.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, isRequestSuccessful } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export function getSchoolByPermission(userEndpoint, userID, permissionName, accessCookie = '', singleTest = false) {
+export function getSchoolByPermission(userEndpoint, userID, permissionName) {
   return http.post(userEndpoint, JSON.stringify({
     query: `query getSchoolByPermission($user_id: ID!, $permission_name: String!) {
       user(user_id: $user_id) {
@@ -32,11 +31,14 @@ export function getSchoolByPermission(userEndpoint, userID, permissionName, acce
 }
 
 export function setup() {
+
+  const loginData = loginSetupWithUserID();
+
   return {
     userEndpoint:   `https://api.${env.APP_URL}/user/`,
-    userID:         ENV_DATA.userID,
+    userID:         loginData.id,
     permissionName: ENV_DATA.permissionNames[0],
-    accessCookie:   loginSetup(),
+    accessCookie:   loginData.cookie,
     singleTest:     true
   };
 }
@@ -45,9 +47,7 @@ export default function main(data) {
   const response = getSchoolByPermission(
     data.userEndpoint, 
     data.userID, 
-    data.permissionName, 
-    data.accessCookie, 
-    Boolean(data.singleTest));
+    data.permissionName);
   isRequestSuccessful(response);
   return response;
 }
