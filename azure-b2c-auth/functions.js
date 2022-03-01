@@ -4,7 +4,7 @@ import {
 
 // import k6 specific packages
 import { URLSearchParams } from './jslib-url.js';
-import { check, group } from 'k6';
+import { check, fail, group } from 'k6';
 import http from 'k6/http';
 import encoding from 'k6/encoding';
 import { Counter } from 'k6/metrics';
@@ -102,9 +102,17 @@ export function loginToB2C(username) {
       headers: csrfHeaders,
       redirects: 0
     });
-    check(response, {
-      'is confirmed status 302': r => r.status === 302,
-    })
+    if (
+      !check(response, {
+        'is confirmed status 302': r => r.status === 302,
+        'redirect does not contain error': r => !r.headers['Location'].includes("error="),
+      })
+    ) {
+      console.log(response.status);
+      console.log(response.headers['Location']);
+      fail('confirmed response failed');
+    }
+    
     isRequestSuccessful(response, 302);
     isResponse429(response, count429);
 
