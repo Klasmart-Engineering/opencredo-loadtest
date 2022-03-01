@@ -1,11 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
+import { userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
-export function getSchoolsConnection(userEndpoint) {
+export function getSchoolsConnection() {
+
   return http.post(userEndpoint, JSON.stringify({
     query: `query getSchoolsConnection {
       schoolsConnection(direction: FORWARD) {
@@ -32,18 +33,23 @@ export function getSchoolsConnection(userEndpoint) {
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
+
+  const accessCookie = loginSetup();
+
   return {
-    userEndpoint:   `https://api.${env.APP_URL}/user/`,
-    accessCookie:   loginSetup(),
-    singleTest:     true
+    accessCookie: accessCookie
   };
-}
+};
 
 export default function main(data) {
-  const response = getSchoolsConnection(data.userEndpoint);
+  
+  initCookieJar(userEndpoint, data.accessCookie);
+
+  const response = getSchoolsConnection();
   isRequestSuccessful(response);
+
   return response;
-}
+};

@@ -1,12 +1,13 @@
 import http from 'k6/http';
-import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js';
+import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js';
+import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
+import { userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions
 
-export function checkMultiUserPermissionInOrg(userEndpoint, userID, orgID, permissionNames) {
+export function checkMultiUserPermissionInOrg(userID, orgID, permissionNames) {
+  
   return http.post(userEndpoint, JSON.stringify({
     query: `query checkMultiUserPermissionInOrg($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {
       user(user_id: $user_id) {
@@ -28,7 +29,7 @@ export function checkMultiUserPermissionInOrg(userEndpoint, userID, orgID, permi
     }),{
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
@@ -36,23 +37,23 @@ export function setup() {
   const orgID = getOrgID(loginData.cookie);
 
   return {
-    userEndpoint:    `https://api.${env.APP_URL}/user/`,
     userID:          loginData.id,
     orgID:           orgID,
     permissionNames: ENV_DATA.permissionNames,
     accessCookie:    loginData.cookie,
-    singleTest:      true
   };
-}
+};
 
 export default function main(data) {
+
+  initCookieJar(userEndpoint, data.accessCookie);
+
   const response = checkMultiUserPermissionInOrg(
-    data.userEndpoint, 
     data.userID, 
     data.orgID, 
-    data.permissionNames, 
-    data.accessCookie, 
-    Boolean(data.singleTest));
+    data.permissionNames,
+  );
   isRequestSuccessful(response);
+
   return response;
-}
+};
