@@ -25,12 +25,12 @@ export function isRequestSuccessful(response, expectedStatus = 200) {
   }
 }
 
-export function initCookieJar(userEndpoint, accessCookieData) {
+export function initCookieJar(endpoint, accessCookieData) {
   //initialise the cookies for this VU
   const cookieJar = http.cookieJar();
-  cookieJar.set(userEndpoint, 'access', accessCookieData);
-  cookieJar.set(userEndpoint, 'locale', 'en');
-  cookieJar.set(userEndpoint, 'privacy', 'true');
+  cookieJar.set(endpoint, 'access', accessCookieData);
+  cookieJar.set(endpoint, 'locale', 'en');
+  cookieJar.set(endpoint, 'privacy', 'true');
 };
 
 const maxVUs = (env.vus * 10) > 10000 ? 10000 : env.vus * 10; 
@@ -84,7 +84,7 @@ export function getUserIDForMultiUser(iterationValue) {
   return `loadtestuser${userID}@testdomain.com`
 }
 
-export function getUserPool() {
+export function getUserPool(returnIDs = false) {
 
   let returnVal = {};
   let vus;
@@ -97,8 +97,26 @@ export function getUserPool() {
   }
 
   for (let index = 0; index < vus; index++) {
-    returnVal[index] = loginSetupB2C(getUserIDForMultiUser(index + 1))
+    if (returnIDs) {
+      returnVal[index] = loginSetupB2C(getUserIDForMultiUser(index + 1), true)
+    }
+    else {
+      returnVal[index] = loginSetupB2C(getUserIDForMultiUser(index + 1))
+    }
   }
 
   return returnVal;
 }
+
+export function getCurrentUserFromPool(num) {
+
+  const userPoolCount = env.vus < env.poolCap ? env.vus : env.poolCap;
+
+  const value = num % userPoolCount;
+  
+  if ((value - 1) < 0 ) {
+    return userPoolCount - 1;
+  }
+
+  return value - 1;
+};

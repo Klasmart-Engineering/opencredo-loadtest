@@ -293,9 +293,60 @@ export function getOrgID(accessCookie) {
   }), {
     headers: APIHeaders,
     cookies: {
-      access: accessCookie,
+      access: {
+        value: accessCookie,
+        replace: true
+      },
     }
   })
 
   return orgResp.json('data.my_users.0.memberships.0.organization_id');
+}
+
+export function getClassID(accessCookie) {
+
+  const classResp = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
+    query: 'query{schoolsConnection(direction:FORWARD){edges{node{classesConnection{edges{node{id}}}}}}}',
+    variables: {},
+  }), {
+    headers: APIHeaders,
+    cookies: {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    },
+  });
+
+  let classID = classResp.json('data.schoolsConnection.edges.0.node.classConnection.edges.0.node.id');
+  // lots of our users have no class
+  if (!classID) {
+    classID = '157100c2-4936-4d08-b156-bf40c3630df0'
+  }
+
+  return classID;
+}
+
+export function getSchoolID(accessCookie) {
+
+  const schoolResp = http.post(`https://api.${env.APP_URL}/user/`, JSON.stringify({
+    query: 'query	{schoolsConnection(direction:FORWARD){edges{node{id}}}}',
+    variables: {},
+  }), {
+    headers: APIHeaders,
+    cookies: {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    },
+  });
+
+  let schoolID = schoolResp.json('data.schoolsConnection.edges.0.node.id');
+  // lots of our users have no class
+  if (!schoolID) {
+    schoolID = 'e9c6b35d-5241-49c2-b7c5-b08bb7ff7d98'
+  }
+
+  return schoolID;
 }
