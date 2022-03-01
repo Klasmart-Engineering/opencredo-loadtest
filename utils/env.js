@@ -23,3 +23,4 @@ export const ROOM_ID = __ENV.ROOM_ID //string
 export const rate = __ENV.rate ? __ENV.rate : 1;
 export const vus = __ENV.vus ? __ENV.vus : 10;
 export const duration = __ENV.duration ? __ENV.duration : '1m';
+export const poolCap = __ENV.poolCap ? __ENV.poolCap : 500;

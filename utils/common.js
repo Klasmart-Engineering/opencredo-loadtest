@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import * as env from './env.js';
+import { loginSetupB2C } from './setup.js';
 
 const userAgent = 'k6 - open credo loadtest';
 
@@ -67,3 +68,37 @@ export const defaultRateOptions = {
     }
   },
 };
+
+export function getUserIDForMultiUser(iterationValue) {
+
+  const baseNumber = 100000;
+
+  let it = iterationValue - 1;
+
+  if (it > 99999) {
+    it = it - 99999
+  }
+
+  const userID = baseNumber + (it);
+
+  return `loadtestuser${userID}@testdomain.com`
+}
+
+export function getUserPool() {
+
+  let returnVal = {};
+  let vus;
+  
+  if (env.vus >= env.poolCap) {
+    vus = env.poolCap;
+  }
+  else {
+    vus = env.vus;
+  }
+
+  for (let index = 0; index < vus; index++) {
+    returnVal[index] = loginSetupB2C(getUserIDForMultiUser(index + 1))
+  }
+
+  return returnVal;
+}
