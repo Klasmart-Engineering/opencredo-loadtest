@@ -15,18 +15,9 @@ export const APIHeaders = Object.assign({
 
 
 
-export function xapiTest(xapiEndpoint, accessCookieData) {
-
-    let response;
-
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(xapiEndpoint, 'access', accessCookieData);
-    cookieJar.set(xapiEndpoint, 'locale', 'en');
-    cookieJar.set(xapiEndpoint, 'privacy', 'true');
-    
+export function xapiTest(xapiEndpoint) {
     const xapiEvent = `{"xapi":{"type":"xAPI","data":{"statement":{"actor":{"account":{"name":"${uuid.v4()}"},"objectType":"Agent"},"verb":{"id":"http://adlnet.gov/expapi/verbs/attempted","display":{"en-US":"attempted"}},"object":{"objectType":"Activity","definition":{"extensions":{"http://h5p.org/x-api/h5p-local-content-id":"611db969c426830013108c40"},"name":{"en-US":"Celebration Memory Game 2"}}},"context":{"contextActivities":{"category":[{"id":"http://h5p.org/libraries/H5P.MemoryGame-1.3","objectType":"Activity"}]}}}},"clientTimestamp":${Date.now()}},"userId":"${uuid.v4()}","ipHash":"152592a2f2db5a645d9e1bd6468368be0d15cfb7c96ac1099313d85e810adb52","geo":{"range":[1531035136,1531035647],"country":"DE","region":"BE","eu":"1","timezone":"Europe/Berlin","city":"Berlin","ll":[52.4669,13.4298],"metro":0,"area":5},"serverTimestamp":${Date.now()}}`
-    response = http.post(xapiEndpoint, JSON.stringify({
+    return http.post(xapiEndpoint, JSON.stringify({
       query: queries.SEND_EVENT,
       operationName: 'xapi',
       variables: {
@@ -37,11 +28,5 @@ export function xapiTest(xapiEndpoint, accessCookieData) {
     }), {
       headers: APIHeaders
     });
-
-    if (response.status !== 200) {
-        console.error(response.status)
-        console.error(JSON.stringify(response))
-    }
-
 }
 
