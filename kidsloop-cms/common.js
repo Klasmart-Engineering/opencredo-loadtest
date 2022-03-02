@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import * as env from '../utils/env.js';
 import { Counter } from 'k6/metrics';
-import { APIHeaders as importedHeaders } from '../utils/common.js';
+import { APIHeaders as importedHeaders, getUserPool } from '../utils/common.js';
 import { getOrgID, loginSetup } from '../utils/setup.js';
 
 export const APIHeaders = importedHeaders;
@@ -49,6 +49,18 @@ export function defaultSetup() {
     orgID: orgID
   }
 };
+
+export function defaultPoolSetup() {
+
+  const userPool = getUserPool();
+
+  const orgID = getOrgID(userPool[0]);
+
+  return {
+    userPool: userPool,
+    orgID: orgID
+  }
+}
 
 export function initCookieJar(accessCookieData) {
   //initialise the cookies for this VU

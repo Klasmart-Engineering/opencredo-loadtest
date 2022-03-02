@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const milestoneID = __ENV.milestoneID
 
@@ -25,10 +25,7 @@ export default function main(data) {
 
   const response = getMilestoneDetails(data.orgID, milestoneID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default milestone ID refers to single milestone in testing org in loadtest-k8s environment 
@@ -39,6 +36,11 @@ export function getMilestoneDetails(orgID, milestoneID = '61eed4267a6bce688b2bd2
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

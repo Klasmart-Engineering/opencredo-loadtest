@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const folderID = __ENV.folderID
 
@@ -25,10 +25,7 @@ export default function main(data) {
 
   const response = getFoldersItemsDetails(data.orgID, folderID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default folder ID refers to single folder in testing org in loadtest-k8s environment 
@@ -39,6 +36,11 @@ export function getFoldersItemsDetails(orgID, folderID = '61eee8cf6a93400ab93988
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

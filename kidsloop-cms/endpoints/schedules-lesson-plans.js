@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const teacherID = __ENV.teacherID
 const classID = __ENV.classID
@@ -26,10 +26,7 @@ export default function main(data) {
 
   const response = getScheduleLessonPlans(data.orgID, teacherID, classID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default teacher & class ID refers to single teacher & class in testing org in loadtest-k8s environment 
@@ -40,6 +37,11 @@ export function getScheduleLessonPlans(orgID, teacherID = '61efdf2de07ca0c6b98f0
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

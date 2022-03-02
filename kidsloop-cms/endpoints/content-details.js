@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const contentID = __ENV.contentID
 
@@ -25,10 +25,7 @@ export default function main(data) {
 
   const response = getContentDetails(data.orgID, contentID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default content ID refers to a single content item in testing org in loadtest-k8s environment 
@@ -39,6 +36,11 @@ export function getContentDetails(orgID, contentID = '61eee3fe1235cc9c6959e69d')
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

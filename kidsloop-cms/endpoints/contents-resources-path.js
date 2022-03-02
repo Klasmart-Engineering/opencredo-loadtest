@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const resourceID = __ENV.resourceID
 
@@ -25,10 +25,7 @@ export default function main(data) {
 
   const response = getContentsResourcesPath(data.orgID, resourceID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default resource ID refers to a single resource in testing org in loadtest-k8s environment 
@@ -39,6 +36,11 @@ export function getContentsResourcesPath(orgID, resourceID = 'assets-61eee3da7a6
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const outcomeID = __ENV.outcomeID
 
@@ -25,10 +25,7 @@ export default function main(data) {
 
   const response = getLearningOutcomeDetails(data.orgID, outcomeID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default outcome ID refers to single outcome in testing org in loadtest-k8s environment 
@@ -39,6 +36,11 @@ export function getLearningOutcomeDetails(orgID, outcomeID = '61eadb950deabad23b
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };
