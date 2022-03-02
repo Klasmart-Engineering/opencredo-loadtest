@@ -1,26 +1,33 @@
-import { loginSetup } from '../utils/setup.js'
+import { scenario } from 'k6/execution';
 import { xapiTest } from './functions.js'
-import {defaultRateOptions} from "../utils/common.js";
+import * as dev from "../utils/env.js";
+import {
+  defaultRateOptions,
+  getUserPool,
+  getCurrentUserFromPool,
+  initCookieJar,
+  isRequestSuccessful
+} from "../utils/common.js";
 
+export const xapiEndpoint = dev.APP_URL_TEST ? `https://api.${dev.APP_URL_TEST}/xapi/graphql` : `https://api.${dev.APP_URL}/xapi/graphql`;
 export const options = defaultRateOptions
 
-const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-const AMSENV = __ENV.AMSENV
-
 export function setup() {
+  const returnUserIDs = false;
+  const userPool = getUserPool(returnUserIDs);
 
-  console.log(APP_URL);
-  let amsEnv = AMSENV
-  if (!amsEnv) {
-    amsEnv = 'dev'
-  }
+  console.log(xapiEndpoint)
 
   return {
-    accessCookie: loginSetup(APP_URL, USERNAME, amsEnv)
-  }
-}
+    userPool: userPool,
+  };
+};
 
 export default function main(data) {
-  xapiTest(`https://api.${APP_URL}/xapi/graphql`, data.accessCookie);
+  const user = getCurrentUserFromPool(scenario.iterationInTest);
+  initCookieJar(xapiEndpoint, data.userPool[user]);
+
+  const response = xapiTest(xapiEndpoint);
+  isRequestSuccessful(response);
+  return response;
 }
