@@ -1,19 +1,11 @@
 import http from 'k6/http';
-import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
+import { userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
-function getQueryMe(userEndpoint, orgID, accessCookie = '', singleTest = false) {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getQueryMe() {
 
   return http.post(userEndpoint, JSON.stringify({
     query: `query queryMe {
@@ -21,34 +13,30 @@ function getQueryMe(userEndpoint, orgID, accessCookie = '', singleTest = false) 
         user_id
       }
     }`,
-    operationName: 'queryMe',
-    variables: {
-      organization_id: orgID
-    }
+    operationName: 'queryMe'
   }), {
     headers: APIHeaders
   });
 };
 
 export function setup() {
-  const accessCookie = loginSetup()
+
+  const accessCookie = loginSetup();
+
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID:        getOrgID(accessCookie),
-    singleTest:   true,
     accessCookie: accessCookie
   };
 };
 
 export default function main(data) {
-  const response = getQueryMe(
-    data.userEndpoint, 
-    data.orgID, 
-    data.accessCookie,
-    Boolean(data.singleTest));
+
+  initCookieJar(userEndpoint, data.accessCookie);
+
+  const response = getQueryMe();
   isRequestSuccessful(response);
+
   return response;
-}
+};
 
 
 

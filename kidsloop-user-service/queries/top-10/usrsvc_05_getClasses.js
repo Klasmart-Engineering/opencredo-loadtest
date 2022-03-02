@@ -1,12 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { getClassID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
+import { userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
-export function getClasses(userEndpoint, classID) {
+export function getClasses(classID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: `query getClasses($class_id: ID!) {
       class(class_id: $class_id) {
@@ -22,21 +22,26 @@ export function getClasses(userEndpoint, classID) {
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
+
+  const accessCookie = loginSetup();
+
+  const classID = getClassID(accessCookie);
+
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    classID:      ENV_DATA.classID,
-    accessCookie: loginSetup(),
-    singleTest:   true
+    classID:      classID,
+    accessCookie: accessCookie
   };
-}
+};
 
 export default function main(data) {
-  const response = getClasses(
-    data.userEndpoint, 
-    data.classID);
+
+  initCookieJar(userEndpoint, data.accessCookie);
+
+  const response = getClasses(data.classID);
   isRequestSuccessful(response);
+
   return response;
-}
+};
