@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,9 +10,9 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
-const assessmentID = __ENV.assessmentID
+const assessmentID = __ENV.assessmentID ? __ENV.assessmentID : '61fbf0fb53e200b6fe53a117';
 
 export function setup() {
 
@@ -25,19 +25,21 @@ export default function main(data) {
 
   const response = getAssessmentDetails(data.orgID, assessmentID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
-export function getAssessmentDetails(orgID, assessmentID = 1) {
+export function getAssessmentDetails(orgID, assessmentID) {
 
   const response = http.get(`${CMSEndpoint}/assessments/${assessmentID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

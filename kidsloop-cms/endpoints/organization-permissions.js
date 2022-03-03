@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const permsPayload = JSON.stringify({
   'permission_name':[
@@ -30,21 +30,23 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeViewList(data.orgID);
+  const response = getOrganizationPermissions(data.orgID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
-export function getSchedulesTimeViewList(orgID) {
+export function getOrganizationPermissions(orgID) {
 
   const response = http.post(`${CMSEndpoint}/organization_permissions?org_id=${orgID}`, permsPayload, {
       headers: APIHeaders
   });
   
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 }

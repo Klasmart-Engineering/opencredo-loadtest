@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,9 +10,10 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
-const scheduleID = __ENV.scheduleID
+//default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
+const scheduleID = __ENV.scheduleID ? __ENV.scheduleID : '61efdf2de07ca5c42f12e99d';
 
 export function setup() {
 
@@ -25,20 +26,22 @@ export default function main(data) {
 
   const response = getScheduleOperatorNewestFeedback(data.orgID, scheduleID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 //default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
-export function getScheduleOperatorNewestFeedback(orgID, scheduleID = '61efdf2de07ca5c42f12e99d') {
+export function getScheduleOperatorNewestFeedback(orgID, scheduleID) {
 
   const response = http.get(`${CMSEndpoint}/schedules/${scheduleID}/operator/newest_feedback?org_id=${orgID}`, {
       headers: APIHeaders
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

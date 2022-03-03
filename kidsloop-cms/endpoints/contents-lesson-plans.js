@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const contentsLessonPlanPayload = JSON.stringify({
   group_names: [
@@ -33,10 +33,7 @@ export default function main(data) {
 
   const response = getContentsLessonPlans(data.orgID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 export function getContentsLessonPlans(orgID) {
@@ -46,6 +43,11 @@ export function getContentsLessonPlans(orgID) {
   });
   
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 }

@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,9 +10,9 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
-const studyID = __ENV.studyID
+const studyID = __ENV.studyID ? __ENV.studyID : '';
 
 export function setup() {
 
@@ -25,10 +25,7 @@ export default function main(data) {
 
   const response = getHomeFunStudyDetails(data.orgID, studyID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 export function getHomeFunStudyDetails(orgID, studyID) {
@@ -38,6 +35,11 @@ export function getHomeFunStudyDetails(orgID, studyID) {
   });
 
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 };

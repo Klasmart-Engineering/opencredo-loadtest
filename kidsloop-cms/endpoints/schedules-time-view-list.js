@@ -1,8 +1,8 @@
 import http from 'k6/http';
+import { defaultRateOptions } from '../../utils/common.js';
 import {
   APIHeaders,
   CMSEndpoint,
-  defaultOptions,
   defaultSetup,
   initCookieJar,
   isRequestSuccessful,
@@ -10,7 +10,7 @@ import {
   threshold
 } from '../common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 const scheduleViewPayload = JSON.stringify({
   end_at_le: 1642636740,
@@ -35,10 +35,7 @@ export default function main(data) {
 
   const response = getSchedulesTimeViewList(data.orgID);
 
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
+  return response;
 };
 
 export function getSchedulesTimeViewList(orgID) {
@@ -48,6 +45,11 @@ export function getSchedulesTimeViewList(orgID) {
   });
   
   isRequestSuccessful(response);
+
+  if (response.timings.duration >= threshold ) {
+
+    requestOverThreshold.add(1);
+  };
 
   return response;
 }

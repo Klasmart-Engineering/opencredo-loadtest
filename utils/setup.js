@@ -42,7 +42,8 @@ export function amsLogin() {
       'AMS status code was 200': (r) => r.status === 200,
     })
   ) {
-    fail('AMS status code was *not* 200')
+    console.error(JSON.stringify(response));
+    fail('AMS status code was *not* 200');
   }
 
   if (
@@ -50,7 +51,8 @@ export function amsLogin() {
       'AMS returned an access token': (r) => r.json('accessToken') !== null,
     })
   ) {
-    fail('AMS did not return an access token')
+    console.error(JSON.stringify(response));
+    fail('AMS did not return an access token');
   }
 
   return loginResp.json('accessToken');
@@ -63,8 +65,8 @@ function checkAccessCookieResponse(response) {
       'Transfer status code was 200': (r) => r.status === 200,
     })
   ) {
-    console.error(JSON.stringify(response))
-    fail('Transfer status code was *not* 200')
+    console.error(JSON.stringify(response));
+    fail('Transfer status code was *not* 200');
   }
 
   if (
@@ -72,8 +74,8 @@ function checkAccessCookieResponse(response) {
       'Transfer returned an access cookie': (r) => r.cookies.access[0],
     })
   ) {
-    console.error(JSON.stringify(response))
-    fail('Transfer did not return an access cookie')
+    console.error(JSON.stringify(response));
+    fail('Transfer did not return an access cookie');
   }
 }
 
@@ -114,7 +116,8 @@ function checkUserIDResponse(response) {
       'UserID status code was 200': (r) => r.status === 200,
     })
   ) {
-    fail('UserID status code was *not* 200')
+    console.error(JSON.stringify(response));
+    fail('UserID status code was *not* 200');
   }
 
   if (
@@ -122,7 +125,8 @@ function checkUserIDResponse(response) {
       'User ID value returned': (r) => r.json('data.myUser.profiles.0.id'),
     })
   ) {
-    fail('No User ID value returned')
+    console.error(JSON.stringify(response));
+    fail('No User ID value returned');
   }
 }
 
@@ -213,7 +217,8 @@ function checkSwitchResponse(response) {
       'Switch status code was 200': (r) => r.status === 200,
     })
   ) {
-    fail('Switch status code was *not* 200')
+    console.error(JSON.stringify(response));
+    fail('Switch status code was *not* 200');
   }
 
   if (
@@ -221,7 +226,8 @@ function checkSwitchResponse(response) {
       'Switch returned an access cookie': (r) => r.cookies.access[0],
     })
   ) {
-    fail('Switch did not return an access cookie')
+    console.error(JSON.stringify(response));
+    fail('Switch did not return an access cookie');
   }
 }
 
