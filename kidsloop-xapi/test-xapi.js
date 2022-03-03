@@ -1,49 +1,33 @@
-import { loginSetup } from '../utils/setup.js'
+import { scenario } from 'k6/execution';
 import { xapiTest } from './functions.js'
+import * as dev from "../utils/env.js";
+import {
+  defaultRateOptions,
+  getUserPool,
+  getCurrentUserFromPool,
+  initCookieJar,
+  isRequestSuccessful
+} from "../utils/common.js";
 
-export const options = {
-  vus: 1,
-  iterations: 1,
-
-  thresholds: {
-    http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<3000'] // 95% of the iteration duration below 2s
-  },
-
-  ext: {
-    loadimpact: {
-      projectID: 3560234,
-      distribution: {
-        mumbaiDistribution: {
-          loadZone: 'amazon:gb:london',
-          percent: 50
-        },
-        portlandDistribution: {
-          loadZone: 'amazon:ie:dublin',
-          percent: 50
-        },
-      }
-    }
-  },
-}
-
-const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-const AMSENV = __ENV.AMSENV
+export const xapiEndpoint = dev.APP_URL_TEST ? `https://api.${dev.APP_URL_TEST}/xapi/graphql` : `https://api.${dev.APP_URL}/xapi/graphql`;
+export const options = defaultRateOptions
 
 export function setup() {
+  const returnUserIDs = false;
+  const userPool = getUserPool(returnUserIDs);
 
-  console.log(APP_URL);
-  let amsEnv = AMSENV
-  if (!amsEnv) {
-    amsEnv = 'dev'
-  }
+  console.log(xapiEndpoint)
 
   return {
-    accessCookie: loginSetup(APP_URL, USERNAME, amsEnv)
-  }
-}
+    userPool: userPool,
+  };
+};
 
 export default function main(data) {
-  xapiTest(`https://api.${APP_URL}/xapi/graphql`, data.accessCookie);
+  const user = getCurrentUserFromPool(scenario.iterationInTest);
+  initCookieJar(xapiEndpoint, data.userPool[user]);
+
+  const response = xapiTest(xapiEndpoint);
+  isRequestSuccessful(response);
+  return response;
 }
