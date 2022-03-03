@@ -30,12 +30,12 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getSchedulesTimeViewList(data.orgID);
+  const response = getOrganizationPermissions(data.orgID);
 
   return response;
 };
 
-export function getSchedulesTimeViewList(orgID) {
+export function getOrganizationPermissions(orgID) {
 
   const response = http.post(`${CMSEndpoint}/organization_permissions?org_id=${orgID}`, permsPayload, {
       headers: APIHeaders

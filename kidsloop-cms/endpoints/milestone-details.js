@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const milestoneID = __ENV.milestoneID
+//default milestone ID refers to single milestone in testing org in loadtest-k8s environment 
+const milestoneID = __ENV.milestoneID ? __ENV.milestoneID : '61eed4267a6bce688b2bd2ef';
 
 export function setup() {
 
@@ -28,8 +29,7 @@ export default function main(data) {
   return response;
 };
 
-//default milestone ID refers to single milestone in testing org in loadtest-k8s environment 
-export function getMilestoneDetails(orgID, milestoneID = '61eed4267a6bce688b2bd2ef') {
+export function getMilestoneDetails(orgID, milestoneID) {
 
   const response = http.get(`${CMSEndpoint}/milestones/${milestoneID}?org_id=${orgID}`, {
       headers: APIHeaders

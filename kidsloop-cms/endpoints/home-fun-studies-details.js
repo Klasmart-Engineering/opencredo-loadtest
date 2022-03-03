@@ -12,7 +12,7 @@ import {
 
 export const options = defaultRateOptions;
 
-const studyID = __ENV.studyID
+const studyID = __ENV.studyID ? __ENV.studyID : '';
 
 export function setup() {
 

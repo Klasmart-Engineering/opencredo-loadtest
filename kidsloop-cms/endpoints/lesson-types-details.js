@@ -12,7 +12,7 @@ import {
 
 export const options = defaultRateOptions;
 
-const lessonTypeID = __ENV.lessonTypeID
+const lessonTypeID = __ENV.lessonTypeID ? __ENV.lessonTypeID : '';
 
 export function setup() {
 
@@ -28,7 +28,7 @@ export default function main(data) {
   return response;
 };
 
-export function getLessonTypesDetails(orgID, lessonTypeID = 1) {
+export function getLessonTypesDetails(orgID, lessonTypeID) {
 
   const response = http.get(`${CMSEndpoint}/lesson_types/${lessonTypeID}?org_id=${orgID}`, {
       headers: APIHeaders

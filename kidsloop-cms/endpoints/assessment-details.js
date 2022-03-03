@@ -12,7 +12,7 @@ import {
 
 export const options = defaultRateOptions;
 
-const assessmentID = __ENV.assessmentID
+const assessmentID = __ENV.assessmentID ? __ENV.assessmentID : '61fbf0fb53e200b6fe53a117';
 
 export function setup() {
 
@@ -28,7 +28,7 @@ export default function main(data) {
   return response;
 };
 
-export function getAssessmentDetails(orgID, assessmentID = 1) {
+export function getAssessmentDetails(orgID, assessmentID) {
 
   const response = http.get(`${CMSEndpoint}/assessments/${assessmentID}?org_id=${orgID}`, {
       headers: APIHeaders

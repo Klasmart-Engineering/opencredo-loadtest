@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const folderID = __ENV.folderID
+//default folder ID refers to single folder in testing org in loadtest-k8s environment 
+const folderID = __ENV.folderID ? __ENV.folderID : '61eee8cf6a93400ab939883c';
 
 export function setup() {
 
@@ -28,8 +29,7 @@ export default function main(data) {
   return response;
 };
 
-//default folder ID refers to single folder in testing org in loadtest-k8s environment 
-export function getFoldersItemsDetails(orgID, folderID = '61eee8cf6a93400ab939883c') {
+export function getFoldersItemsDetails(orgID, folderID) {
 
   const response = http.get(`${CMSEndpoint}/folders/items/details/${folderID}?org_id=${orgID}`, {
       headers: APIHeaders

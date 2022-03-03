@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const contentID = __ENV.contentID
+//default content ID refers to a single content item in testing org in loadtest-k8s environment 
+const contentID = __ENV.contentID ? __ENV.contentID : '61eee3fe1235cc9c6959e69d';
 
 export function setup() {
 
@@ -28,8 +29,7 @@ export default function main(data) {
   return response;
 };
 
-//default content ID refers to a single content item in testing org in loadtest-k8s environment 
-export function getContentDetails(orgID, contentID = '61eee3fe1235cc9c6959e69d') {
+export function getContentDetails(orgID, contentID) {
 
   const response = http.get(`${CMSEndpoint}/contents/${contentID}?org_id=${orgID}`, {
       headers: APIHeaders

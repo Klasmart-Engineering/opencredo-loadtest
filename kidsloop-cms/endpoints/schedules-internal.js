@@ -26,6 +26,7 @@ export default function main(data) {
   return response;
 };
 
+//returns a 404
 export function getInternalSchedules(orgID) {
 
   const response = http.get(`${CMSEndpoint}/internals/schedules?org_id=${orgID}`, {

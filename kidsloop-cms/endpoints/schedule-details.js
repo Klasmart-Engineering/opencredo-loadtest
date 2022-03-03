@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const scheduleID = __ENV.scheduleID
+//default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
+const scheduleID = __ENV.scheduleID ? __ENV.scheduleID : '61efdf2de07ca5c42f12e99d';
 
 export function setup() {
 
@@ -28,19 +29,13 @@ export default function main(data) {
   return response;
 };
 
-//default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
-export function getScheduleDetails(orgID, scheduleID = '61efdf2de07ca5c42f12e99d') {
+export function getScheduleDetails(orgID, scheduleID) {
 
   const response = http.get(`${CMSEndpoint}/schedules/${scheduleID}?org_id=${orgID}`, {
       headers: APIHeaders
   });
 
   isRequestSuccessful(response);
-
-  if (response.timings.duration >= threshold ) {
-
-    requestOverThreshold.add(1);
-  };
 
   return response;
 };

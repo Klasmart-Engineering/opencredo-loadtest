@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const resourceID = __ENV.resourceID
+//default resource ID refers to a single resource in testing org in loadtest-k8s environment 
+const resourceID = __ENV.resourceID ? __ENV.resourceID : 'assets-61eee3da7a6bce688b2bdf9a.jpeg';
 
 export function setup() {
 
@@ -28,8 +29,7 @@ export default function main(data) {
   return response;
 };
 
-//default resource ID refers to a single resource in testing org in loadtest-k8s environment 
-export function getContentsResourcesDownload(orgID, resourceID = 'assets-61eee3da7a6bce688b2bdf9a.jpeg') {
+export function getContentsResourcesDownload(orgID, resourceID) {
 
   const response = http.get(`${CMSEndpoint}/contents_resources/${resourceID}/download?org_id=${orgID}`, {
       headers: APIHeaders

@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const outcomeID = __ENV.outcomeID
+//default outcome ID refers to single outcome in testing org in loadtest-k8s environment
+const outcomeID = __ENV.outcomeID ? __ENV.outcomeID : '61eadb950deabad23b938a32';
 
 export function setup() {
 
@@ -28,8 +29,7 @@ export default function main(data) {
   return response;
 };
 
-//default outcome ID refers to single outcome in testing org in loadtest-k8s environment 
-export function getLearningOutcomeDetails(orgID, outcomeID = '61eadb950deabad23b938a32') {
+export function getLearningOutcomeDetails(orgID, outcomeID) {
 
   const response = http.get(`${CMSEndpoint}/learning_outcomes/${outcomeID}?org_id=${orgID}`, {
       headers: APIHeaders

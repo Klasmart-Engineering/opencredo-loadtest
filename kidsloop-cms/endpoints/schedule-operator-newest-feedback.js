@@ -12,7 +12,8 @@ import {
 
 export const options = defaultRateOptions;
 
-const scheduleID = __ENV.scheduleID
+//default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
+const scheduleID = __ENV.scheduleID ? __ENV.scheduleID : '61efdf2de07ca5c42f12e99d';
 
 export function setup() {
 
@@ -29,7 +30,7 @@ export default function main(data) {
 };
 
 //default schedule ID refers to single schedule in testing org in loadtest-k8s environment 
-export function getScheduleOperatorNewestFeedback(orgID, scheduleID = '61efdf2de07ca5c42f12e99d') {
+export function getScheduleOperatorNewestFeedback(orgID, scheduleID) {
 
   const response = http.get(`${CMSEndpoint}/schedules/${scheduleID}/operator/newest_feedback?org_id=${orgID}`, {
       headers: APIHeaders
