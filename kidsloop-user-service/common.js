@@ -1,7 +1,9 @@
-import http from 'k6/http';
 import * as env from '../utils/env.js';
 import { Counter } from 'k6/metrics';
-import { APIHeaders as importedHeaders } from '../utils/common.js';
+import {
+  APIHeaders as importedHeaders,
+  initCookieJar as importedInitCookieJar
+} from '../utils/common.js';
 import { loginSetup } from '../utils/setup.js';
 
 export const APIHeaders = importedHeaders;
@@ -48,11 +50,8 @@ export function defaultSetup() {
 };
 
 export function initCookieJar(accessCookieData) {
-  //initialise the cookies for this VU
-  const cookieJar = http.cookieJar();
-  cookieJar.set(userEndpoint, 'access', accessCookieData);
-  cookieJar.set(userEndpoint, 'locale', 'en');
-  cookieJar.set(userEndpoint, 'privacy', 'true');
+
+  importedInitCookieJar(userEndpoint, accessCookieData);
 };
 
 export function isRequestSuccessful(request) {

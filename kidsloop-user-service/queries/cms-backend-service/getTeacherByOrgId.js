@@ -1,10 +1,9 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query teacherByOrgId($organization_id: ID!) {
   organization(organization_id: $organization_id) {
@@ -34,14 +33,17 @@ fragment userIdName on User {
   user_name
 }`;
 
-function getTeacherByOrgId(userEndpoint, orgID, singleTest = false, accessCookie = '') {
+export function getTeacherByOrgId(orgID, accessCookie = undefined) {
 
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
+  let cookies = {};
+
+  if (accessCookie) {
+    cookies = {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    };
   };
 
   return http.post(userEndpoint, JSON.stringify({
@@ -51,7 +53,8 @@ function getTeacherByOrgId(userEndpoint, orgID, singleTest = false, accessCookie
       organization_id: orgID
     }
   }), {
-    headers: APIHeaders
+    headers: APIHeaders,
+    cookies: cookies,
   });
 };
 
@@ -62,19 +65,15 @@ export function setup() {
   const orgID = getOrgID(accessCookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
+    orgID: orgID
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  }
+  initCookieJar(data.accessCookie);
 
-  return getTeacherByOrgId(data.userEndpoint, data.orgID, singleTest, data.accessCookie);
+  const response = getTeacherByOrgId(data.orgID);
+  isRequestSuccessful(response);
 };

@@ -1,10 +1,9 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query classesStudentQuery($user_id: ID!, $organization_id: ID!) {
   user(user_id: $user_id) {
@@ -30,15 +29,7 @@ const query = `query classesStudentQuery($user_id: ID!, $organization_id: ID!) {
   }
 }`;
 
-function getClassesStudentQuery(userEndpoint, userID, orgID, singleTest = false, accessCookie = '') {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getClassesStudentQuery(orgID, userID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -62,20 +53,16 @@ export function setup() {
   const userID = '';
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID: userID,
+    accessCookie: accessCookie,
     orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
+    userID: userID
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initCookieJar(data.accessCookie);
 
-  return getClassesStudentQuery(data.userEndpoint, data.userID, data.orgID, singleTest, data.accessCookie);
+  const response = getClassesStudentQuery(data.orgID, data.userID);
+  isRequestSuccessful(response);
 };
