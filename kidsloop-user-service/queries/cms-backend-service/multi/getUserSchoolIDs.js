@@ -1,8 +1,7 @@
 import { scenario } from 'k6/execution';
 import { defaultRateOptions, getCurrentUserFromPool, getUserPool, isRequestSuccessful } from '../../../../utils/common.js';
-import { getOrgID } from '../../../../utils/setup.js';
 import { initCookieJar } from '../../../common.js';
-import { getSchoolsByOrganization } from '../getSchoolsByOrganization.js';
+import { getUserSchoolIDs } from '../getUserSchoolIDs.js';
 
 export const options = Object.assign({}, defaultRateOptions, {
   setupTimeout: '15m',
@@ -10,22 +9,20 @@ export const options = Object.assign({}, defaultRateOptions, {
 
 export function setup() {
 
-  const userPool = getUserPool();
-
-  const orgID = getOrgID(userPool[0]);
+  const returnUserIDs = true; 
+  const userPool = getUserPool(returnUserIDs);
 
   return {
-    orgID: orgID,
     userPool: userPool
-  }
+  };
 };
 
 export default function main(data) {
 
   const user = getCurrentUserFromPool(scenario.iterationInTest);
 
-  initCookieJar(data.userPool[user]);
+  initCookieJar(data.userPool[user].cookie);
 
-  const response = getSchoolsByOrganization(data.orgID);
+  const response = getUserSchoolIDs(data.userPool[user].id);
   isRequestSuccessful(response);
 };

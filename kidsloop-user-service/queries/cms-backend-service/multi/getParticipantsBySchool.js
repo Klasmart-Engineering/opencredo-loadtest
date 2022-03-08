@@ -2,8 +2,8 @@ import { scenario } from 'k6/execution';
 import { defaultRateOptions, getCurrentUserFromPool, getUserPool, isRequestSuccessful } from '../../../../utils/common.js';
 import { getOrgID } from '../../../../utils/setup.js';
 import { initCookieJar } from '../../../common.js';
-import { getClassesByTeacher } from '../getClassesByTeacher.js';
-import { getTeacherByOrgId } from '../getTeacherByOrgId.js';
+import { getParticipantsBySchool } from '../getParticipantsBySchool.js';
+import { getSchoolsByOrganization } from '../getSchoolsByOrganization.js';
 
 export const options = Object.assign({}, defaultRateOptions, {
   setupTimeout: '15m',
@@ -15,12 +15,12 @@ export function setup() {
 
   const orgID = getOrgID(userPool[0]);
 
-  const teacherResp = getTeacherByOrgId(orgID, userPool[0]);
-  const teacherID = teacherResp.json('data.organization.classes.0.teachers.0.user_id')
+  const schoolsResp = getSchoolsByOrganization(orgID, userPool[0]);
+  const schoolID = schoolsResp.json('data.organization.schools.0.school_id');
 
   return {
-    teacherID: teacherID,
-    userPool: userPool
+    userPool: userPool,
+    schoolID: schoolID
   }
 };
 
@@ -30,6 +30,6 @@ export default function main(data) {
 
   initCookieJar(data.userPool[user]);
 
-  const response = getClassesByTeacher(data.teacherID);
+  const response = getParticipantsBySchool(data.schoolID);
   isRequestSuccessful(response);
 };

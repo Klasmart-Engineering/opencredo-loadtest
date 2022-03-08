@@ -1,11 +1,10 @@
 import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { default as getProgramsAndSubjects } from './getProgramsAndSubjects.js'
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { getProgramsAndSubjects } from './getProgramsAndSubjects.js'
+import { initCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query getPrograms($program_id: ID!) {
   program(id: $program_id) {
@@ -40,15 +39,7 @@ const query = `query getPrograms($program_id: ID!) {
   }
 }`;
 
-function getPrograms(userEndpoint, programID, singleTest = false, accessCookie = '') {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getPrograms(programID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -65,27 +56,19 @@ export function setup() {
   
   const accessCookie = loginSetup();
 
-  const progResp = getProgramsAndSubjects({
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    singleTest: true,
-    accessCookie: accessCookie
-  })
+  const progResp = getProgramsAndSubjects(accessCookie);
   const programID = progResp.json('data.programsConnection.edges.0.node.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    programID: programID,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
+    programID: programID
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initCookieJar(data.accessCookie);
 
-  return getPrograms(data.userEndpoint, data.programID, singleTest, data.accessCookie);
+  const response = getPrograms(data.programID);
+  isRequestSuccessful(response);
 };

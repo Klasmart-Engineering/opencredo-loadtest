@@ -2,6 +2,7 @@ import { scenario } from 'k6/execution';
 import { defaultRateOptions, getCurrentUserFromPool, getUserPool, isRequestSuccessful } from '../../../../utils/common.js';
 import { getOrgID } from '../../../../utils/setup.js';
 import { initCookieJar } from '../../../common.js';
+import { getClassesBySchool } from '../getClassesBySchool.js';
 import { getSchoolsByOrganization } from '../getSchoolsByOrganization.js';
 
 export const options = Object.assign({}, defaultRateOptions, {
@@ -29,6 +30,6 @@ export default function main(data) {
 
   initCookieJar(data.userPool[user]);
 
-  const response = getSchoolsByOrganization(data.schoolID);
+  const response = getClassesBySchool(data.schoolID);
   isRequestSuccessful(response);
 };

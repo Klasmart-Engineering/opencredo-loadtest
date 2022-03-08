@@ -27,7 +27,18 @@ const query = `query classesByOrganization($organization_id: ID!) {
   }
 }`;
 
-export function getClassesByOrganization(orgID) {
+export function getClassesByOrganization(orgID, accessCookie = undefined) {
+
+  let cookies = {};
+
+  if (accessCookie) {
+    cookies = {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    };
+  };
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -36,7 +47,8 @@ export function getClassesByOrganization(orgID) {
       organization_id: orgID
     }
   }), {
-    headers: APIHeaders
+    headers: APIHeaders,
+    cookies: cookies
   });
 };
 

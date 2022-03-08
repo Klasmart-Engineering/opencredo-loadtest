@@ -15,8 +15,8 @@ export function setup() {
   const orgID = getOrgID(userPool[0]);
 
   return {
-    userPool: userPool,
-    orgID: orgID
+    orgID: orgID,
+    userPool: userPool
   }
 };
 

@@ -1,10 +1,9 @@
 import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query getProgramsAndSubjects($count: PageSize!,  $cursor: String!, $filter: ProgramFilter!) {
   programsConnection(filter:$filter
@@ -48,14 +47,17 @@ const query = `query getProgramsAndSubjects($count: PageSize!,  $cursor: String!
   }
 }`;
 
-function getProgramsAndSubjects(userEndpoint, singleTest = false, accessCookie = '') {
+export function getProgramsAndSubjects(accessCookie = undefined) {
 
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
+  let cookies = {};
+
+  if (accessCookie) {
+    cookies = {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    };
   };
 
   return http.post(userEndpoint, JSON.stringify({
@@ -72,7 +74,8 @@ function getProgramsAndSubjects(userEndpoint, singleTest = false, accessCookie =
       }
     }
   }), {
-    headers: APIHeaders
+    headers: APIHeaders,
+    cookies: cookies,
   });
 };
 
@@ -81,18 +84,14 @@ export function setup() {
   const accessCookie = loginSetup();
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initCookieJar(data.accessCookie);
 
-  return getProgramsAndSubjects(data.userEndpoint, singleTest, data.accessCookie);
+  const response = getProgramsAndSubjects();
+  isRequestSuccessful(response);
 };

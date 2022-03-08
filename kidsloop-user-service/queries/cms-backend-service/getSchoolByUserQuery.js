@@ -1,10 +1,9 @@
 import http from 'k6/http';
-import { getOrgID, loginSetup, getUserID } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query schoolByUserQuery($user_id: ID!, $organization_id: ID!) {
   user(user_id: $user_id) {
@@ -32,15 +31,7 @@ const query = `query schoolByUserQuery($user_id: ID!, $organization_id: ID!) {
   }
 }`;
 
-function getSchoolByUserQuery(userEndpoint, userID, orgID, singleTest = false, accessCookie = '') {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getSchoolByUserQuery(userID, orgID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -56,27 +47,21 @@ function getSchoolByUserQuery(userEndpoint, userID, orgID, singleTest = false, a
 
 export function setup() {
   
-  const accessCookie = loginSetup();
+  const setup = loginSetupWithUserID();
 
-  const orgID = getOrgID(accessCookie);
-
-  const userID = getUserID('', accessCookie);
+  const orgID = getOrgID(setup.cookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID: userID,
+    accessCookie: setup.cookie,
     orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
+    userID: setup.id
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initCookieJar(data.accessCookie);
 
-  return getSchoolByUserQuery(data.userEndpoint, data.userID, data.orgID, singleTest, data.accessCookie);
+  const response = getSchoolByUserQuery(data.userID, data.orgID);
+  isRequestSuccessful(response);
 };

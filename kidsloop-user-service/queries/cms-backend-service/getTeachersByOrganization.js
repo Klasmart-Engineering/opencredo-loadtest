@@ -1,34 +1,30 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
-import { getClassesByOrganization } from './getClassesByOrganization.js';
 import { initCookieJar, userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
-const query = `query participantsByClass($class_id: ID!) {
-  class(class_id: $class_id) {
+// Note: typo in 'Organization' has been preserved from CMS in order to align with what we'll see in the application
+const query = `query teachersByOrgnization($organization_id: ID!) {
+  organization(organization_id: $organization_id) {
     teachers {
-      ...userIdName
-    }
-    students {
-      ...userIdName
+      user {
+        user_id
+        user_name
+      }
     }
   }
-}
-
-fragment userIdName on User {
-  user_id
-  user_name
 }`;
 
-export function getParticipantsByClass(classID) {
+export function getTeachersByOrganization(orgID) {
 
+  // Note: typo in 'Organization' has been preserved from CMS in order to align with what we'll see in the application
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'participantsByClass',
+    operationName: 'teachersByOrgnization',
     variables: {
-      class_id: classID
+      organization_id: orgID
     }
   }), {
     headers: APIHeaders
@@ -41,12 +37,9 @@ export function setup() {
 
   const orgID = getOrgID(accessCookie);
 
-  const classResp = getClassesByOrganization(orgID, accessCookie);
-  const classID = classResp.json('data.organization.classes.0.class_id')
-
   return {
     accessCookie: accessCookie,
-    classID: classID,
+    orgID: orgID
   };
 };
 
@@ -54,6 +47,6 @@ export default function main(data) {
 
   initCookieJar(data.accessCookie);
 
-  const response = getParticipantsByClass(data.classID);
+  const response = getTeachersByOrganization(data.orgID);
   isRequestSuccessful(response);
 };
