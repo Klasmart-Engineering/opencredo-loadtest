@@ -1,6 +1,6 @@
 import { scenario } from 'k6/execution';
-import { defaultRateOptions, getCurrentUserFromPool, getUserPool, initCookieJar, isRequestSuccessful } from "../../../utils/common.js";
-import { userEndpoint } from "../../common.js";
+import { defaultRateOptions, getCurrentUserFromPool, getUserPool, isRequestSuccessful } from "../../../utils/common.js";
+import { initUserCookieJar } from '../../common.js';
 import { getMyId } from './usrsvc_08_getMyId.js';
 
 export const options = defaultRateOptions;
@@ -19,10 +19,8 @@ export default function main(data) {
 
   const user = getCurrentUserFromPool(scenario.iterationInTest);
 
-  initCookieJar(userEndpoint, data.userPool[user]);
+  initUserCookieJar(data.userPool[user]);
 
   const response = getMyId();
   isRequestSuccessful(response);
-  
-  return response;
 };

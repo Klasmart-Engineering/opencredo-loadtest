@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { getOrgID, getSchoolID, loginSetup } from '../../../utils/setup.js';
-import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
-import { userEndpoint } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
@@ -34,21 +34,19 @@ export function setup() {
   const schoolID = getSchoolID(accessCookie);
 
   return {
-    orgID:        orgID,
-    schoolID:     schoolID,
     accessCookie: accessCookie,
+    orgID:        orgID,
+    schoolID:     schoolID
   };
 };
 
 export default function main(data) {
 
-  initCookieJar(userEndpoint, data.accessCookie);
+  initUserCookieJar(data.accessCookie);
 
   const response = getOrgSchoolById(
     data.orgID, 
     data.schoolID
   );
   isRequestSuccessful(response);
-
-  return response;
 };

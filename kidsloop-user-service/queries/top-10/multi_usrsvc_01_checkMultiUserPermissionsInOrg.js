@@ -1,8 +1,8 @@
 import { scenario } from 'k6/execution';
-import { defaultRateOptions, getCurrentUserFromPool, getUserPool, initCookieJar, isRequestSuccessful } from "../../../utils/common.js";
+import { defaultRateOptions, getCurrentUserFromPool, getUserPool, isRequestSuccessful } from "../../../utils/common.js";
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js';
 import { getOrgID } from '../../../utils/setup.js';
-import { userEndpoint } from "../../common.js";
+import { initUserCookieJar } from "../../common.js";
 import { checkMultiUserPermissionInOrg } from "./usrsvc_01_checkMultiUserPermissionsInOrg.js";
 
 export const options = defaultRateOptions;
@@ -24,14 +24,12 @@ export default function main(data) {
 
   const user = getCurrentUserFromPool(scenario.iterationInTest);
 
-  initCookieJar(userEndpoint, data.userPool[user].cookie);
+  initUserCookieJar(data.userPool[user].cookie);
 
   const response = checkMultiUserPermissionInOrg(
-    data.userPool[user].id,
     data.orgID,
-    ENV_DATA.permissionNames
+    ENV_DATA.permissionNames,
+    data.userPool[user].id
   );
   isRequestSuccessful(response);
-  
-  return response;
 };

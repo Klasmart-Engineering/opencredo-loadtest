@@ -1,7 +1,7 @@
 import { scenario } from 'k6/execution';
 import { defaultRateOptions, getCurrentUserFromPool, getUserPool, isRequestSuccessful } from '../../../../utils/common.js';
 import { getOrgID } from '../../../../utils/setup.js';
-import { initCookieJar } from '../../../common.js';
+import { initUserCookieJar } from '../../../common.js';
 import { getClassesBySchool } from '../getClassesBySchool.js';
 import { getSchoolsByOrganization } from '../getSchoolsByOrganization.js';
 
@@ -28,7 +28,7 @@ export default function main(data) {
 
   const user = getCurrentUserFromPool(scenario.iterationInTest);
 
-  initCookieJar(data.userPool[user]);
+  initUserCookieJar(data.userPool[user]);
 
   const response = getClassesBySchool(data.schoolID);
   isRequestSuccessful(response);

@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
 import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
 import { getProgramsAndSubjects } from './getProgramsAndSubjects.js'
-import { initCookieJar, userEndpoint } from '../../common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
@@ -67,7 +67,7 @@ export function setup() {
 
 export default function main(data) {
 
-  initCookieJar(data.accessCookie);
+  initUserCookieJar(data.accessCookie);
 
   const response = getPrograms(data.programID);
   isRequestSuccessful(response);

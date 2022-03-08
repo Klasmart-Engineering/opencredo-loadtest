@@ -1,5 +1,5 @@
 import {
-  initCookieJar
+  initUserCookieJar
 } from "./common.js";
 import { scenario } from 'k6/execution';
 import { landingTest } from "./landing-test.js";
@@ -17,7 +17,7 @@ export default function main() {
 
   const accessCookie = loginSetupB2C(userID);
 
-  initCookieJar(accessCookie);
+  initUserCookieJar(accessCookie);
 
   landingTest();
 }

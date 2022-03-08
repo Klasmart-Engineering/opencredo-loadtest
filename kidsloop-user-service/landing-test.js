@@ -2,7 +2,7 @@ import http from 'k6/http';
 import {
   APIHeaders,
   defaultSetup,
-  initCookieJar,
+  initUserCookieJar,
   isRequestSuccessful,
   requestOverThreshold,
   threshold,
@@ -20,7 +20,7 @@ export function setup() {
 
 export default function main(data) {
 
-  initCookieJar(data.accessCookie);
+  initUserCookieJar(data.accessCookie);
   
   landingTest();
 }

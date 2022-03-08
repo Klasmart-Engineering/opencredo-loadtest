@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
 import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
-import { initCookieJar, userEndpoint } from '../../common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
@@ -50,7 +50,7 @@ export function setup() {
 
 export default function main(data) {
 
-  initCookieJar(data.accessCookie);
+  initUserCookieJar(data.accessCookie);
 
   const response = getClassesSchoolsByOrganization(data.orgID);
   isRequestSuccessful(response);

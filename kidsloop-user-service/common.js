@@ -2,7 +2,7 @@ import * as env from '../utils/env.js';
 import { Counter } from 'k6/metrics';
 import {
   APIHeaders as importedHeaders,
-  initCookieJar as importedInitCookieJar
+  initCookieJar
 } from '../utils/common.js';
 import { loginSetup } from '../utils/setup.js';
 
@@ -49,9 +49,9 @@ export function defaultSetup() {
   }
 };
 
-export function initCookieJar(accessCookieData) {
+export function initUserCookieJar(accessCookieData) {
 
-  importedInitCookieJar(userEndpoint, accessCookieData);
+  initCookieJar(userEndpoint, accessCookieData);
 };
 
 export function isRequestSuccessful(request) {
