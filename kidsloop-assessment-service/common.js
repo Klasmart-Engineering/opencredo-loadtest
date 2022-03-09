@@ -1,10 +1,7 @@
 import http from 'k6/http';
 import * as env from '../utils/env.js';
 import { Counter } from 'k6/metrics';
-import { APIHeaders as importedHeaders } from '../utils/common.js';
 import { loginSetup } from '../utils/setup.js';
-
-export const APIHeaders = importedHeaders;
 
 export const assessmentEndpoint = `https://api.${env.APP_URL}/assessment/`;
 
@@ -14,7 +11,7 @@ export const defaultOptions = {
 
   thresholds: {
     http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<3000'] // 95% of the iteration duration below 2s
+    iteration_duration: ['p(95)<3000'] // 95% of the iteration duration below 3s
   },
 
   ext: {
@@ -67,20 +64,5 @@ export function defaultSetup() {
 
   return {
     accessCookie: accessCookie
-  }
-};
-
-export function initCookieJar(accessCookieData) {
-  //initialise the cookies for this VU
-  const cookieJar = http.cookieJar();
-  cookieJar.set(assessmentEndpoint, 'access', accessCookieData);
-  cookieJar.set(assessmentEndpoint, 'locale', 'en');
-  cookieJar.set(assessmentEndpoint, 'privacy', 'true');
-};
-
-export function isRequestSuccessful(request) {
-  if (request.status !== 200) {
-    console.error(request.status)
-    console.error(JSON.stringify(request))
   }
 };
