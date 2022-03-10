@@ -9,7 +9,7 @@ const AMSENV = __ENV.AMSENV
 const RATE = __ENV.RATE || 1
 
 const pdfEndpoint = `https://api.${APP_URL}/pdf`;
-const pdfFileName = '61ead76d1708577bc731ed93.pdf';
+const pdfFileName = '61f7ce22ee9e045916473c5c.pdf';
 
 // Configure options
 export const options = {
