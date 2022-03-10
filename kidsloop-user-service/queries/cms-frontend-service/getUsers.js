@@ -1,13 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getUsersByOrg } from './getUsersByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($user_id_0: ID! $user_id_1: ID! $user_id_2: ID! $user_id_3: ID! $user_id_4: ID! $user_id_5: ID!) {
+const query = `query ($user_id_0: ID! $user_id_1: ID! $user_id_2: ID! $user_id_3: ID! $user_id_4: ID! $user_id_5: ID!) {
   q0: user(user_id: $user_id_0) {id:user_id name:user_name given_name family_name email avatar}
   q1: user(user_id: $user_id_1) {id:user_id name:user_name given_name family_name email avatar}
   q2: user(user_id: $user_id_2) {id:user_id name:user_name given_name family_name email avatar}
@@ -16,13 +15,13 @@ export const query = `query ($user_id_0: ID! $user_id_1: ID! $user_id_2: ID! $us
   q5: user(user_id: $user_id_5) {id:user_id name:user_name given_name family_name email avatar}
 }`;
 
-export function getUsers(userEndpoint, userIDs, accessCookie = '', singleTest = false) {
+export function getUsers(userIDs) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getUsers',
     variables: {
       user_id_0: userIDs[0],
-      user_id_1: userIDs[1],
+      user_id_1: userIDs[1],  
       user_id_2: userIDs[2],
       user_id_3: userIDs[3],
       user_id_4: userIDs[4],
@@ -31,27 +30,30 @@ export function getUsers(userEndpoint, userIDs, accessCookie = '', singleTest = 
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const userIDs = ENV_DATA.userIDs;
+
+  const orgID = getOrgID(accessCookie);
+
+  const usersResp = getUsersByOrg(orgID);
+
+  // in order to prevent repeated runs caching too much data we select 5 random users
+  const shuffledUsers = usersResp.json('data.organization.memberships').sort(function() { 0.5 - Math.random()} );
+  const userIDs = shuffledUsers.slice(0, 6).map(u => u["user"]["id"]);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userIDs: userIDs,
     accessCookie: accessCookie,
-    singleTest: true
+    userIDs: userIDs
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getUsers(data.userEndpoint, data.userIDs, data.accessCookie, singleTest)
+  const response = getUsers(data.userIDs);
+  isRequestSuccessful(response);
 }

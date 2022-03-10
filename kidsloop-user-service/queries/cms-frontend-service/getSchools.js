@@ -1,49 +1,53 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getSchoolsByOrg } from './getSchoolsByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($school_id: ID!) {
+const query = `query ($school_id: ID!) {
   q0: school(school_id: $school_id) {
-    classes{teachers{id:user_id name:user_name}}
+    classes {
+      teachers {
+        id: user_id
+        name: user_name
+      }
+    }
   }
 }`;
 
-export function getSchools(userEndpoint, schoolID, accessCookie = '', singleTest = false) {
+export function getSchools(schoolID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSchools',
     variables: {
       school_id: schoolID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const schoolID = ENV_DATA.schoolID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const schoolResp = getSchoolsByOrg(orgID);
+  const schoolID = schoolResp.json('data.organization.schools.0.school_id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    schoolID: schoolID,
     accessCookie: accessCookie,
-    singleTest: true
+    schoolID: schoolID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSchools(data.userEndpoint, data.schoolID, data.accessCookie, singleTest)
-}
+  const response = getSchools(data.schoolID);
+  isRequestSuccessful(response);
+};

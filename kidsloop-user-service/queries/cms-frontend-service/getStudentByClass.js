@@ -1,25 +1,24 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getClassesByOrg } from './getClassesByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($class_id: ID!){
-  class(class_id: $class_id){
-    students{
+const query = `query ($class_id: ID!) {
+  class(class_id: $class_id) {
+    students {
       id: user_id
       name: user_name
     }
   }
 }`;
 
-export function getStudentByClass(userEndpoint, classID, accessCookie = '', singleTest = false) {
+export function getStudentByClass(classID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getStudentByClass',
     variables: {
       class_id: classID
     }
@@ -31,22 +30,22 @@ export function getStudentByClass(userEndpoint, classID, accessCookie = '', sing
 export function setup() {
 
   const accessCookie = loginSetup();
-  const classID = ENV_DATA.classID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const classResp = getClassesByOrg(orgID);
+  const classID = classResp.json('data.q0.classes.0.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    classID: classID,
     accessCookie: accessCookie,
-    singleTest: true
+    classID: classID
   };
 }
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getStudentByClass(data.userEndpoint, data.classID, data.accessCookie, singleTest)
+  const response = getStudentByClass(data.classID);
+  isRequestSuccessful(response);
 }

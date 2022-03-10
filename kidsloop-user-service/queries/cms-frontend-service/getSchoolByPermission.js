@@ -1,16 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { loginSetupWithUserID } from '../../../utils/setup.js';
+import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query(
-  $user_id: ID!
-  $permission_name: String!
-) {
+const query = `query ($user_id: ID!, $permission_name: String!) {
   user(user_id: $user_id) {
     schoolsWithPermission(permission_name: $permission_name) {
       school {
@@ -25,40 +21,33 @@ export const query = `query(
   }
 }`;
 
-export function getSchoolByPermission(userEndpoint, userID, permissionName, accessCookie = '', singleTest = false) {
+export function getSchoolByPermission(userID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSchoolByPermission',
     variables: {
-      user_id: userID,
-      permission_name: permissionName
+      permission_name: ENV_DATA.permissionNames[0],
+      user_id: userID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
-  const accessCookie = loginSetup();
-  const userID = ENV_DATA.userID;
-  const permissionName = ENV_DATA.permissionNames[0]
+  const loginData = loginSetupWithUserID();
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID: userID,
-    permissionName: permissionName,
-    accessCookie: accessCookie,
-    singleTest: true
+    accessCookie: loginData.cookie,
+    userID: loginData.id
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSchoolByPermission(data.userEndpoint, data.userID, data.permissionName, data.accessCookie, singleTest)
-}
+  const response = getSchoolByPermission(data.userID);
+  isRequestSuccessful(response);
+};

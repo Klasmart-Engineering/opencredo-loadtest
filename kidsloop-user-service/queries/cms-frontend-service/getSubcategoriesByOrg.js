@@ -1,54 +1,61 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query($organization_id: ID!) {
+const query = `query ($organization_id: ID!) {
   organization(organization_id: $organization_id) {
     subcategories {
       id
       name
       status
       system
-    }			
+    }
   }
 }`;
 
-export function getSubcategoriesByOrg(userEndpoint, orgID, accessCookie = '', singleTest = false) {
+export function getSubcategoriesByOrg(orgID, accessCookie = undefined) {
+
+  let cookies = {};
+
+  if (accessCookie) {
+    cookies = {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    };
+  };
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSubcategoriesByOrg',
     variables: {
       organization_id: orgID
     }
   }), {
-    headers: APIHeaders
+    headers: APIHeaders,
+    cookies: cookies
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const orgID = ENV_DATA.orgID;
+
+  const orgID = getOrgID(accessCookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
     accessCookie: accessCookie,
-    singleTest: true
+    orgID: orgID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSubcategoriesByOrg(data.userEndpoint, data.orgID, data.accessCookie, singleTest)
-}
+  const response = getSubcategoriesByOrg(data.orgID);
+  isRequestSuccessful(response);
+};

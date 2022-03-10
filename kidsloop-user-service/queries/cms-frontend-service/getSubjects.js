@@ -1,47 +1,51 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getSubjectsByOrg } from './getSubjectsByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($subject_id: ID!) {
-  q0: subject(id: $subject_id) {id name status system}
+const query = `query ($subject_id: ID!) {
+  q0: subject(id: $subject_id) {
+    id
+    name
+    status
+    system
+  }
 }`;
 
-export function getSubjects(userEndpoint, subjectID, accessCookie = '', singleTest = false) {
+export function getSubjects(subjectID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSubjects',
     variables: {
       subject_id: subjectID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const subjectID = ENV_DATA.subjectID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const subjectResp = getSubjectsByOrg(orgID);
+  const subjectID = subjectResp.json('data.organization.subjects.0.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    subjectID: subjectID,
     accessCookie: accessCookie,
-    singleTest: true
+    subjectID: subjectID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSubjects(data.userEndpoint, data.subjectID, data.accessCookie, singleTest)
-}
+  const response = getSubjects(data.subjectID);
+  isRequestSuccessful(response);
+};

@@ -1,55 +1,54 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getClassesByOrg } from './getClassesByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query{
-  index_0: class(class_id: $class_id){
+const query = `query ($class_id: ID!) {
+  index_0: class(class_id: $class_id) {
     id: class_id
     name: class_name
     status
-    students{
+    students {
       id: user_id
       name: user_name
     }
   }
 }`;
 
-export function getClass(userEndpoint, headers, classID, accessCookie = '', singleTest = false) {
+export function getClass(classID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getClass',
     variables: {
       class_id: classID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const classID = ENV_DATA.classID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const classResp = getClassesByOrg(orgID);
+  const classID = classResp.json('data.q0.classes.0.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    classID: classID,
     accessCookie: accessCookie,
-    singleTest: true
+    classID: classID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getClass(data.userEndpoint, data.classID, data.accessCookie, singleTest)
-}
+  const response = getClass(data.classID);
+  isRequestSuccessful(response);
+};

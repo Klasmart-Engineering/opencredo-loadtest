@@ -1,47 +1,58 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { getGradesByOrg } from './getGradesByOrg.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($grade_id: ID!) {
-  q0: grade(id: $grade_id) {id name status system}
+const query = `query ($grade_id: ID!) {
+  q0: grade(id: $grade_id) {
+    id
+    name
+    status
+    system
+  }
 }`;
 
-export function getGrades(userEndpoint, gradeID, accessCookie = '', singleTest = false) {
+export function getGrades(gradeID) {
+
+  let grade_id = gradeID;
+
+  //set a default as most users won't be able to get the gradeID in setup
+  if (!grade_id) {
+    grade_id = 'd7e2e258-d4b3-4e95-b929-49ae702de4be';
+  }
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getGrades',
     variables: {
-      grade_id: gradeID
+      grade_id: grade_id
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const gradeID = ENV_DATA.gradeID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const gradesResp = getGradesByOrg(orgID);
+  const gradeID = gradesResp.json('.data.organization.grades.0.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    gradeID: gradeID,
     accessCookie: accessCookie,
-    singleTest: true
+    gradeID: gradeID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getGrades(data.userEndpoint, data.gradeID, data.accessCookie, singleTest)
-}
+  const response = getGrades(data.gradeID);
+  isRequestSuccessful(response);
+};

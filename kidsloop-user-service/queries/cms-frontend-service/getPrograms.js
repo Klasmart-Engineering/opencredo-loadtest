@@ -1,21 +1,30 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions } from '../../../utils/common.js';
+import { initUserCookieJar, isRequestSuccessful, userEndpoint } from '../../common.js';
+import { getProgramsByOrg } from './getProgramsByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($program_id_0: ID! $program_id_1: ID!) {
-  q0: program(id: $program_id_0) {id name status system}
-  q1: program(id: $program_id_1) {id name status system}
+const query = `query ($program_id_0: ID!, $program_id_1: ID!) {
+  q0: program(id: $program_id_0) {
+    id
+    name
+    status
+    system
+  }
+  q1: program(id: $program_id_1) {
+    id
+    name
+    status
+    system
+  }
 }`;
 
-export function getPrograms(userEndpoint, programIDs, accessCookie = '', singleTest = false) {
+export function getPrograms(programIDs) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getPrograms',
     variables: {
       program_id_0: programIDs[0],
       program_id_1: programIDs[1]
@@ -23,27 +32,30 @@ export function getPrograms(userEndpoint, programIDs, accessCookie = '', singleT
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const programIDs = ENV_DATA.programIDs;
+
+  const orgID = getOrgID(accessCookie);
+
+  const programResp = getProgramsByOrg(orgID);
+  const programIDs = [
+    programResp.json('data.organization.programs.0.id'),
+    programResp.json('data.organization.programs.1.id')
+  ];
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    programIDs: programIDs,
     accessCookie: accessCookie,
-    singleTest: true
+    programIDs: programIDs
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getPrograms(data.userEndpoint, data.programIDs, data.accessCookie, singleTest)
-}
+  const response = getPrograms(data.programIDs);
+  isRequestSuccessful(response);
+};
