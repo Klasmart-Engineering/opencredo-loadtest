@@ -1,30 +1,56 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
+import { getOrgID, loginSetup } from '../../../utils/setup.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getCategoriesBySubject } from './getCategoriesBySubject.js';
+import { getSubjectsByOrg } from './getSubjectsByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($category_id_0: ID! $category_id_1: ID! $category_id_2: ID! $category_id_3: ID! $category_id_4: ID!) {
-  q0: category(id: $category_id_0) {id name status system}
-  q1: category(id: $category_id_1) {id name status system}
-  q2: category(id: $category_id_2) {id name status system}
-  q3: category(id: $category_id_3) {id name status system}
-  q4: category(id: $category_id_4) {id name status system}
+const query = `query ($category_id_0: ID!, $category_id_1: ID!, $category_id_2: ID!, $category_id_3: ID!, $category_id_4: ID!) {
+  q0: category(id: $category_id_0) {
+    id
+    name
+    status
+    system
+  }
+  q1: category(id: $category_id_1) {
+    id
+    name
+    status
+    system
+  }
+  q2: category(id: $category_id_2) {
+    id
+    name
+    status
+    system
+  }
+  q3: category(id: $category_id_3) {
+    id
+    name
+    status
+    system
+  }
+  q4: category(id: $category_id_4) {
+    id
+    name
+    status
+    system
+  }
 }`;
 
-export function getCategories(userEndpoint, categoryIDs, accessCookie = '', singleTest = false) {
+export function getCategories(categories) {
+  
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getCategories',
     variables: {
-      category_id_0: categoryIDs[0],
-      category_id_1: categoryIDs[1],
-      category_id_2: categoryIDs[2],
-      category_id_3: categoryIDs[3],
-      category_id_4: categoryIDs[4]
+      category_id_0: categories[0].id,
+      category_id_1: categories[1].id,
+      category_id_2: categories[2].id,
+      category_id_3: categories[3].id,
+      category_id_4: categories[4].id
     }
   }), {
     headers: APIHeaders
@@ -34,22 +60,25 @@ export function getCategories(userEndpoint, categoryIDs, accessCookie = '', sing
 export function setup() {
 
   const accessCookie = loginSetup();
-  const categoryIDs = ENV_DATA.categoryIDs;
+
+  const orgID = getOrgID(accessCookie);
+
+  const subjectResp = getSubjectsByOrg(orgID);
+  const subjectID = subjectResp.json('data.organization.subjects.0.id');
+
+  const categoryResp = getCategoriesBySubject(subjectID);
+  const categories = categoryResp.json('data.q0.categories');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    categoryIDs: categoryIDs,
     accessCookie: accessCookie,
-    singleTest: true
+    categories: categories
   };
 }
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getCategories(data.userEndpoint, data.categoryIDs, data.accessCookie, singleTest)
+  const response = getCategories(data.categories);
+  isRequestSuccessful(response);
 }

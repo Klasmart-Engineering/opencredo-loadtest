@@ -1,10 +1,9 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query classesByOrganization($organization_id: ID!) {
   organization(organization_id: $organization_id) {
@@ -28,14 +27,17 @@ const query = `query classesByOrganization($organization_id: ID!) {
   }
 }`;
 
-function getClassesByOrganization(userEndpoint, orgID, singleTest = false, accessCookie = '') {
+export function getClassesByOrganization(orgID, accessCookie = undefined) {
 
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
+  let cookies = {};
+
+  if (accessCookie) {
+    cookies = {
+      access: {
+        value: accessCookie,
+        replace: true
+      },
+    };
   };
 
   return http.post(userEndpoint, JSON.stringify({
@@ -45,7 +47,8 @@ function getClassesByOrganization(userEndpoint, orgID, singleTest = false, acces
       organization_id: orgID
     }
   }), {
-    headers: APIHeaders
+    headers: APIHeaders,
+    cookies: cookies
   });
 };
 
@@ -56,19 +59,15 @@ export function setup() {
   const orgID = getOrgID(accessCookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
+    orgID: orgID
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initUserCookieJar(data.accessCookie)
 
-  return getClassesByOrganization(data.userEndpoint, data.orgID, singleTest, data.accessCookie);
+  const response = getClassesByOrganization(data.orgID);
+  isRequestSuccessful(response);
 };

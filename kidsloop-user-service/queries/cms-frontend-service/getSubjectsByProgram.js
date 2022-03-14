@@ -1,54 +1,53 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getProgramsByOrg } from './getProgramsByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query($program_id: ID!) {
+const query = `query ($program_id: ID!) {
   program(id: $program_id) {
     subjects {
       id
       name
       status
       system
-    }			
+    }
   }
 }`;
 
-export function getSubjectsByProgram(userEndpoint, programID, accessCookie = '', singleTest = false) {
+export function getSubjectsByProgram(programID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSubjectsByProgram',
     variables: {
       program_id: programID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const programID = ENV_DATA.programID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const programResp = getProgramsByOrg(orgID);
+  const programID = programResp.json('data.organization.programs.0.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    programID: programID,
     accessCookie: accessCookie,
-    singleTest: true
+    programID: programID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSubjectsByProgram(data.userEndpoint, data.programID, data.accessCookie, singleTest)
-}
+  const response = getSubjectsByProgram(data.programID);
+  isRequestSuccessful(response);
+};

@@ -1,4 +1,4 @@
-import { initCookieJar } from "./common.js";
+import { initUserCookieJar } from "./common.js";
 import { scenario } from 'k6/execution';
 import { landingTest } from "./landing-test.js";
 import { defaultRateOptions, getUserPool, getCurrentUserFromPool as getCurrentUser } from "../utils/common.js";
@@ -18,7 +18,7 @@ export default function main(data) {
 
   const accessCookie = data[id];
 
-  initCookieJar(accessCookie);
+  initUserCookieJar(accessCookie);
 
   landingTest();
 }

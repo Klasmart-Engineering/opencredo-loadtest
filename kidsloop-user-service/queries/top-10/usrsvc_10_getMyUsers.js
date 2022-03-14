@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { loginSetup } from '../../../utils/setup.js';
-import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
-import { userEndpoint } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
@@ -33,10 +33,8 @@ export function setup() {
 
 export default function main(data) {
 
-  initCookieJar(userEndpoint, data.accessCookie);
+  initUserCookieJar(data.accessCookie);
 
   const response = getMyUsers();
   isRequestSuccessful(response);
-
-  return response;
 };

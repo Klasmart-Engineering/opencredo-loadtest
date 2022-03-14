@@ -1,13 +1,11 @@
-// Note: typo in 'Query' has been preserved from CMS in order to align with what we'll see in the application
-
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
+// Note: typo in 'Query' has been preserved from CMS in order to align with what we'll see in the application
 const query = `query qeuryMe($organization_id: ID!) {
   me {
     ...userIdName
@@ -26,16 +24,9 @@ fragment userIdName on User {
   user_name
 }`;
 
-function getQeuryMe(userEndpoint, orgID, singleTest = false, accessCookie = '') {
+export function getQueryMe(orgID) {
 
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
-
+// Note: typo in 'Query' has been preserved from CMS in order to align with what we'll see in the application
   return http.post(userEndpoint, JSON.stringify({
     query: query,
     operationName: 'qeuryMe',
@@ -54,19 +45,15 @@ export function setup() {
   const orgID = getOrgID(accessCookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
+    orgID: orgID
   };
 };
 
 export default function main(data) {
+  
+  initUserCookieJar(data.accessCookie)
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
-
-  return getQeuryMe(data.userEndpoint, data.orgID, singleTest, data.accessCookie);
+  const response =  getQueryMe(data.orgID);
+  isRequestSuccessful(response);
 };

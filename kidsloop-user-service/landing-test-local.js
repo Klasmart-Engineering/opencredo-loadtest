@@ -1,4 +1,4 @@
-import { initCookieJar } from './common.js';
+import { initUserCookieJar } from './common.js';
 import { landingTest } from './landing-test.js';
 
 export const options = {
@@ -17,7 +17,7 @@ const ACCESS_COOKIE = __ENV.ACCESS_COOKIE
 
 export default function main(data) {
 
-  initCookieJar(ACCESS_COOKIE)
+  initUserCookieJar(ACCESS_COOKIE)
 
   landingTest();
 }

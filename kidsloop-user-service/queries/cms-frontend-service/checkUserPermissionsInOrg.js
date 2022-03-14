@@ -1,17 +1,12 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
+import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js'
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query(
-  $user_id: ID!
-  $organization_id: ID!
-  $permission_name: ID!
-) {
+const query = `query ($user_id: ID!, $organization_id: ID!, $permission_name: ID!) {
   user(user_id: $user_id) {
     membership(organization_id: $organization_id) {
       checkAllowed(permission_name: $permission_name)
@@ -19,14 +14,14 @@ export const query = `query(
   }
 }`;
 
-export function checkUserPermissionInOrg(userEndpoint, userID, orgID, permissionName, accessCookie = '', singleTest = false) {
+export function checkUserPermissionInOrg(orgID, userID) {
+  
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'checkUserPermissionInOrg',
      variables: {
       user_id: userID,
       organization_id: orgID,
-      permission_name: permissionName
+      permission_name: ENV_DATA.permissionNames[0]
      }
   }), {
     headers: APIHeaders
@@ -35,28 +30,21 @@ export function checkUserPermissionInOrg(userEndpoint, userID, orgID, permission
 
 export function setup() {
 
-  const accessCookie = loginSetup();
+  const loginData = loginSetupWithUserID();
 
-  const orgID = ENV_DATA.orgID;
-  const userID = ENV_DATA.userID;
-  const permissionName = ENV_DATA.permissionNames[0];
+  const orgID = getOrgID(loginData.cookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
+    accessCookie: loginData.cookie,
     orgID: orgID,
-    userID: userID,
-    permissionName: permissionName,
-    accessCookie: accessCookie,
-    singleTest: true
+    userID: loginData.id
   };
 }
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie)
 
-  return checkUserPermissionInOrg(data.userEndpoint, data.userID, data.orgID, data.permissionName, data.accessCookie, singleTest)
+  const response = checkUserPermissionInOrg(data.orgID, data.userID);
+  isRequestSuccessful(response);
 }

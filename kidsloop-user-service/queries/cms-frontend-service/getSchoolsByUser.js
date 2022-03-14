@@ -1,15 +1,13 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { loginSetupWithUserID } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query($user_id: ID!) {
+const query = `query ($user_id: ID!) {
   user(user_id: $user_id) {
-    school_memberships{
+    school_memberships {
       school {
         school_id
         school_name
@@ -22,37 +20,32 @@ export const query = `query($user_id: ID!) {
   }
 }`;
 
-export function getSchoolsByUser(userEndpoint, userID, accessCookie = '', singleTest = false) {
+export function getSchoolsByUser(userID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSchoolsByUser',
     variables: {
       user_id: userID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
-  const accessCookie = loginSetup();
-  const userID = ENV_DATA.userID;
+  const loginData = loginSetupWithUserID();
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID: userID,
-    accessCookie: accessCookie,
-    singleTest: true
+    accessCookie: loginData.cookie,
+    userID: loginData.id
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSchoolsByUser(data.userEndpoint, data.userID, data.accessCookie, singleTest)
-}
+  const response = getSchoolsByUser(data.userID);
+  isRequestSuccessful(response);
+};

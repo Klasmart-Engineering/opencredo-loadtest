@@ -1,54 +1,49 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query ($organization_id: ID!) {
+const query = `query ($organization_id: ID!) {
   organization(organization_id: $organization_id) {
-    classes{
-      teachers{
+    classes {
+      teachers {
         id: user_id
         name: user_name
       }
-    }    
+    }
   }
 }`;
 
-export function getTeachersByOrg(userEndpoint, orgID, accessCookie = '', singleTest = false) {
+export function getTeachersByOrg(orgID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getTeachersByOrg',
     variables: {
       organization_id: orgID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const orgID = ENV_DATA.orgID;
+  
+  const orgID = getOrgID(accessCookie);
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
     accessCookie: accessCookie,
-    singleTest: true
+    orgID: orgID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getTeachersByOrg(data.userEndpoint, data.orgID, data.accessCookie, singleTest)
-}
+  const response = getTeachersByOrg(data.orgID);
+  isRequestSuccessful(response);
+};

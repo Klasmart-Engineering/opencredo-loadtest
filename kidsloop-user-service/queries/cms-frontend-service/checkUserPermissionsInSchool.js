@@ -1,17 +1,13 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js';
+import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getSchoolsByOrg } from './getSchoolsByOrg.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query(
-  $user_id: ID!
-  $school_id: ID!
-  $permission_name: ID!
-) {
+const query = `query ($user_id: ID!, $school_id: ID!, $permission_name: ID!) {
   user(user_id: $user_id) {
     school_membership(school_id: $school_id) {
       checkAllowed(permission_name: $permission_name)
@@ -19,53 +15,40 @@ export const query = `query(
   }
 }`;
 
-export function checkUserPermissionsInSchool(userEndpoint, userID, schoolID, permissionName, accessCookie = '', singleTest = false) {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  }
+export function checkUserPermissionsInSchool(schoolID, userID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'checkUserPermissionsInSchool',
     variables: {
-      userID: userID,
-      schoolID: schoolID,
-      permissionNames: permissionNames
+      permission_name: ENV_DATA.permissionNames[0],
+      school_id: schoolID,
+      user_id: userID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
-  const accessCookie = loginSetup();
+  const loginData = loginSetupWithUserID();
 
-  const userID = ENV_DATA.userID;
-  const schoolID = ENV_DATA.schoolID;
-  const permissionName = ENV_DATA.permissionNames[0];
+  const orgID = getOrgID(loginData.cookie);
+
+  const schoolResp = getSchoolsByOrg(orgID);
+  const schoolID = schoolResp.json('data.organization.schools.0.school_id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID: userID,
+    accessCookie: loginData.cookie,
     schoolID: schoolID,
-    permissionName: permissionName,
-    accessCookie: accessCookie,
-    singleTest: true
+    userID: loginData.id
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return checkUserPermissionsInSchool(data.userEndpoint, data.userID, data.schoolID, data.permissionName, data.accessCookie, singleTest)
-}
+  const response = checkUserPermissionsInSchool(data.schoolID, data.userID);
+  isRequestSuccessful(response);
+};

@@ -1,10 +1,9 @@
 import http from 'k6/http';
-import { getUserID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { loginSetupWithUserID } from '../../../utils/setup.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query userSchoolIDs($user_id: ID!) {
   user(user_id: $user_id) {
@@ -14,15 +13,7 @@ const query = `query userSchoolIDs($user_id: ID!) {
   }
 }`;
 
-function getUserSchoolIDs(userEndpoint, userID, singleTest = false, accessCookie = '') {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getUserSchoolIDs(userID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -37,24 +28,18 @@ function getUserSchoolIDs(userEndpoint, userID, singleTest = false, accessCookie
 
 export function setup() {
   
-  const accessCookie = loginSetup();
-
-  const userID = getUserID('', accessCookie);
+  const loginData = loginSetupWithUserID();
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    userID: userID,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: loginData.cookie,
+    userID: loginData.id
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initUserCookieJar(data.accessCookie);
 
-  return getUserSchoolIDs(data.userEndpoint, data.userID, singleTest, data.accessCookie);
+  const response = getUserSchoolIDs(data.userID);
+  isRequestSuccessful(response);
 };

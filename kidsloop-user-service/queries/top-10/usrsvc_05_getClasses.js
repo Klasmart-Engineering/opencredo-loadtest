@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { getClassID, loginSetup } from '../../../utils/setup.js';
-import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
-import { userEndpoint } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
 export const options = defaultRateOptions;
 
@@ -31,17 +31,15 @@ export function setup() {
   const classID = getClassID(accessCookie);
 
   return {
-    classID:      classID,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
+    classID:      classID
   };
 };
 
 export default function main(data) {
 
-  initCookieJar(userEndpoint, data.accessCookie);
+  initUserCookieJar(data.accessCookie);
 
   const response = getClasses(data.classID);
   isRequestSuccessful(response);
-
-  return response;
 };

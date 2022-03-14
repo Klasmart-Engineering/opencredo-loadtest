@@ -1,11 +1,10 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { default as getSchoolsByOrganization } from './getSchoolsByOrganization.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getSchoolsByOrganization } from './getSchoolsByOrganization.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions
 
 const query = `query classesBySchool($school_id: ID!) {
   school(school_id: $school_id) {
@@ -36,15 +35,7 @@ fragment userIdName on User {
   user_name
 }`;
 
-function getClassesBySchool(userEndpoint, schoolID, singleTest = false, accessCookie = '') {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getClassesBySchool(schoolID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -63,29 +54,19 @@ export function setup() {
 
   const orgID = getOrgID(accessCookie);
 
-  const schoolsResp = getSchoolsByOrganization({
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
-  });
-
+  const schoolsResp = getSchoolsByOrganization(orgID, accessCookie);
   const schoolID = schoolsResp.json('data.organization.schools.0.school_id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    schoolID: schoolID,
-    singleTest: true,
-    accessCookie: accessCookie
+    accessCookie: accessCookie,
+    schoolID: schoolID
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initUserCookieJar(data.accessCookie);
 
-  return getClassesBySchool(data.userEndpoint, data.schoolID, singleTest, data.accessCookie);
+  const response = getClassesBySchool(data.schoolID);
+  isRequestSuccessful(response);
 };

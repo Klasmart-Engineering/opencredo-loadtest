@@ -1,11 +1,10 @@
 import http from 'k6/http';
 import { getOrgID, loginSetup } from '../../../utils/setup.js';
-import * as env from '../../../utils/env.js';
-import { APIHeaders } from '../../../utils/common.js';
-import { default as getClassesByOrganization } from './getClassesByOrganization.js';
-import { defaultOptions } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { getClassesByOrganization } from './getClassesByOrganization.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
 const query = `query participantsByClass($class_id: ID!) {
   class(class_id: $class_id) {
@@ -23,15 +22,7 @@ fragment userIdName on User {
   user_name
 }`;
 
-function getClassStudentsByOrganization(userEndpoint, classID, singleTest = false, accessCookie = '') {
-
-  if (singleTest) {
-    //initialise the cookies for this VU
-    const cookieJar = http.cookieJar();
-    cookieJar.set(userEndpoint, 'access', accessCookie);
-    cookieJar.set(userEndpoint, 'locale', 'en');
-    cookieJar.set(userEndpoint, 'privacy', 'true');
-  };
+export function getParticipantsByClass(classID) {
 
   return http.post(userEndpoint, JSON.stringify({
     query: query,
@@ -50,29 +41,19 @@ export function setup() {
 
   const orgID = getOrgID(accessCookie);
 
-  const classResp = getClassesByOrganization({
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    orgID: orgID,
-    singleTest: true,
-    accessCookie: accessCookie
-  });
-  
+  const classResp = getClassesByOrganization(orgID, accessCookie);
   const classID = classResp.json('data.organization.classes.0.class_id')
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
+    accessCookie: accessCookie,
     classID: classID,
-    singleTest: true,
-    accessCookie: accessCookie
   };
 };
 
 export default function main(data) {
 
-  let singleTest = data.singleTest;
-  if (!singleTest) {
-    singleTest = false;
-  };
+  initUserCookieJar(data.accessCookie);
 
-  return getClassStudentsByOrganization(data.userEndpoint, data.orgID, singleTest, data.accessCookie)
+  const response = getParticipantsByClass(data.classID);
+  isRequestSuccessful(response);
 };

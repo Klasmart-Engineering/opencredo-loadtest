@@ -1,13 +1,13 @@
 import http from 'k6/http';
-import { loginSetup } from '../../../utils/setup.js'
-import * as env from '../../../utils/env.js'
-import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js'
-import { APIHeaders } from '../../../utils/common.js';
-import { defaultOptions } from '../../common.js';
+import { getOrgID, loginSetup } from '../../../utils/setup.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
+import { getSubjectsByOrg } from './getSubjectsByOrg.js';
+import { getCategoriesBySubject } from './getCategoriesBySubject.js';
 
-export const options = defaultOptions
+export const options = defaultRateOptions;
 
-export const query = `query($category_id: ID!) {
+const query = `query ($category_id: ID!) {
   category(id: $category_id) {
     subcategories {
       id
@@ -18,37 +18,40 @@ export const query = `query($category_id: ID!) {
   }
 }`;
 
-export function getSubcategoriesByCategory(userEndpoint, categoryID, accessCookie = '', singleTest = false) {
+export function getSubcategoriesByCategory(categoryID) {
+
   return http.post(userEndpoint, JSON.stringify({
     query: query,
-    operationName: 'getSubcategoriesByCategory',
     variables: {
       category_id: categoryID
     }
   }), {
     headers: APIHeaders
   });
-}
+};
 
 export function setup() {
 
   const accessCookie = loginSetup();
-  const categoryID = ENV_DATA.categoryID;
+
+  const orgID = getOrgID(accessCookie);
+
+  const subjectResp = getSubjectsByOrg(orgID);
+  const subjectID = subjectResp.json('data.organization.subjects.0.id');
+
+  const categoryResp = getCategoriesBySubject(subjectID);
+  const categoryID = categoryResp.json('data.q0.categories.0.id');
 
   return {
-    userEndpoint: `https://api.${env.APP_URL}/user/`,
-    categoryID: categoryID,
     accessCookie: accessCookie,
-    singleTest: true
+    categoryID: categoryID
   };
-}
+};
 
 export default function main(data) {
 
-  let singleTest = data.singleTest
-  if (!singleTest) {
-    singleTest = false
-  }
+  initUserCookieJar(data.accessCookie);
 
-  return getSubcategoriesByCategory(data.userEndpoint, data.categoryID, data.accessCookie, singleTest)
-}
+  const response = getSubcategoriesByCategory(data.categoryID);
+  isRequestSuccessful(response);
+};

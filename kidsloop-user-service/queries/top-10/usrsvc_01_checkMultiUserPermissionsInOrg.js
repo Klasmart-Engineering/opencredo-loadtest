@@ -1,12 +1,12 @@
 import http from 'k6/http';
 import { getOrgID, loginSetupWithUserID } from '../../../utils/setup.js';
 import { ENV_DATA } from '../../../utils/env-data-loadtest-k8s.js';
-import { APIHeaders, defaultRateOptions, initCookieJar, isRequestSuccessful } from '../../../utils/common.js';
-import { userEndpoint } from '../../common.js';
+import { APIHeaders, defaultRateOptions, isRequestSuccessful } from '../../../utils/common.js';
+import { initUserCookieJar, userEndpoint } from '../../common.js';
 
-export const options = defaultRateOptions
+export const options = defaultRateOptions;
 
-export function checkMultiUserPermissionInOrg(userID, orgID, permissionNames) {
+export function checkMultiUserPermissionInOrg(orgID, permissionNames, userID) {
   
   return http.post(userEndpoint, JSON.stringify({
     query: `query checkMultiUserPermissionInOrg($user_id: ID! $organization_id: ID! $permission_name_0: ID! $permission_name_1: ID! $permission_name_2: ID!) {
@@ -20,11 +20,11 @@ export function checkMultiUserPermissionInOrg(userID, orgID, permissionNames) {
     }`,
     operationName: 'checkMultiUserPermissionInOrg',
     variables: {
-      user_id: userID,
       organization_id: orgID,
       permission_name_0: permissionNames[0],
       permission_name_1: permissionNames[1],
-      permission_name_2: permissionNames[2]
+      permission_name_2: permissionNames[2],
+      user_id: userID
      }
     }),{
     headers: APIHeaders
@@ -37,23 +37,20 @@ export function setup() {
   const orgID = getOrgID(loginData.cookie);
 
   return {
-    userID:          loginData.id,
-    orgID:           orgID,
-    permissionNames: ENV_DATA.permissionNames,
     accessCookie:    loginData.cookie,
+    orgID:           orgID,
+    userID:          loginData.id
   };
 };
 
 export default function main(data) {
 
-  initCookieJar(userEndpoint, data.accessCookie);
+  initUserCookieJar(data.accessCookie);
 
   const response = checkMultiUserPermissionInOrg(
-    data.userID, 
     data.orgID, 
-    data.permissionNames,
+    ENV_DATA.permissionNames,
+    data.userID
   );
   isRequestSuccessful(response);
-
-  return response;
 };
