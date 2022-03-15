@@ -26,8 +26,8 @@ export function loginToB2C(username) {
 
   let response, cookies, params, csrfToken, clientRequestID, code;
 
-  const baseURL = `https://login.${env.APP_URL}/${tenantID}/${policyName}`;
-  const scope = `email https://login.${env.APP_URL}/${authClientID}/tasks.write openid profile offline_access`;
+  const baseURL = `https://login.${env.B2C_URL}/${tenantID}/${policyName}`;
+  const scope = `email https://login.${env.B2C_URL}/${authClientID}/tasks.write openid profile offline_access`;
   const redirect = `https://auth.${env.APP_URL}/authentication-callback`;
 
   //initialise the cookies for this VU

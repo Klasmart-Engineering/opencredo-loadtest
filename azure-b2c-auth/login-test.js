@@ -1,11 +1,12 @@
-import {
-  defaultOptions
-} from './common.js';
 import { loginToB2C } from './functions.js';
-import * as env from '../utils/env.js';
+import { scenario } from 'k6/execution';
+import { defaultRateOptions, getUserIDForMultiUser } from '../utils/common.js';
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
-export default function main(data) {
-  loginToB2C(env.USERNAME);
+export default function main() {
+
+  const userID = getUserIDForMultiUser(scenario.iterationInTest);
+
+  loginToB2C(userID);
 }

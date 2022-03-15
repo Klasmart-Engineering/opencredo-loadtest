@@ -1,20 +1,19 @@
-import { check } from 'k6';
 import http from 'k6/http';
 import { loginToB2C } from '../azure-b2c-auth/functions.js';
-import { isRequestSuccessful } from '../utils/common.js';
+import { defaultRateOptions, isRequestSuccessful } from '../utils/common.js';
 import { getUserIDB2C } from '../utils/setup.js';
 import {
   APIHeaders,
   AuthEndpoint,
-  defaultOptions,
   requestOverThreshold,
   threshold
 } from './common.js'
 
-export const options = defaultOptions;
+export const options = defaultRateOptions;
 
 export function setup() {
-  const loginResp = loginToB2C();
+
+  const loginResp = loginToB2C(__ENV.USERNAME);
 
   const userID = getUserIDB2C(loginResp.json('access_token'));
 
@@ -46,19 +45,6 @@ export default function main(data) {
   };
 
   isRequestSuccessful(response);
-
-  if (
-    check(response, {
-      'has status 200': (r) => r.status === 200,
-      'has access cookie': (r) => r.cookies.access,
-      'has refresh cookie': (r) => r.cookies.refresh,
-    })
-  ) {
-    check(response, {
-      'has access cookie data': (r) => r.cookies.access[0],
-      'has refresh cookie data': (r) => r.cookies.refresh[0],
-    })
-  };
   
   const switchPayload = JSON.stringify({
     user_id: data.user_id
@@ -74,19 +60,6 @@ export default function main(data) {
 
   isRequestSuccessful(response);
 
-  if (
-    check(response, {
-      'has status 200': (r) => r.status === 200,
-      'has access cookie': (r) => r.cookies.access,
-      'has refresh cookie': (r) => r.cookies.refresh,
-    })
-  ) {
-    check(response, {
-      'has access cookie data': (r) => r.cookies.access[0],
-      'has refresh cookie data': (r) => r.cookies.refresh[0],
-    })
-  };
-
   response = http.get(`${AuthEndpoint}/refresh`, {
     headers: APIHeaders,
   });
@@ -96,10 +69,4 @@ export default function main(data) {
   };
 
   isRequestSuccessful(response);
-
-  check(response, {
-    'has status 200': (r) => r.status === 200,
-  });
-
-  return response;
 }
