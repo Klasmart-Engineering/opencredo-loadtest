@@ -16,7 +16,6 @@ export const AUTH_CLIENT_ID = __ENV.AUTH_CLIENT_ID //string
 export const POLICY_NAME = __ENV.POLICY_NAME //string
 // Whether to use B2C to authenticate for tests
 export const B2C = __ENV.B2C ? __ENV.B2C : false //boolean
-export const B2C_URL = __ENV.B2C_URL ? __ENV.B2C_URL : __ENV.APP_URL
 
 //Assessment
 export const ROOM_ID = __ENV.ROOM_ID //string
