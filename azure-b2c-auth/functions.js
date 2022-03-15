@@ -23,12 +23,13 @@ export function loginToB2C(username) {
   const policyName = env.POLICY_NAME ? env.POLICY_NAME : 'B2C_1A_RELYING_PARTY_SIGN_UP_LOG_IN';
   const authClientID = env.AUTH_CLIENT_ID ? env.AUTH_CLIENT_ID : '926001fe-7853-485d-a15e-8c36bb4acaef';
   const hubClientID = env.HUB_CLIENT_ID ? env.HUB_CLIENT_ID : '24bc7c47-97c6-4f27-838e-093b3948a5ca';
+  const loginURL = env.LOGIN_URL ? env.LOGIN_URL : env.APP_URL;
 
   let response, cookies, params, csrfToken, clientRequestID, code;
 
-  const baseURL = `https://login.${env.APP_URL}/${tenantID}/${policyName}`;
-  const scope = `email https://login.${env.APP_URL}/${authClientID}/tasks.write openid profile offline_access`;
-  const redirect = `https://auth.${env.APP_URL}/authentication-callback`;
+  const baseURL = `https://login.${loginURL}/${tenantID}/${policyName}`;
+  const scope = `email https://login.${loginURL}/${authClientID}/tasks.write openid profile offline_access`;
+  const redirect = `https://auth.${loginURL}/authentication-callback`;
 
   //initialise the cookies for this VU
   const cookieJar = http.cookieJar();

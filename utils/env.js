@@ -1,5 +1,6 @@
 export const APP_URL = __ENV.APP_URL //string
 export const APP_URL_TEST = __ENV.APP_URL_TEST //string
+export const LOGIN_URL = __ENV.LOGIN_URL //String
 export const USERNAME = __ENV.USERNAME //string
 export const AMSENV = __ENV.AMSENV //string
 export const TESTVAL = __ENV.test //string
