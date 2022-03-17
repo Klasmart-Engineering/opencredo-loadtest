@@ -8,7 +8,7 @@ export const PASSWORD = __ENV.PASSWORD //string
 //This should be a JWT string
 export const ACCESS_COOKIE = __ENV.ACCESS_COOKIE //string
 export const CMS_PREFIX = __ENV.CMS_PREFIX ? __ENV.CMS_PREFIX : 'cms' //string
-export const THRESHOLD = __ENV.THRESHOLD //integer
+export const THRESHOLD = __ENV.THRESHOLD ? __ENV.THRESHOLD : 1000; //integer
 
 //Azure B2C
 export const TENANT_ID = __ENV.TENANT_ID //string
