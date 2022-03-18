@@ -31,7 +31,3 @@ export const defaultOptions = {
     }
   },
 };
-
-export const requestOverThreshold = new Counter('requests over specified threshold', false);
-
-export const threshold = env.THRESHOLD ? env.THRESHOLD : 1000;

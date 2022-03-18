@@ -1,6 +1,8 @@
 import http from 'k6/http';
+import { Counter } from 'k6/metrics';
+import { loginToB2C } from '../azure-b2c-auth/functions.js';
 import * as env from './env.js';
-import { loginSetupB2C } from './setup.js';
+import { getUserIDB2C, loginSetupB2C } from './setup.js';
 
 const userAgent = 'k6 - open credo loadtest';
 
@@ -14,7 +16,13 @@ export const APIHeaders = Object.assign({
   'content-type': 'application/json',
 }, defaultHeaders)
 
+const requestOverThreshold = new Counter('requests over specified threshold', false);
+
 export function isRequestSuccessful(response, expectedStatus = 200) {
+
+  if (response.timings.duration >= env.THRESHOLD ) {
+    requestOverThreshold.add(1);
+  };
 
   if (response.status !== expectedStatus) {
     console.error(response.status)
@@ -117,3 +125,32 @@ export function getCurrentUserFromPool(num) {
 
   return value - 1;
 };
+
+export function getB2CTokenPool() {
+
+  let returnVal = {};
+  let vus;
+  
+  if (env.vus >= env.poolCap) {
+    vus = env.poolCap;
+  }
+  else {
+    vus = env.vus;
+  }
+
+  for (let index = 0; index < vus; index++) {
+
+    let loginResp = loginToB2C(getUserIDForMultiUser(index + 1));
+
+    let userID = getUserIDB2C(loginResp.json('access_token'));
+
+    returnVal[index] = {
+      access_token: loginResp.json('access_token'),
+      id_token: loginResp.json('id_token'),
+      refresh_token: loginResp.json('refresh_token'),
+      user_id: userID
+    }
+  }
+
+  return returnVal;
+}

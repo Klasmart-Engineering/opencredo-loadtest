@@ -1,29 +1,29 @@
 import http from 'k6/http';
-import { loginToB2C } from '../azure-b2c-auth/functions.js';
-import { defaultRateOptions, isRequestSuccessful } from '../utils/common.js';
-import { getUserIDB2C } from '../utils/setup.js';
+import { scenario } from 'k6/execution';
+import { defaultRateOptions, getB2CTokenPool, getCurrentUserFromPool, isRequestSuccessful } from '../utils/common.js';
 import {
   APIHeaders,
-  AuthEndpoint
+  AuthEndpoint,
 } from './common.js'
 
-export const options = defaultRateOptions;
+export const options = Object.assign({}, defaultRateOptions, {
+  setupTimeout: '15m'
+});
 
 export function setup() {
-
-  const loginResp = loginToB2C(__ENV.USERNAME);
-
-  const userID = getUserIDB2C(loginResp.json('access_token'));
+  
+  const tokenPool = getB2CTokenPool();
 
   return {
-    access_token: loginResp.json('access_token'),
-    id_token: loginResp.json('id_token'),
-    refresh_token: loginResp.json('refresh_token'),
-    user_id: userID
+    tokenPool: tokenPool
   }
 }
 
 export default function main(data) {
+
+  const id = getCurrentUserFromPool(scenario.iterationInTest);
+
+  const userData = data.tokenPool[id];
 
   let response;
 
@@ -31,7 +31,7 @@ export default function main(data) {
   http.cookieJar();
 
   const authHeader = {
-    Authorization: `Bearer ${data.access_token}`
+    Authorization: `Bearer ${userData.access_token}`
   };
 
   response = http.post(`${AuthEndpoint}/transfer`, '', {
@@ -40,7 +40,7 @@ export default function main(data) {
   isRequestSuccessful(response);
   
   const switchPayload = JSON.stringify({
-    user_id: data.user_id
+    user_id: userData.user_id
   })
   
   response = http.post(`${AuthEndpoint}/switch`, switchPayload, {
