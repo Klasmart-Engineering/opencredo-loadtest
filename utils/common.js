@@ -51,11 +51,8 @@ export const defaultRateOptions = {
       maxVUs: maxVUs,
     }
   },
-
-  thresholds: {
-    http_req_duration: ['p(99)<1000'], // 99% of requests must complete below 1s
-    iteration_duration: ['p(95)<3000'] // 95% of the iteration duration below 2s
-  },
+  
+  summaryTrendStats: ["avg", "min", "med", "max", "p(90)", "p(99)"],
 
   ext: {
     loadimpact: {

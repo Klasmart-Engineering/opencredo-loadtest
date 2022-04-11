@@ -1,14 +1,13 @@
 import { initUserCookieJar } from "./common.js";
 import { scenario } from 'k6/execution';
-import { landingTest } from "./landing-test.js";
-import { defaultRateOptions, getUserPool, getCurrentUserFromPool as getCurrentUser } from "../utils/common.js";
+import { landingTest, options as defaultOptions } from "./landing-test.js";
+import { getUserPool, getCurrentUserFromPool as getCurrentUser } from "../utils/common.js";
 
-export const options = Object.assign({}, defaultRateOptions, {
+export const options = Object.assign({}, defaultOptions, {
   setupTimeout: '30m'
 });
 
 export function setup() {
-  
   return getUserPool();
 };
 
