@@ -48,3 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+#Misc codebuild files
+nri-statsd.toml
+codebuild_build.sh
