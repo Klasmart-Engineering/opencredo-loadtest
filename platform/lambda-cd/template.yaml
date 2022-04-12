@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  update-deployment
+  SAM Template for the event based CD lambda
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 20
+
+Resources:
+  UpdateDeploymentFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: update-deployment/
+      Handler: update-deployment
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          EKS_CLUSTER_NAME: kidskube-uk-kidskube-loadtest-eks
+          APPS_NAMESPACE: kl-apps
+          DEPLOYMENT_NAME: kidsloop-user-service
+          EVENTBUS_NAME: loadtest-poc-event-bus
+          EVENT_OUTPUT_SOURCE: live.kidsloop.kidskube-loadtest.user-updated
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-user
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  UpdateDeployment:
+    Description: "Update Deployment Lambda Function ARN"
+    Value: !GetAtt UpdateDeploymentFunction.Arn
+  UpdateDeploymentIamRole:
+    Description: "Implicit IAM Role created for Update Deployment function"
+    Value: !GetAtt UpdateDeploymentFunctionRole.Arn
