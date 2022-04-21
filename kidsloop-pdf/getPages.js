@@ -1,49 +1,70 @@
-import { loginSetup } from '../utils/setup.js'
-import { initCookieJar } from '../utils/common.js'
-import { prerender } from './common.js'
-import { getPagesTest } from './functions.js'
+import http                                  from 'k6/http';
+import { APIHeaders, isRequestSuccessful }   from '../utils/common.js';
+import { loginSetup }                        from '../utils/setup.js';
+import { defaultRateOptions, initCookieJar } from '../utils/common.js';
+import * as env                              from '../utils/env.js';
 
-const APP_URL = __ENV.APP_URL
-const USERNAME = __ENV.USERNAME
-const AMSENV = __ENV.AMSENV
-const RATE = __ENV.RATE || 1
+/**
+ * options for k6, set to default rate options
+ *
+ * @constant
+ * @type {object}
+ * @memberof pdf-service
+ * @alias getPagesOptions
+ */
+export const options = defaultRateOptions;
 
-const pdfEndpoint = `https://api.${APP_URL}/pdf`;
-const pdfFileName = '61f7ce22ee9e045916473c5c.pdf';
-
-// Configure options
-export const options = {
-  ext: {
-    loadimpact: {
-      projectID: 3560234,
-    }
-  },
-  scenarios: {
-    pages: {
-      executor: 'constant-arrival-rate',
-      rate: RATE,
-      duration: '30s',
-      preAllocatedVUs: 100,
-      maxVUs: 10000,
-    }
-  }
-};
-
+/**
+ * function for k6 to setup the get pages test
+ *
+ * @returns {Function} returns the default setup function
+ * @memberof pdf-service
+ * @alias getPagesSetup
+ */
 export function setup() {
-  let amsEnv = AMSENV
-  if (!amsEnv) {
-    amsEnv = 'dev'
-  }
-
-  const accessCookie = loginSetup(APP_URL, USERNAME, amsEnv);
-  prerender(accessCookie, pdfEndpoint, pdfFileName);
-
-  return {
-    accessCookie: accessCookie
-  }
+  return loginSetup();
 }
 
+/**
+ * function for k6 to run the get pages test
+ *
+ * @param {object} data -result of setup function above
+ * @memberof pdf-service
+ * @alias getPagesMain
+ */
 export default function main(data) {
-  initCookieJar(data.accessCookie);
-  getPagesTest(pdfEndpoint, pdfFileName);
+  initCookieJar(data);
+  getPagesTest();
+}
+
+/**
+ * the API endpoint for the PDF service
+ *
+ * @constant
+ * @type {string}
+ * @memberof pdf-service
+ */
+const pdfEndpoint = `https://api.${env.APP_URL}/pdf`;
+
+/**
+ * the filename of an existing PDF to test against
+ *
+ * @constant
+ * @type {string}
+ * @memberof pdf-service
+ */
+const pdfFileName = '61f7ce22ee9e045916473c5c.pdf';
+
+/**
+ * function to hit the get pages endpoint based on the variables set above
+ *
+ * @returns {void} Nothing
+ * @memberof pdf-service
+ */
+function getPagesTest() {
+
+  const response = http.get(`${pdfEndpoint}/${pdfFileName}/page/1`, {
+    headers: APIHeaders
+  });
+  isRequestSuccessful(response, 200);
 }

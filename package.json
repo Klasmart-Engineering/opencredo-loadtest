@@ -1,0 +1,26 @@
+{
+  "name": "opencredo-loadtest",
+  "version": "1.0.0",
+  "description": "This repository contains a collection of loadtesting scripts written with [k6](https://k6.io/) and associated tooling.",
+  "scripts": {
+    "lint": "eslint .",
+    "docs": "rm -rf jsdocs/* && jsdoc --configure .jsdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/calmisland/opencredo-loadtest.git"
+  },
+  "bugs": {
+    "url": "https://bitbucket.org/calmisland/opencredo-loadtest/issues"
+  },
+  "homepage": "https://bitbucket.org/calmisland/opencredo-loadtest#readme",
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-plugin-align-import": "^1.0.0",
+    "eslint-plugin-jsdoc": "^39.2.1",
+    "jsdoc": "~3.6.10"
+  },
+  "dependencies": {
+    "clean-jsdoc-theme": "^3.3.4"
+  }
+}

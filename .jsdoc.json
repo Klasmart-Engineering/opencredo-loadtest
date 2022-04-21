@@ -1,0 +1,29 @@
+{
+  "opts": {
+    "destination": "jsdocs",
+    "readme": "README.md",
+    "recurse": true,
+    "template": "node_modules/clean-jsdoc-theme",
+    "theme_opts": {
+      "theme": "dark"
+    }
+  },
+  "plugins": [],
+  "recurseDepth": 10,
+  "source": {
+    "include": ["."],
+    "exclude": ["azure-b2c-auth/jslib-url.js", "kidsloop-fps/aws4.js", "utils/uuid.js"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(node_modules|dist|jsdocs)"
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  }
+}
+

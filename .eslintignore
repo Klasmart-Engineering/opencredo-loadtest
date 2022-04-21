@@ -1,0 +1,11 @@
+# compiled files
+**/dist/*
+# json files
+**/*.json
+# markdown files
+**/*.md
+
+# imported modules 
+azure-b2c-auth/jslib-url.js
+kidsloop-fps/aws4.js
+utils/uuid.js

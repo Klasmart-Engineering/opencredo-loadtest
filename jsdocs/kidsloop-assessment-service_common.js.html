@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Adding favicon -->
+    
+
+    <!-- Adding meta -->
+    
+
+    <!-- Adding external script-->
+    
+
+    <!-- Adding external style-->
+    
+
+    <!-- Adding scripts-->
+    
+
+    <!-- Adding style-->
+    
+
+    <!-- Adding overlay script-->
+    
+
+    <!-- Adding overlay style-->
+    
+
+
+    <title>
+      kidsloop-assessment-service/common.js
+    </title>
+
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/third-party/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/third-party/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/reset.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme-base.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme-dark.css">
+    
+    <svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    style="display:none">
+    <defs>
+        <symbol id="copy-icon" viewbox="0 0 488.3 488.3">
+            <g>
+                <path
+                    d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z" />
+                <path
+                    d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z" />
+            </g>
+        </symbol>
+        <symbol id='search-icon' viewBox="0 0 512 512">
+            <g>
+                <g>
+                    <path
+                        d="M225.474,0C101.151,0,0,101.151,0,225.474c0,124.33,101.151,225.474,225.474,225.474    c124.33,0,225.474-101.144,225.474-225.474C450.948,101.151,349.804,0,225.474,0z M225.474,409.323    c-101.373,0-183.848-82.475-183.848-183.848S124.101,41.626,225.474,41.626s183.848,82.475,183.848,183.848    S326.847,409.323,225.474,409.323z" />
+                </g>
+            </g>
+            <g>
+                <g>
+                    <path
+                        d="M505.902,476.472L386.574,357.144c-8.131-8.131-21.299-8.131-29.43,0c-8.131,8.124-8.131,21.306,0,29.43l119.328,119.328    c4.065,4.065,9.387,6.098,14.715,6.098c5.321,0,10.649-2.033,14.715-6.098C514.033,497.778,514.033,484.596,505.902,476.472z" />
+                </g>
+            </g>
+        </symbol>
+        <symbol id="down-icon" viewBox="0 0 16 16">
+            <path 
+                fill-rule="evenodd" 
+                clip-rule="evenodd" 
+                d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z"
+            >
+            </path>
+        </symbol>
+    </defs>
+</svg>
+  </head>
+
+  <body>
+
+    <nav class="navbar" id="navbar">
+      <div class="navbar-heading" id="navbar-heading"><a href="index.html"><h2 class="navbar-heading-text">Home</h2></a></div><div class="search-box" id="search-box"><div class="search-box-input-container"><input class="search-box-input" type="text" placeholder="Search..." id="search-box-input" /><svg class="search-icon" alt="search-icon"><use xlink:href="#search-icon"></use></svg></div><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-main-content" id="sidebar-main-content"><div class="accordion collapsed" id="2544654" > <h3 class="accordion-heading">Namespaces<svg><use xlink:href="#down-icon"></use></svg></h3><ul class="accordion-content"><li class="accordion collapsed child" id=8665365><div class="accordion-heading child"><a href="assessment-service.html">assessment-service</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="assessment-service.html#.exports.scoreByUser">exports.scoreByUser</a></li><li data-type='method'><a href="assessment-service.html">multiScoreByUserTestMain</a></li><li data-type='method'><a href="assessment-service.html">multiScoreByUserTestSetup</a></li><li data-type='method'><a href="assessment-service.html">scoreByUserTestMain</a></li><li data-type='method'><a href="assessment-service.html">scoreByUserTestSetup</a></li></ul></li><li class="accordion collapsed child" id=7754417><div class="accordion-heading child"><a href="auth-server.html">auth-server</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="auth-server.html">loginB2CMain</a></li><li data-type='method'><a href="auth-server.html">loginB2CSetup</a></li><li data-type='method'><a href="auth-server.html">poolLoginB2CMain</a></li><li data-type='method'><a href="auth-server.html">poolLoginB2CSetup</a></li></ul></li><li class="accordion collapsed child" id=6571082><div class="accordion-heading child"><a href="azure-b2c.html">azure-b2c</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="azure-b2c.html#.exports.generateCodeChallenge">exports.generateCodeChallenge</a></li><li data-type='method'><a href="azure-b2c.html#.exports.loginToB2C">exports.loginToB2C</a></li><li data-type='method'><a href="azure-b2c.html#.isB2CRequestSuccessful">isB2CRequestSuccessful</a></li><li data-type='method'><a href="azure-b2c.html">loginTestMain</a></li></ul></li><li class="accordion collapsed child" id=1124920><div class="accordion-heading child"><a href="cms-backend.html">cms-backend</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="cms-backend.html">assessmentsForStudentMain</a></li><li data-type='method'><a href="cms-backend.html">assessmentsForStudentSetup</a></li><li data-type='method'><a href="cms-backend.html">assessmentsSummaryMain</a></li><li data-type='method'><a href="cms-backend.html">assessmentsSummarySetup</a></li><li data-type='method'><a href="cms-backend.html#.exports.defaultPoolSetup">exports.defaultPoolSetup</a></li><li data-type='method'><a href="cms-backend.html#.exports.defaultSetup">exports.defaultSetup</a></li><li data-type='method'><a href="cms-backend.html#.exports.getAssessmentsForStudent">exports.getAssessmentsForStudent</a></li><li data-type='method'><a href="cms-backend.html#.exports.getAssessmentsSummary">exports.getAssessmentsSummary</a></li><li data-type='method'><a href="cms-backend.html#.exports.getContentsFolders">exports.getContentsFolders</a></li><li data-type='method'><a href="cms-backend.html#.exports.getSchedulesTimeView">exports.getSchedulesTimeView</a></li><li data-type='method'><a href="cms-backend.html#.exports.initCookieJar">exports.initCookieJar</a></li><li data-type='method'><a href="cms-backend.html#.exports.isRequestSuccessful">exports.isRequestSuccessful</a></li><li data-type='method'><a href="cms-backend.html#.multiStudentLandingTest">multiStudentLandingTest</a></li><li data-type='method'><a href="cms-backend.html#.studentLandingTest">studentLandingTest</a></li><li data-type='method'><a href="cms-backend.html#.teacherLandingTest">teacherLandingTest</a></li><li data-type='method'><a href="cms-backend.html">contentsFoldersMain</a></li><li data-type='method'><a href="cms-backend.html">contentsFoldersSetup</a></li><li data-type='method'><a href="cms-backend.html">landingStudentMain</a></li><li data-type='method'><a href="cms-backend.html">landingStudentSetup</a></li><li data-type='method'><a href="cms-backend.html">landingTeacherMain</a></li><li data-type='method'><a href="cms-backend.html">landingTeacherSetup</a></li><li data-type='method'><a href="cms-backend.html">multiLandingStudentMain</a></li><li data-type='method'><a href="cms-backend.html">multiLandingStudentSetup</a></li><li data-type='method'><a href="cms-backend.html">schedulesTimeViewMain</a></li><li data-type='method'><a href="cms-backend.html">schedulesTimeViewSetup</a></li></ul></li><li class="accordion collapsed child" id=8673476><div class="accordion-heading child"><a href="common.html">common</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="common.html#.exports.getB2CTokenPool">exports.getB2CTokenPool</a></li><li data-type='method'><a href="common.html#.exports.getCurrentUserFromPool">exports.getCurrentUserFromPool</a></li><li data-type='method'><a href="common.html#.exports.getUserIDForMultiUser">exports.getUserIDForMultiUser</a></li><li data-type='method'><a href="common.html#.exports.getUserPool">exports.getUserPool</a></li><li data-type='method'><a href="common.html#.exports.initCookieJar">exports.initCookieJar</a></li><li data-type='method'><a href="common.html#.exports.isRequestSuccessful">exports.isRequestSuccessful</a></li></ul></li><li class="accordion-list" id=""><a href="environment.html">environment</a></li><li class="accordion collapsed child" id=7352870><div class="accordion-heading child"><a href="file-processing-service.html">file-processing-service</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="file-processing-service.html#.sleepWait">sleepWait</a></li><li data-type='method'><a href="file-processing-service.html">studentUploadsMain</a></li></ul></li><li class="accordion collapsed child" id=107796><div class="accordion-heading child"><a href="h5p-library.html">h5p-library</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="h5p-library.html#.exports.chooseRandom">exports.chooseRandom</a></li><li data-type='method'><a href="h5p-library.html#.exports.contentParamsTest">exports.contentParamsTest</a></li><li data-type='method'><a href="h5p-library.html#.exports.contentPlayTest">exports.contentPlayTest</a></li><li data-type='method'><a href="h5p-library.html#.exports.contentTypeCacheTest">exports.contentTypeCacheTest</a></li><li data-type='method'><a href="h5p-library.html#.exports.coreTest">exports.coreTest</a></li><li data-type='method'><a href="h5p-library.html#.exports.librariesAjaxTest">exports.librariesAjaxTest</a></li><li data-type='method'><a href="h5p-library.html#.exports.librariesTest">exports.librariesTest</a></li><li data-type='method'><a href="h5p-library.html">multiTestH5PMain</a></li><li data-type='method'><a href="h5p-library.html">multiTestH5PSetup</a></li><li data-type='method'><a href="h5p-library.html">testH5PMain</a></li><li data-type='method'><a href="h5p-library.html">testH5PSetup</a></li></ul></li><li class="accordion collapsed child" id=4785625><div class="accordion-heading child"><a href="pdf-service.html">pdf-service</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="pdf-service.html">getPagesMain</a></li><li data-type='method'><a href="pdf-service.html">getPagesSetup</a></li><li data-type='method'><a href="pdf-service.html#.getPagesTest">getPagesTest</a></li></ul></li><li class="accordion collapsed child" id=5778221><div class="accordion-heading child"><a href="setup.html">setup</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="setup.html#.checkAccessCookieResponse">checkAccessCookieResponse</a></li><li data-type='method'><a href="setup.html#.checkSwitchResponse">checkSwitchResponse</a></li><li data-type='method'><a href="setup.html#.checkUserIDResponse">checkUserIDResponse</a></li><li data-type='method'><a href="setup.html#.exports.amsLogin">exports.amsLogin</a></li><li data-type='method'><a href="setup.html#.exports.getAccessCookie">exports.getAccessCookie</a></li><li data-type='method'><a href="setup.html#.exports.getAccessCookieB2C">exports.getAccessCookieB2C</a></li><li data-type='method'><a href="setup.html#.exports.getClassID">exports.getClassID</a></li><li data-type='method'><a href="setup.html#.exports.getOrgID">exports.getOrgID</a></li><li data-type='method'><a href="setup.html#.exports.getSchoolID">exports.getSchoolID</a></li><li data-type='method'><a href="setup.html#.exports.getUserID">exports.getUserID</a></li><li data-type='method'><a href="setup.html#.exports.getUserIDB2C">exports.getUserIDB2C</a></li><li data-type='method'><a href="setup.html#.exports.loginSetup">exports.loginSetup</a></li><li data-type='method'><a href="setup.html#.exports.loginSetupB2C">exports.loginSetupB2C</a></li><li data-type='method'><a href="setup.html#.exports.loginSetupWithUserID">exports.loginSetupWithUserID</a></li><li data-type='method'><a href="setup.html#.loginSetupAMS">loginSetupAMS</a></li></ul></li><li class="accordion collapsed child" id=3460840><div class="accordion-heading child"><a href="user-service.html">user-service</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="user-service.html">landingTestLocalMain</a></li><li data-type='method'><a href="user-service.html">landingTestMain</a></li><li data-type='method'><a href="user-service.html">landingTestSetup</a></li><li data-type='method'><a href="user-service.html">multiLandingTestMain</a></li><li data-type='method'><a href="user-service.html">multiLandingTestSetup</a></li><li data-type='method'><a href="user-service.html">poolLandingTestMain</a></li><li data-type='method'><a href="user-service.html">poolLandingTestSetup</a></li><li data-type='method'><a href="user-service.html#.checkRequest">checkRequest</a></li><li data-type='method'><a href="user-service.html#.exports.defaultSetup">exports.defaultSetup</a></li><li data-type='method'><a href="user-service.html#.exports.initUserCookieJar">exports.initUserCookieJar</a></li><li data-type='method'><a href="user-service.html#.exports.landingTest">exports.landingTest</a></li><li data-type='method'><a href="user-service.html#.sizeOfHeaders">sizeOfHeaders</a></li><li data-type='method'><a href="user-service.html#.trackDataMetricsPerURL">trackDataMetricsPerURL</a></li></ul></li><li class="accordion collapsed child" id=6861175><div class="accordion-heading child"><a href="xapi-server.html">xapi-server</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="xapi-server.html#.xapiTest">xapiTest</a></li><li data-type='method'><a href="xapi-server.html">xapiTestSetup</a></li><li data-type='method'><a href="xapi-server.html">xapiTestSetup</a></li></ul></li></ul> </div>
+      
+
+    </nav>
+    <div class="navbar-ham" id="navbar-ham">
+      <div>
+        <div class="first"></div>
+        <div class="second"></div>
+        <div class="third"></div>
+      </div>
+    </div>
+
+    <div id="main" class="main-content">
+      
+      <h1 id='page-title' class="page-title">
+        kidsloop-assessment-service/common.js
+      </h1>
+      
+
+      
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @namespace assessment-service
+ */
+import * as env from '../utils/env.js';
+
+/**
+ * the endpoint for the assessment service
+ *
+ * @constant
+ * @type {string}
+ * @memberof assessment-service
+ */
+export const assessmentEndpoint = `https://api.${env.APP_URL}/assessment/`;
+
+/**
+ * the graphql query used to test scores by user
+ *
+ * @constant
+ * @type {string}
+ * @memberof assessment-service
+ */
+export const query = `query ($id: String) {
+  Room(room_id: $id) {
+    scoresByUser {
+      user {
+        user_id
+        given_name
+        family_name
+      }
+      scores {
+        content {
+          content_id
+          name
+          type
+          name
+          h5p_id
+          subcontent_id
+          parent_id
+        }
+      }
+    }
+  }
+}`;</code></pre>
+        </article>
+    </section>
+
+
+
+
+    </div>
+
+    <footer class="footer" id="footer">
+      
+    </footer>
+
+    <script src="scripts/third-party/prettify.js"></script>
+    <script src="scripts/third-party/lang-css.js"></script>
+    <script type="text/javascript" src="scripts/misc.js"></script>
+
+    <script>prettyPrint();</script>
+    <script src="scripts/linenumber.js"></script>
+    <script src="scripts/fix-code-block.js"></script>
+    <script src="scripts/fix-navbar.js"></script>
+    
+      <script src="scripts/search.js"></script>
+      <script src="scripts/third-party/fuse.js"></script>
+      <script>
+        var list = [{"title":"assessment-service","link":"<a href=\"assessment-service.html\">assessment-service</a>"},{"title":"assessment-service.exports.scoreByUser","link":"<a href=\"assessment-service.html#.exports.scoreByUser\">assessment-service &rtrif; exports</a>"},{"title":"multiScoreByUserTestMain","link":"<a href=\"assessment-service.html\">multiScoreByUserTestMain &rtrif; undefined</a>"},{"title":"multiScoreByUserTestSetup","link":"<a href=\"assessment-service.html\">multiScoreByUserTestSetup &rtrif; undefined</a>"},{"title":"scoreByUserTestMain","link":"<a href=\"assessment-service.html\">scoreByUserTestMain &rtrif; undefined</a>"},{"title":"scoreByUserTestSetup","link":"<a href=\"assessment-service.html\">scoreByUserTestSetup &rtrif; undefined</a>"},{"title":"auth-server","link":"<a href=\"auth-server.html\">auth-server</a>"},{"title":"loginB2CMain","link":"<a href=\"auth-server.html\">loginB2CMain &rtrif; undefined</a>"},{"title":"loginB2CSetup","link":"<a href=\"auth-server.html\">loginB2CSetup &rtrif; undefined</a>"},{"title":"poolLoginB2CMain","link":"<a href=\"auth-server.html\">poolLoginB2CMain &rtrif; undefined</a>"},{"title":"poolLoginB2CSetup","link":"<a href=\"auth-server.html\">poolLoginB2CSetup &rtrif; undefined</a>"},{"title":"azure-b2c","link":"<a href=\"azure-b2c.html\">azure-b2c</a>"},{"title":"azure-b2c.exports.generateCodeChallenge","link":"<a href=\"azure-b2c.html#.exports.generateCodeChallenge\">azure-b2c &rtrif; exports</a>"},{"title":"azure-b2c.exports.loginToB2C","link":"<a href=\"azure-b2c.html#.exports.loginToB2C\">azure-b2c &rtrif; exports</a>"},{"title":"azure-b2c.isB2CRequestSuccessful","link":"<a href=\"azure-b2c.html#.isB2CRequestSuccessful\">azure-b2c &rtrif; isB2CRequestSuccessful</a>"},{"title":"loginTestMain","link":"<a href=\"azure-b2c.html\">loginTestMain &rtrif; undefined</a>"},{"title":"cms-backend","link":"<a href=\"cms-backend.html\">cms-backend</a>"},{"title":"assessmentsForStudentMain","link":"<a href=\"cms-backend.html\">assessmentsForStudentMain &rtrif; undefined</a>"},{"title":"assessmentsForStudentSetup","link":"<a href=\"cms-backend.html\">assessmentsForStudentSetup &rtrif; undefined</a>"},{"title":"assessmentsSummaryMain","link":"<a href=\"cms-backend.html\">assessmentsSummaryMain &rtrif; undefined</a>"},{"title":"assessmentsSummarySetup","link":"<a href=\"cms-backend.html\">assessmentsSummarySetup &rtrif; undefined</a>"},{"title":"cms-backend.exports.defaultPoolSetup","link":"<a href=\"cms-backend.html#.exports.defaultPoolSetup\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.defaultSetup","link":"<a href=\"cms-backend.html#.exports.defaultSetup\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.getAssessmentsForStudent","link":"<a href=\"cms-backend.html#.exports.getAssessmentsForStudent\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.getAssessmentsSummary","link":"<a href=\"cms-backend.html#.exports.getAssessmentsSummary\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.getContentsFolders","link":"<a href=\"cms-backend.html#.exports.getContentsFolders\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.getSchedulesTimeView","link":"<a href=\"cms-backend.html#.exports.getSchedulesTimeView\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.initCookieJar","link":"<a href=\"cms-backend.html#.exports.initCookieJar\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.exports.isRequestSuccessful","link":"<a href=\"cms-backend.html#.exports.isRequestSuccessful\">cms-backend &rtrif; exports</a>"},{"title":"cms-backend.multiStudentLandingTest","link":"<a href=\"cms-backend.html#.multiStudentLandingTest\">cms-backend &rtrif; multiStudentLandingTest</a>"},{"title":"cms-backend.studentLandingTest","link":"<a href=\"cms-backend.html#.studentLandingTest\">cms-backend &rtrif; studentLandingTest</a>"},{"title":"cms-backend.teacherLandingTest","link":"<a href=\"cms-backend.html#.teacherLandingTest\">cms-backend &rtrif; teacherLandingTest</a>"},{"title":"contentsFoldersMain","link":"<a href=\"cms-backend.html\">contentsFoldersMain &rtrif; undefined</a>"},{"title":"contentsFoldersSetup","link":"<a href=\"cms-backend.html\">contentsFoldersSetup &rtrif; undefined</a>"},{"title":"landingStudentMain","link":"<a href=\"cms-backend.html\">landingStudentMain &rtrif; undefined</a>"},{"title":"landingStudentSetup","link":"<a href=\"cms-backend.html\">landingStudentSetup &rtrif; undefined</a>"},{"title":"landingTeacherMain","link":"<a href=\"cms-backend.html\">landingTeacherMain &rtrif; undefined</a>"},{"title":"landingTeacherSetup","link":"<a href=\"cms-backend.html\">landingTeacherSetup &rtrif; undefined</a>"},{"title":"multiLandingStudentMain","link":"<a href=\"cms-backend.html\">multiLandingStudentMain &rtrif; undefined</a>"},{"title":"multiLandingStudentSetup","link":"<a href=\"cms-backend.html\">multiLandingStudentSetup &rtrif; undefined</a>"},{"title":"schedulesTimeViewMain","link":"<a href=\"cms-backend.html\">schedulesTimeViewMain &rtrif; undefined</a>"},{"title":"schedulesTimeViewSetup","link":"<a href=\"cms-backend.html\">schedulesTimeViewSetup &rtrif; undefined</a>"},{"title":"common","link":"<a href=\"common.html\">common</a>"},{"title":"common.exports.getB2CTokenPool","link":"<a href=\"common.html#.exports.getB2CTokenPool\">common &rtrif; exports</a>"},{"title":"common.exports.getCurrentUserFromPool","link":"<a href=\"common.html#.exports.getCurrentUserFromPool\">common &rtrif; exports</a>"},{"title":"common.exports.getUserIDForMultiUser","link":"<a href=\"common.html#.exports.getUserIDForMultiUser\">common &rtrif; exports</a>"},{"title":"common.exports.getUserPool","link":"<a href=\"common.html#.exports.getUserPool\">common &rtrif; exports</a>"},{"title":"common.exports.initCookieJar","link":"<a href=\"common.html#.exports.initCookieJar\">common &rtrif; exports</a>"},{"title":"common.exports.isRequestSuccessful","link":"<a href=\"common.html#.exports.isRequestSuccessful\">common &rtrif; exports</a>"},{"title":"environment","link":"<a href=\"environment.html\">environment</a>"},{"title":"file-processing-service","link":"<a href=\"file-processing-service.html\">file-processing-service</a>"},{"title":"file-processing-service.sleepWait","link":"<a href=\"file-processing-service.html#.sleepWait\">file-processing-service &rtrif; sleepWait</a>"},{"title":"studentUploadsMain","link":"<a href=\"file-processing-service.html\">studentUploadsMain &rtrif; undefined</a>"},{"title":"h5p-library","link":"<a href=\"h5p-library.html\">h5p-library</a>"},{"title":"h5p-library.exports.chooseRandom","link":"<a href=\"h5p-library.html#.exports.chooseRandom\">h5p-library &rtrif; exports</a>"},{"title":"h5p-library.exports.contentParamsTest","link":"<a href=\"h5p-library.html#.exports.contentParamsTest\">h5p-library &rtrif; exports</a>"},{"title":"h5p-library.exports.contentPlayTest","link":"<a href=\"h5p-library.html#.exports.contentPlayTest\">h5p-library &rtrif; exports</a>"},{"title":"h5p-library.exports.contentTypeCacheTest","link":"<a href=\"h5p-library.html#.exports.contentTypeCacheTest\">h5p-library &rtrif; exports</a>"},{"title":"h5p-library.exports.coreTest","link":"<a href=\"h5p-library.html#.exports.coreTest\">h5p-library &rtrif; exports</a>"},{"title":"h5p-library.exports.librariesAjaxTest","link":"<a href=\"h5p-library.html#.exports.librariesAjaxTest\">h5p-library &rtrif; exports</a>"},{"title":"h5p-library.exports.librariesTest","link":"<a href=\"h5p-library.html#.exports.librariesTest\">h5p-library &rtrif; exports</a>"},{"title":"multiTestH5PMain","link":"<a href=\"h5p-library.html\">multiTestH5PMain &rtrif; undefined</a>"},{"title":"multiTestH5PSetup","link":"<a href=\"h5p-library.html\">multiTestH5PSetup &rtrif; undefined</a>"},{"title":"testH5PMain","link":"<a href=\"h5p-library.html\">testH5PMain &rtrif; undefined</a>"},{"title":"testH5PSetup","link":"<a href=\"h5p-library.html\">testH5PSetup &rtrif; undefined</a>"},{"title":"pdf-service","link":"<a href=\"pdf-service.html\">pdf-service</a>"},{"title":"getPagesMain","link":"<a href=\"pdf-service.html\">getPagesMain &rtrif; undefined</a>"},{"title":"getPagesSetup","link":"<a href=\"pdf-service.html\">getPagesSetup &rtrif; undefined</a>"},{"title":"pdf-service.getPagesTest","link":"<a href=\"pdf-service.html#.getPagesTest\">pdf-service &rtrif; getPagesTest</a>"},{"title":"setup","link":"<a href=\"setup.html\">setup</a>"},{"title":"setup.checkAccessCookieResponse","link":"<a href=\"setup.html#.checkAccessCookieResponse\">setup &rtrif; checkAccessCookieResponse</a>"},{"title":"setup.checkSwitchResponse","link":"<a href=\"setup.html#.checkSwitchResponse\">setup &rtrif; checkSwitchResponse</a>"},{"title":"setup.checkUserIDResponse","link":"<a href=\"setup.html#.checkUserIDResponse\">setup &rtrif; checkUserIDResponse</a>"},{"title":"setup.exports.amsLogin","link":"<a href=\"setup.html#.exports.amsLogin\">setup &rtrif; exports</a>"},{"title":"setup.exports.getAccessCookie","link":"<a href=\"setup.html#.exports.getAccessCookie\">setup &rtrif; exports</a>"},{"title":"setup.exports.getAccessCookieB2C","link":"<a href=\"setup.html#.exports.getAccessCookieB2C\">setup &rtrif; exports</a>"},{"title":"setup.exports.getClassID","link":"<a href=\"setup.html#.exports.getClassID\">setup &rtrif; exports</a>"},{"title":"setup.exports.getOrgID","link":"<a href=\"setup.html#.exports.getOrgID\">setup &rtrif; exports</a>"},{"title":"setup.exports.getSchoolID","link":"<a href=\"setup.html#.exports.getSchoolID\">setup &rtrif; exports</a>"},{"title":"setup.exports.getUserID","link":"<a href=\"setup.html#.exports.getUserID\">setup &rtrif; exports</a>"},{"title":"setup.exports.getUserIDB2C","link":"<a href=\"setup.html#.exports.getUserIDB2C\">setup &rtrif; exports</a>"},{"title":"setup.exports.loginSetup","link":"<a href=\"setup.html#.exports.loginSetup\">setup &rtrif; exports</a>"},{"title":"setup.exports.loginSetupB2C","link":"<a href=\"setup.html#.exports.loginSetupB2C\">setup &rtrif; exports</a>"},{"title":"setup.exports.loginSetupWithUserID","link":"<a href=\"setup.html#.exports.loginSetupWithUserID\">setup &rtrif; exports</a>"},{"title":"setup.loginSetupAMS","link":"<a href=\"setup.html#.loginSetupAMS\">setup &rtrif; loginSetupAMS</a>"},{"title":"user-service","link":"<a href=\"user-service.html\">user-service</a>"},{"title":"landingTestLocalMain","link":"<a href=\"user-service.html\">landingTestLocalMain &rtrif; undefined</a>"},{"title":"landingTestMain","link":"<a href=\"user-service.html\">landingTestMain &rtrif; undefined</a>"},{"title":"landingTestSetup","link":"<a href=\"user-service.html\">landingTestSetup &rtrif; undefined</a>"},{"title":"multiLandingTestMain","link":"<a href=\"user-service.html\">multiLandingTestMain &rtrif; undefined</a>"},{"title":"multiLandingTestSetup","link":"<a href=\"user-service.html\">multiLandingTestSetup &rtrif; undefined</a>"},{"title":"poolLandingTestMain","link":"<a href=\"user-service.html\">poolLandingTestMain &rtrif; undefined</a>"},{"title":"poolLandingTestSetup","link":"<a href=\"user-service.html\">poolLandingTestSetup &rtrif; undefined</a>"},{"title":"user-service.checkRequest","link":"<a href=\"user-service.html#.checkRequest\">user-service &rtrif; checkRequest</a>"},{"title":"user-service.exports.defaultSetup","link":"<a href=\"user-service.html#.exports.defaultSetup\">user-service &rtrif; exports</a>"},{"title":"user-service.exports.initUserCookieJar","link":"<a href=\"user-service.html#.exports.initUserCookieJar\">user-service &rtrif; exports</a>"},{"title":"user-service.exports.landingTest","link":"<a href=\"user-service.html#.exports.landingTest\">user-service &rtrif; exports</a>"},{"title":"user-service.sizeOfHeaders","link":"<a href=\"user-service.html#.sizeOfHeaders\">user-service &rtrif; sizeOfHeaders</a>"},{"title":"user-service.trackDataMetricsPerURL","link":"<a href=\"user-service.html#.trackDataMetricsPerURL\">user-service &rtrif; trackDataMetricsPerURL</a>"},{"title":"xapi-server","link":"<a href=\"xapi-server.html\">xapi-server</a>"},{"title":"xapi-server.xapiTest","link":"<a href=\"xapi-server.html#.xapiTest\">xapi-server &rtrif; xapiTest</a>"},{"title":"xapiTestSetup","link":"<a href=\"xapi-server.html\">xapiTestSetup &rtrif; undefined</a>"},{"title":"xapiTestSetup","link":"<a href=\"xapi-server.html\">xapiTestSetup &rtrif; undefined</a>"}];
+        var options = 
+          setupSearch(list, options)
+      </script>
+    
+
+    
+
+    
+
+    
+
+
+  </body>
+
+</html>

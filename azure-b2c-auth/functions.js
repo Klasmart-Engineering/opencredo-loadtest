@@ -1,29 +1,41 @@
-import {
-  generateCodeChallenge
-} from './common.js'
-
-// import k6 specific packages
-import { URLSearchParams } from './jslib-url.js';
-import { check, fail, group } from 'k6';
-import http from 'k6/http';
-import encoding from 'k6/encoding';
-import { Counter } from 'k6/metrics';
 import * as env from '../utils/env.js';
+import {
+  check,
+  fail,
+  group
+}                  from 'k6';
+import {
+  defaultHeaders,
+  isRequestSuccessful
+} from '../utils/common.js';
+import { Counter }               from 'k6/metrics';
+import encoding                  from 'k6/encoding';
+import { generateCodeChallenge } from './common.js';
+import http                      from 'k6/http';
+import { URLSearchParams }       from './jslib-url.js';
 
-// import helpers
-import { defaultHeaders, isRequestSuccessful } from '../utils/common.js'
-
-// Initialise counter for HTTP 429 errors
+/**
+ * initalises a k6 metric counter for 429 status returns from azure, this is the status returned by Azure after hitting the rate limit
+ *
+ * @constant
+ * @memberof azure-b2c
+ */
 export const count429 = new Counter('http_429_errors');
 
+/**
+ * function to log in to B2C and return the response with the tokens required to login to the kidsloop application
+ *
+ * @param {string} username - the username to log in to the application with
+ * @returns {object} a k6/http response object
+ * @memberof azure-b2c
+ */
 export function loginToB2C(username) {
 
-  //initalise variables for B2C from env - if not set load the loadtest environment defaults
-  const tenantID = env.TENANT_ID ? env.TENANT_ID : '8d922fec-c1fc-4772-b37e-18d2ce6790df';
-  const policyName = env.POLICY_NAME ? env.POLICY_NAME : 'B2C_1A_RELYING_PARTY_SIGN_UP_LOG_IN';
-  const authClientID = env.AUTH_CLIENT_ID ? env.AUTH_CLIENT_ID : '926001fe-7853-485d-a15e-8c36bb4acaef';
-  const hubClientID = env.HUB_CLIENT_ID ? env.HUB_CLIENT_ID : '24bc7c47-97c6-4f27-838e-093b3948a5ca';
-  const loginURL = env.LOGIN_URL ? env.LOGIN_URL : env.APP_URL;
+  const tenantID = env.TENANT_ID;
+  const policyName = env.POLICY_NAME;
+  const authClientID = env.AUTH_CLIENT_ID;
+  const hubClientID = env.HUB_CLIENT_ID;
+  const loginURL = env.LOGIN_URL;
 
   let response, cookies, params, csrfToken, clientRequestID, code;
 
@@ -43,9 +55,8 @@ export function loginToB2C(username) {
     });
     check(response, {
       'is openid-configuration status 200': r => r.status === 200,
-    })
-    isRequestSuccessful(response);
-    isResponse429(response, count429);
+    });
+    isB2CRequestSuccessful(response);
 
     // Authorize
     params = new URLSearchParams([
@@ -62,9 +73,8 @@ export function loginToB2C(username) {
     });
     check(response, {
       'is authorize status 200': r => r.status === 200,
-    })
-    isRequestSuccessful(response);
-    isResponse429(response, count429);
+    });
+    isB2CRequestSuccessful(response);
 
     cookies = cookieJar.cookiesForURL(response.url);
     csrfToken = cookies['x-ms-cpim-csrf'][0];
@@ -95,9 +105,8 @@ export function loginToB2C(username) {
     });
     check(response, {
       'is SelfAsserted status 200': r => r.status === 200,
-    })
-    isRequestSuccessful(response);
-    isResponse429(response, count429);
+    });
+    isB2CRequestSuccessful(response);
 
     response = http.get(`${baseURL}/api/CombinedSigninAndSignup/confirmed?${params.toString()}`, {
       headers: csrfHeaders,
@@ -106,16 +115,15 @@ export function loginToB2C(username) {
     if (
       !check(response, {
         'is confirmed status 302': r => r.status === 302,
-        'redirect does not contain error': r => !r.headers['Location'].includes("error="),
+        'redirect does not contain error': r => !r.headers['Location'].includes('error='),
       })
     ) {
       console.log(response.status);
       console.log(response.headers['Location']);
       fail('confirmed response failed');
     }
-    
-    isRequestSuccessful(response, 302);
-    isResponse429(response, count429);
+
+    isB2CRequestSuccessful(response, 302);
 
     const redirectURL = new URL(response.headers['Location']);
     code = redirectURL.searchParams.get('code');
@@ -128,9 +136,8 @@ export function loginToB2C(username) {
     });
     check(response, {
       'is openid-configuration status 200': r => r.status === 200,
-    })
-    isRequestSuccessful(response);
-    isResponse429(response, count429);
+    });
+    isB2CRequestSuccessful(response);
 
     const tokenPayload = {
       client_id: hubClientID,
@@ -148,16 +155,25 @@ export function loginToB2C(username) {
     });
     check(response, {
       'is token status 200': r => r.status === 200,
-    })
-    isRequestSuccessful(response);
-    isResponse429(response, count429);
-  })
+    });
+    isB2CRequestSuccessful(response);
+  });
 
   return response;
 }
 
-function isResponse429(response, counter) {
+/**
+ * function to check a B2C request succeeded
+ *
+ * @param {object} response - a k6/http response object
+ * @returns {void} Nothing
+ * @memberof azure-b2c
+ */
+function isB2CRequestSuccessful(response) {
+
+  isRequestSuccessful(response);
+
   if (response.status === 429) {
-    counter.add(1);
+    count429.add(1);
   }
 }

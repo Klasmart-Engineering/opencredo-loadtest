@@ -1,22 +1,28 @@
-import http           from 'k6/http';
-import {chooseRandom} from './_functions.js';
-import {apiHeaders}   from './envs/_shared.js';
-import {contentIds}   from './envs/_contentIds.js';
-import {APP_URL}      from '../../utils/env.js'
+import { apiHeaders }          from './envs/_shared.js';
+import { APP_URL }             from '../../utils/env.js';
+import { chooseRandom }        from './_functions.js';
+import { contentIds }          from './envs/_contentIds.js';
+import http                    from 'k6/http';
+import { isRequestSuccessful } from '../../utils/common.js';
 
 // GET  /h5p/play/:contentId
 // GET  https://h5p.loadtest-k8s.kidsloop.live/h5p/play/61e5ab9293c3e70013dfa9a
+
+/**
+ * function to test the parameters of a piece of H5P content
+ *
+ * @param {string} h5pEndpoint - the API endpoint for H5P
+ * @param {string} token - an access cookie
+ * @returns {void} Nothing
+ * @memberof h5p-library
+ */
 export function contentParamsTest(h5pEndpoint, token) {
 
-    const url = `${h5pEndpoint}/h5p/params/${chooseRandom(contentIds[APP_URL])}?jwt=${token}`
+  const url = `${h5pEndpoint}/h5p/params/${chooseRandom(contentIds[APP_URL])}?jwt=${token}`;
 
-    const response = http.get(url, {
-        headers: apiHeaders
-    });
+  const response = http.get(url, {
+    headers: apiHeaders
+  });
 
-    if (response.status !== 200) {
-        console.error(`${response.status}: ${url}`)
-        console.error(JSON.stringify(response))
-    }
-
+  isRequestSuccessful(response);
 }
