@@ -166,12 +166,13 @@ export function loginToB2C(username) {
  * function to check a B2C request succeeded
  *
  * @param {object} response - a k6/http response object
+ * @param {number} statusCode - the expected HTTP status code
  * @returns {void} Nothing
  * @memberof azure-b2c
  */
-function isB2CRequestSuccessful(response) {
+function isB2CRequestSuccessful(response, statusCode = 200) {
 
-  isRequestSuccessful(response);
+  isRequestSuccessful(response, statusCode);
 
   if (response.status === 429) {
     count429.add(1);

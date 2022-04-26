@@ -102,7 +102,9 @@ const maxVUs = (env.vus * 10) > 10000 ? 10000 : env.vus * 10;
 /**
  * k6 options object that will configure k6 to run a scenario where it targets a constant arrival rate
  * This should be the default options used as we are primarily interested in the possible throughput of a service/endpoint
+ * To overwrite the thresholds specified see example below:
  *
+ * @example export const options = Object.Assign({}, defaultRateOptions, { thresholds: { <new thresholds> } })
  * @constant
  * @type {object}
  * @memberof common
@@ -120,6 +122,11 @@ export const defaultRateOptions = {
   },
 
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(99)'],
+
+  thresholds: {
+    http_req_duration: ['p(99)<1000'],
+    http_req_failed: ['rate<0.01']
+  },
 
   ext: {
     loadimpact: {
