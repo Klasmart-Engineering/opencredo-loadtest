@@ -1,29 +1,256 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  update-deployment
   SAM Template for the event based CD lambda
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
+    Handler: update-deployment
+    Runtime: go1.x
+    CodeUri: update-deployment/
+    MemorySize: 128
     Timeout: 20
+    Environment: 
+      Variables:
+      # All possible variables are set here for reference
+        APPS_NAMESPACE: kl-apps
+        BRANCH_NAME: main
+        DEPLOYMENT_NAME: kidsloop-user-service
+        EKS_ASSUME_ROLE: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+        EKS_CLUSTER_NAME: kidskube-uk-kidskube-loadtest-eks
+        EMIT_EVENT: 'false'
+        EVENTBUS_NAME: loadtest-poc-event-bus
+        EVENT_OUTPUT_SOURCE: live.kidsloop.kidskube-loadtest.user-updated
+        LATEST_TAG: main
+    ReservedConcurrentExecutions: 1
+    EventInvokeConfig:
+      DestinationConfig:
+        OnFailure:
+          Destination: arn:aws:events:eu-west-2:828974637366:event-bus/loadtest-poc-event-bus
+          Type: EventBridge
+        OnSuccess:
+          Destination: arn:aws:events:eu-west-2:828974637366:event-bus/loadtest-poc-event-bus
+          Type: EventBridge
+    Architectures:
+      - x86_64
 
 Resources:
-  UpdateDeploymentFunction:
+
+  assessment:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: update-deployment/
-      Handler: update-deployment
-      Runtime: go1.x
-      Architectures:
-        - x86_64
+      Description: Function to update the assessment deployment based on ECR image scans
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          EKS_CLUSTER_NAME: kidskube-uk-kidskube-loadtest-eks
-          APPS_NAMESPACE: kl-apps
+          BRANCH_NAME: master
+          DEPLOYMENT_NAME: kidsloop-assessment
+          LATEST_TAG: master-latest
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-assessment
+      FunctionName: loadtest-assessment-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  attendanceService:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the attendance service deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          BRANCH_NAME: master
+          DEPLOYMENT_NAME: kidsloop-attendance-service
+          LATEST_TAG: master-latest
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-attendance-service
+      FunctionName: loadtest-attendanceService-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  authBackend:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the auth backend deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          BRANCH_NAME: master
+          DEPLOYMENT_NAME: kidsloop-auth-backend
+          LATEST_TAG: master
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-auth-backend
+      FunctionName: loadtest-authBackend-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  cmsBackend:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the cms backend deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DEPLOYMENT_NAME: kidsloop-cms-backend
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-cms-backend
+      FunctionName: loadtest-cmsBackend-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  h5pService:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the h5p service deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DEPLOYMENT_NAME: kidsloop-h5p-service
+          LATEST_TAG: alpha
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-h5p-service
+      FunctionName: loadtest-h5pService-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  liveBackend:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the live backend deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          BRANCH_NAME: master
+          DEPLOYMENT_NAME: kidsloop-live-backend
+          LATEST_TAG: master-latest
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-live-backend
+      FunctionName: loadtest-liveBackend-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  userService:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the user service deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
           DEPLOYMENT_NAME: kidsloop-user-service
-          EVENTBUS_NAME: loadtest-poc-event-bus
-          EVENT_OUTPUT_SOURCE: live.kidsloop.kidskube-loadtest.user-updated
+          BRANCH_NAME: main
       Events:
         UpdateDeployment:
           Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
@@ -37,14 +264,103 @@ Resources:
               detail:
                 repository-name:
                 - kidsloop-user
+      FunctionName: loadtest-userService-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  xapi:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the xapi deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          BRANCH_NAME: main
+          DEPLOYMENT_NAME: kidsloop-xapi
+          LATEST_TAG: alpha
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-h5p-xapi-service
+      FunctionName: loadtest-xapi-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  UpdateDeployment:
-    Description: "Update Deployment Lambda Function ARN"
-    Value: !GetAtt UpdateDeploymentFunction.Arn
-  UpdateDeploymentIamRole:
-    Description: "Implicit IAM Role created for Update Deployment function"
-    Value: !GetAtt UpdateDeploymentFunctionRole.Arn
+  assessmentFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt assessment.Arn
+  assessmentIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt assessmentRole.Arn
+  attendanceServiceFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt attendanceService.Arn
+  attendanceServiceIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt attendanceServiceRole.Arn
+  authBackendFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt authBackend.Arn
+  authBackendIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt authBackendRole.Arn
+  cmsBackendFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt cmsBackend.Arn
+  cmsBackendIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt cmsBackendRole.Arn
+  h5pServiceFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt h5pService.Arn
+  h5pServiceIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt h5pServiceRole.Arn
+  liveBackendFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt liveBackend.Arn
+  liveBackendIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt liveBackendRole.Arn
+  userServiceFunction:
+    Description: "Update Deployment User Service Lambda Function ARN"
+    Value: !GetAtt userService.Arn
+  userServiceIAMRole:
+    Description: "Implicit IAM Role created for User Service Update Deployment function"
+    Value: !GetAtt userServiceRole.Arn
+  xapiFunction:
+    Description: "Update Deployment User Service Lambda Function ARN"
+    Value: !GetAtt xapi.Arn
+  xapiIAMRole:
+    Description: "Implicit IAM Role created for User Service Update Deployment function"
+    Value: !GetAtt xapi.Arn

@@ -1,0 +1,58 @@
+{
+  "version": "0",
+  "id": "",
+  "detail-type": "Lambda Function Invocation Result - Success",
+  "source": "lambda",
+  "account": "828974637366",
+  "time": "2022-04-25T13:45:36Z",
+  "region": "eu-west-2",
+  "resources": [
+      "arn:aws:events:eu-west-2:828974637366:event-bus/loadtest-poc-event-bus",
+      "arn:aws:lambda:eu-west-2:828974637366:function:loadtest-userService-update-deployment:$LATEST"
+  ],
+  "detail": {
+      "version": "1.0",
+      "timestamp": "2022-04-25T13:45:36.213Z",
+      "requestContext": {
+          "requestId": "",
+          "functionArn": "arn:aws:lambda:eu-west-2:828974637366:function:loadtest-userService-update-deployment:$LATEST",
+          "condition": "Success",
+          "approximateInvokeCount": 1
+      },
+      "requestPayload": {
+          "version": "0",
+          "id": "",
+          "detail-type": "ECR Image Scan",
+          "source": "aws.ecr",
+          "account": "942095822719",
+          "time": "2022-04-25T13:45:35Z",
+          "region": "eu-west-2",
+          "resources": [
+              "arn:aws:ecr:eu-west-2:942095822719:repository/kidsloop-user"
+          ],
+          "detail": {
+              "scan-status": "COMPLETE",
+              "repository-name": "kidsloop-user",
+              "image-digest": "sha256:0b85fbfa68be19489cfc5cbb62225f061e4c04b16f05330f6427e916dce068c0",
+              "image-tags": [
+                  "ad-2282-deprecate-rename-duplicates-migrations",
+                  "ad-2282-deprecate-rename-duplicates-migrations-3113c2b"
+              ],
+              "finding-severity-counts": {
+                  "LOW": 1
+              }
+          }
+      },
+      "responseContext": {
+          "statusCode": 200,
+          "executedVersion": "$LATEST"
+      },
+      "responsePayload": {
+          "message": "Not latest image or not from correct branch",
+          "deployment": "kidsloop-user-service",
+          "namespace": "kl-apps",
+          "cluster": "kidskube-uk-kidskube-loadtest-eks",
+          "statusCode": 0
+      }
+  }
+}

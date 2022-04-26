@@ -1,4 +1,2 @@
-## Ignore editor files
-.vscode
 ## Ignore sam build files
 .aws-sam
