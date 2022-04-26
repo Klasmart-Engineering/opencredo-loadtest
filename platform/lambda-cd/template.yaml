@@ -60,15 +60,51 @@ Resources:
                 - kidsloop-assessment
       FunctionName: loadtest-assessment-update-deployment
       Policies:
-      # Incorrectly flagged by vscode toolkit as incorrect type https://github.com/aws/aws-toolkit-vscode/issues/1974
         - Statement:
           - Effect: "Allow"
             Action: eks:DescribeCluster
             Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
         - Statement:
           - Effect: Allow
             Action: sts:AssumeRole
             Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  attendanceService:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the attendance service deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          BRANCH_NAME: master
+          DEPLOYMENT_NAME: kidsloop-attendance-service
+          LATEST_TAG: master-latest
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-attendance-service
+      FunctionName: loadtest-attendanceService-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
 
   authBackend:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -94,15 +130,16 @@ Resources:
                 - kidsloop-auth-backend
       FunctionName: loadtest-authBackend-update-deployment
       Policies:
-      # Incorrectly flagged by vscode toolkit as incorrect type https://github.com/aws/aws-toolkit-vscode/issues/1974
         - Statement:
           - Effect: "Allow"
             Action: eks:DescribeCluster
             Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
         - Statement:
           - Effect: Allow
             Action: sts:AssumeRole
             Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
 
   cmsBackend:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -126,15 +163,50 @@ Resources:
                 - kidsloop-cms-backend
       FunctionName: loadtest-cmsBackend-update-deployment
       Policies:
-      # Incorrectly flagged by vscode toolkit as incorrect type https://github.com/aws/aws-toolkit-vscode/issues/1974
         - Statement:
           - Effect: "Allow"
             Action: eks:DescribeCluster
             Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
         - Statement:
           - Effect: Allow
             Action: sts:AssumeRole
             Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  h5pService:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the h5p service deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          DEPLOYMENT_NAME: kidsloop-h5p-service
+          LATEST_TAG: alpha
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-h5p-service
+      FunctionName: loadtest-h5pService-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
 
   liveBackend:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -160,15 +232,16 @@ Resources:
                 - kidsloop-live-backend
       FunctionName: loadtest-liveBackend-update-deployment
       Policies:
-      # Incorrectly flagged by vscode toolkit as incorrect type https://github.com/aws/aws-toolkit-vscode/issues/1974
         - Statement:
           - Effect: "Allow"
             Action: eks:DescribeCluster
             Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
         - Statement:
           - Effect: Allow
             Action: sts:AssumeRole
             Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
 
   userService:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -193,15 +266,51 @@ Resources:
                 - kidsloop-user
       FunctionName: loadtest-userService-update-deployment
       Policies:
-      # Incorrectly flagged by vscode toolkit as incorrect type https://github.com/aws/aws-toolkit-vscode/issues/1974
         - Statement:
           - Effect: "Allow"
             Action: eks:DescribeCluster
             Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
         - Statement:
           - Effect: Allow
             Action: sts:AssumeRole
             Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
+
+  xapi:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: Function to update the xapi deployment based on ECR image scans
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          BRANCH_NAME: main
+          DEPLOYMENT_NAME: kidsloop-xapi
+          LATEST_TAG: alpha
+      Events:
+        UpdateDeployment:
+          Type: EventBridgeRule # More info about EventBridge Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#eventbridgerule
+          Properties:
+            EventBusName: loadtest-poc-event-bus
+            Pattern:
+              source:
+                - aws.ecr
+              detail-type:
+                - ECR Image Scan
+              detail:
+                repository-name:
+                - kidsloop-h5p-xapi-service
+      FunctionName: loadtest-xapi-update-deployment
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action: eks:DescribeCluster
+            Resource: arn:aws:eks:eu-west-2:828974637366:cluster/kidskube-uk-kidskube-loadtest-eks
+          Version: "2012-10-17"
+        - Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: arn:aws:iam::828974637366:role/UpdateDeploymentEKSAssumeRole
+          Version: "2012-10-17"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -209,10 +318,16 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   assessmentFunction:
     Description: "Update Deployment Live Backend Lambda Function ARN"
-    Value: !GetAtt authBackend.Arn
+    Value: !GetAtt assessment.Arn
   assessmentIAMRole:
     Description: "Implicit IAM Role created for Live Backend Update Deployment function"
-    Value: !GetAtt authBackendRole.Arn
+    Value: !GetAtt assessmentRole.Arn
+  attendanceServiceFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt attendanceService.Arn
+  attendanceServiceIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt attendanceServiceRole.Arn
   authBackendFunction:
     Description: "Update Deployment Live Backend Lambda Function ARN"
     Value: !GetAtt authBackend.Arn
@@ -225,6 +340,12 @@ Outputs:
   cmsBackendIAMRole:
     Description: "Implicit IAM Role created for Live Backend Update Deployment function"
     Value: !GetAtt cmsBackendRole.Arn
+  h5pServiceFunction:
+    Description: "Update Deployment Live Backend Lambda Function ARN"
+    Value: !GetAtt h5pService.Arn
+  h5pServiceIAMRole:
+    Description: "Implicit IAM Role created for Live Backend Update Deployment function"
+    Value: !GetAtt h5pServiceRole.Arn
   liveBackendFunction:
     Description: "Update Deployment Live Backend Lambda Function ARN"
     Value: !GetAtt liveBackend.Arn
@@ -237,3 +358,9 @@ Outputs:
   userServiceIAMRole:
     Description: "Implicit IAM Role created for User Service Update Deployment function"
     Value: !GetAtt userServiceRole.Arn
+  xapiFunction:
+    Description: "Update Deployment User Service Lambda Function ARN"
+    Value: !GetAtt xapi.Arn
+  xapiIAMRole:
+    Description: "Implicit IAM Role created for User Service Update Deployment function"
+    Value: !GetAtt xapi.Arn
