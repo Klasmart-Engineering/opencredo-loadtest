@@ -1,20 +1,51 @@
-import * as env         from '../utils/env.js';
-import * as queries     from './queries.js';
+import * as env     from '../utils/env.js';
+import * as queries from './queries.js';
 import {
   APIHeaders,
   defaultRateOptions,
   getCurrentUserFromPool,
   getUserPool,
   initCookieJar,
-  isRequestSuccessful
+  isRequestSuccessful,
+  sizeOfHeaders
 } from '../utils/common.js';
-import { http }     from 'k6/http';
+import {
+  Counter,
+  Trend
+} from 'k6/metrics';
+import { check }    from 'k6';
+import http         from 'k6/http';
 import { scenario } from 'k6/execution';
-import { uuid }     from '../utils/uuid.js';
+import uuid         from '../utils/uuid.js';
 
+/**
+ * Construct an XAPI specific endpoint, allows authenticating against a seperate system to test by setting `APP_URL_TEST`
+ *
+ * @constant
+ * @memberof xapi-server
+ */
 const xapiEndpoint = env.APP_URL_TEST ? `https://api.${env.APP_URL_TEST}/xapi/graphql` : `https://api.${env.APP_URL}/xapi/graphql`;
 
-export const options = defaultRateOptions;
+/**
+ * options for k6, expanding the default options with an increased setup timeout
+ *
+ * @constant
+ * @type {object}
+ * @memberof xapi-server
+ * @alias xapiTestOptions
+ */
+export const options = Object.assign({}, defaultRateOptions, {
+  setupTimeout: '30m',
+  thresholds: {
+    xapi_http_duration: ['p(99)<1000']
+  }
+});
+
+const xapiHTTPDuration = new Trend('xapi_http_duration', true);
+const xapiHTTPCount = new Counter('xapi_http_reqs');
+const xapiDataReceived = new Counter('xapi_data_received');
+const xapiDataSent = new Counter('xapi_data_sent');
+
 /**
  * function for k6 to setup the xapi test
  *
@@ -44,7 +75,7 @@ export default function main(data) {
   initCookieJar(xapiEndpoint, data[user]);
 
   const response = xapiTest(xapiEndpoint);
-  isRequestSuccessful(response);
+  checkRequest(response);
   return response;
 }
 
@@ -67,4 +98,32 @@ function xapiTest() {
   }), {
     headers: APIHeaders
   });
+}
+
+/**
+ *
+ * @param {object} response - a k6/http response object
+ * @returns {void} Nothing
+ * @memberof xapi-service
+ */
+function checkRequest(response) {
+
+  xapiHTTPCount.add(1);
+  trackDataMetricsPerURL(response);
+  xapiHTTPDuration.add(response.timings.duration);
+  check(response, { 'XAPI status is 200': (r) => r.status = 200 });
+
+  isRequestSuccessful(response);
+}
+
+/**
+ *
+ * @param {*} response - a k6/http response object
+ * @returns {void} Nothing
+ * @memberof xapi-service
+ */
+function trackDataMetricsPerURL(response) {
+
+  xapiDataSent.add(sizeOfHeaders(response.request.headers) + response.request.body.length);
+  xapiDataReceived.add(sizeOfHeaders(response.headers) + response.body.length);
 }

@@ -260,3 +260,15 @@ export function getB2CTokenPool() {
 
   return returnVal;
 }
+
+/**
+ * function takes a k6 header object and returns a sum of the length of the key and value
+ *
+ * @param {object} headers - The headers from either a request or response
+ * @returns {number} summed length of headers
+ * @memberof common
+ */
+export function sizeOfHeaders(headers) {
+
+  return Object.keys(headers).reduce((sum, key) => sum + key.length + headers[key].length, 0);
+}
