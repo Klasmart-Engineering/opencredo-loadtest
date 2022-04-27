@@ -48,7 +48,7 @@
           "executedVersion": "$LATEST"
       },
       "responsePayload": {
-          "message": "Succesfully updated deployment",
+          "message": "Successfully updated deployment",
           "deployment": "kidsloop-user-service",
           "namespace": "kl-apps",
           "cluster": "kidskube-uk-kidskube-loadtest-eks",
