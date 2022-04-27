@@ -5,7 +5,7 @@ env:
     "LOGIN_URL": "loadtest.kidsloop.live"
     "APP_URL": "kidskube-loadtest.kidsloop.live"
     "duration": "10m"
-    "rate": "90"
+    "rate": "80"
     "vus": "100"
     "TESTPATH": "kidsloop-xapi/test-xapi.js"
     "NEW_RELIC_ACCOUNT_ID": "3286825"
