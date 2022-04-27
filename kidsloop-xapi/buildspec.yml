@@ -9,6 +9,7 @@ env:
     "vus": "100"
     "TESTPATH": "kidsloop-xapi/test-xapi.js"
     "NEW_RELIC_ACCOUNT_ID": "3286825"
+    "STATSD_NAMESPACE": "xapi_loadtest_k6."
   parameter-store:
     "PASSWORD": "loadtest-codebuild-pool-password"
     "NEW_RELIC_API_KEY": "loadtest-codebuild-new-relic-api-key"
@@ -42,7 +43,7 @@ phases:
         -e vus=${vus}
         -e K6_STATSD_ENABLE_TAGS=true
         -e K6_STATSD_ADDR=newrelic:8125
-        -e K6_STATSD_NAMESPACE=user_loadtest_k6.
+        -e K6_STATSD_NAMESPACE=${STATSD_NAMESPACE}
         -v $(pwd):/src
         loadimpact/k6 run --out statsd --quiet /src/${TESTPATH}
   post_build:
