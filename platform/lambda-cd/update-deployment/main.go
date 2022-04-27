@@ -227,7 +227,7 @@ func handler(context context.Context, event ecrimagescan.AWSEvent) (Response, er
 	}
 
 	response.StatusCode = 0
-	response.Message = "Succesfully updated deployment"
+	response.Message = "Successfully updated deployment"
 
 	// Return success
 	return response, nil

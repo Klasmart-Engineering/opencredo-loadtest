@@ -48,7 +48,7 @@
           "executedVersion": "$LATEST"
       },
       "responsePayload": {
-          "message": "Not latest image or not from correct branch",
+          "message": "Image is from a different branch or repository",
           "deployment": "kidsloop-user-service",
           "namespace": "kl-apps",
           "cluster": "kidskube-uk-kidskube-loadtest-eks",

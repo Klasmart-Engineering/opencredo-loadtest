@@ -1,15 +1,24 @@
-import http             from 'k6/http';
-import { check, group } from 'k6';
+import * as env     from '../utils/env.js';
+import * as queries from './queries/landing.js';
 import {
   APIHeaders,
   defaultSetup,
   initUserCookieJar,
   userEndpoint
 } from './common.js';
-import * as queries                                from './queries/landing.js';
-import * as env                                    from '../utils/env.js';
-import { defaultRateOptions, isRequestSuccessful } from '../utils/common.js';
-import { Counter, Trend }                          from 'k6/metrics';
+import {
+  check,
+  group
+} from 'k6';
+import {
+  Counter,
+  Trend
+} from 'k6/metrics';
+import {
+  defaultRateOptions,
+  isRequestSuccessful
+} from '../utils/common.js';
+import http from 'k6/http';
 
 /**
  * options for k6 that include a custom threshold that will fail the test based on only results from the landing test function
