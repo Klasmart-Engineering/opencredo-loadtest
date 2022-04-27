@@ -1,11 +1,9 @@
-import {
-  initUserCookieJar
-} from './common.js';
-import { scenario }                           from 'k6/execution';
-import { landingTest }                        from './landing-test.js';
-import { loginSetupB2C }                      from '../utils/setup.js';
 import { defaultRateOptions }                 from '../utils/common.js';
 import { getUserIDForMultiUser as getUserID } from '../utils/common.js';
+import { initUserCookieJar }                  from './common.js';
+import { landingTest }                        from './landing-test.js';
+import { loginSetupB2C }                      from '../utils/setup.js';
+import { scenario }                           from 'k6/execution';
 
 /**
  * options for k6, set to default rate options

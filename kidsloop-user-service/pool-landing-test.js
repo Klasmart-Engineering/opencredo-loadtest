@@ -1,7 +1,13 @@
-import { initUserCookieJar }                                     from './common.js';
-import { scenario }                                              from 'k6/execution';
-import { landingTest, options as defaultOptions }                from './landing-test.js';
-import { getUserPool, getCurrentUserFromPool as getCurrentUser } from '../utils/common.js';
+import {
+  options as defaultOptions,
+  landingTest
+} from './landing-test.js';
+import {
+  getCurrentUserFromPool as getCurrentUser,
+  getUserPool
+} from '../utils/common.js';
+import { initUserCookieJar } from './common.js';
+import { scenario }          from 'k6/execution';
 
 /**
  * options for k6, expanding the default options with an increased setup timeout
