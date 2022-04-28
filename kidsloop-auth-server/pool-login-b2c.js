@@ -1,15 +1,10 @@
 import {
-  APIHeaders,
-  AuthEndpoint,
-} from './common.js';
-import {
   defaultRateOptions,
   getB2CTokenPool,
   getCurrentUserFromPool,
-  isRequestSuccessful
 } from '../utils/common.js';
-import http         from 'k6/http';
-import { scenario } from 'k6/execution';
+import { authLoginB2C } from './login-b2c.js';
+import { scenario }     from 'k6/execution';
 
 /**
  * options for k6, set to default rate options with an adjusted setup timeout
@@ -20,7 +15,10 @@ import { scenario } from 'k6/execution';
  * @alias poolLoginB2COptions
  */
 export const options = Object.assign({}, defaultRateOptions, {
-  setupTimeout: '15m'
+  setupTimeout: '15m',
+  thresholds: {
+    auth_http_duration: ['p(99)<1000']
+  }
 });
 
 /**
@@ -48,31 +46,5 @@ export default function main(data) {
 
   const userData = data[id];
 
-  let response;
-
-  //initialise the cookies for this VU
-  http.cookieJar();
-
-  const authHeader = {
-    Authorization: `Bearer ${userData.access_token}`
-  };
-
-  response = http.post(`${AuthEndpoint}/transfer`, '', {
-    headers: Object.assign(APIHeaders, authHeader),
-  });
-  isRequestSuccessful(response);
-
-  const switchPayload = JSON.stringify({
-    user_id: userData.user_id
-  });
-
-  response = http.post(`${AuthEndpoint}/switch`, switchPayload, {
-    headers: APIHeaders
-  });
-  isRequestSuccessful(response);
-
-  response = http.get(`${AuthEndpoint}/refresh`, {
-    headers: APIHeaders,
-  });
-  isRequestSuccessful(response);
+  authLoginB2C(userData.access_token, userData.user_id);
 }
