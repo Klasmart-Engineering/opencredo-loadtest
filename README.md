@@ -45,6 +45,17 @@ Environment variables are configured with defaults in `utils/env.js` where it's 
 const contentID = __ENV.contentID ? __ENV.contentID : '61eee3fe1235cc9c6959e69d';
 ```
 
+## Compiling Tests
+
+To compile a test to a single file you can run the `npm run bundle` command with an argument of the filename you want to compile preceded by `./`. The compiled test will then be output in the `dist/` folder in the root of this repository following the path of the test. e.g:
+
+```bash
+npm install
+INPUT=kidsloop-user-service/landing-test.js
+npm run bundle ./$INPUT
+OUTPUT=dist/kidsloop-user-service/landing-test.es5.js
+```
+
 ## New test creation
 
 To add a new test in an existing service the easiest way is to copy an existing test and change the main function
