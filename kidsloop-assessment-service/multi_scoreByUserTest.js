@@ -6,7 +6,7 @@ import {
 } from '../utils/common.js';
 import { assessmentEndpoint } from './common.js';
 import { scenario }           from 'k6/execution';
-import { scoreByUser }        from './scoreByUserTest';
+import { scoreByUser }        from './scoreByUserTest.js';
 
 /**
  * options for k6, set to default rate options
@@ -16,7 +16,12 @@ import { scoreByUser }        from './scoreByUserTest';
  * @memberof assessment-service
  * @alias mutliScoreByUserTestOptions
  */
-export const options = defaultRateOptions;
+export const options = Object.assign({}, defaultRateOptions, {
+  setupTimeout: '30m',
+  thresholds: {
+    assessment_http_duration: ['p(99)<1000']
+  }
+});
 
 /**
  * function for k6 to setup the multi score by user test

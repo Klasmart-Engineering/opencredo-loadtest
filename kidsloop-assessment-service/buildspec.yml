@@ -1,0 +1,52 @@
+version: 0.2
+
+env:
+  variables:
+    "LOGIN_URL": "loadtest.kidsloop.live"
+    "APP_URL": "kidskube-loadtest.kidsloop.live"
+    "duration": "10m"
+    "rate": "80"
+    "vus": "100"
+    "TESTPATH": "kidsloop-assessment-service/multi_scoreByUserTest.js"
+    "NEW_RELIC_ACCOUNT_ID": "3286825"
+    "STATSD_NAMESPACE": "assessment_loadtest_k6."
+    "ROOM_ID": "CURRENTLY_NO_ROOM"
+  parameter-store:
+    "PASSWORD": "loadtest-codebuild-pool-password"
+    "NEW_RELIC_API_KEY": "loadtest-codebuild-new-relic-api-key"
+
+phases:
+  pre_build:
+    commands:
+      - docker pull --quiet loadimpact/k6:latest
+      - docker pull --quiet newrelic/nri-statsd:latest
+  build:
+    commands:
+      - ./generate_statsd_config.sh
+      - docker network create build-net
+      - >-
+        docker run -d
+        --net build-net
+        --restart unless-stopped
+        -h "nr-cb-pipeline"
+        -v ${PWD}/nri-statsd.toml:/etc/opt/newrelic/nri-statsd.toml
+        --name newrelic
+        newrelic/nri-statsd:latest
+      - echo Running ${TESTPATH} performance test
+      - >-
+        docker run -i
+        --net build-net
+        -e LOGIN_URL=${LOGIN_URL}
+        -e APP_URL=${APP_URL}
+        -e PASSWORD=${PASSWORD}
+        -e duration=${duration}
+        -e rate=${rate}
+        -e vus=${vus}
+        -e K6_STATSD_ENABLE_TAGS=true
+        -e K6_STATSD_ADDR=newrelic:8125
+        -e K6_STATSD_NAMESPACE=${STATSD_NAMESPACE}
+        -v $(pwd):/src
+        loadimpact/k6 run --out statsd --quiet /src/${TESTPATH}
+  post_build:
+    commands:
+      - echo Performance test complete
