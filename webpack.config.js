@@ -10,7 +10,7 @@ module.exports = {
   mode: 'production',
   entry: fileName,
   output: {
-    path: `${ path.resolve(path.dirname(fileName)) }/dist`,
+    path: `${ path.resolve() }/dist/${ path.dirname(fileName) }`,
     libraryTarget: 'commonjs',
     filename: outFilename
   },
