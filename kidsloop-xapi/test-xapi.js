@@ -41,9 +41,36 @@ export const options = Object.assign({}, defaultRateOptions, {
   }
 });
 
+/**
+ * custom trend metric for xapi http durations
+ *
+ * @constant
+ * @memberof xapi-server
+ */
 const xapiHTTPDuration = new Trend('xapi_http_duration', true);
+
+/**
+ * custom counter metric for xapi http request counting
+ *
+ * @constant
+ * @memberof xapi-server
+ */
 const xapiHTTPCount = new Counter('xapi_http_reqs');
+
+/**
+ * custom counter metric for tracking xapi data transfer - received
+ *
+ * @constant
+ * @memberof xapi-server
+ */
 const xapiDataReceived = new Counter('xapi_data_received');
+
+/**
+ * custom counter metric for tracking xapi data transfer - sent
+ *
+ * @constant
+ * @memberof xapi-server
+ */
 const xapiDataSent = new Counter('xapi_data_sent');
 
 /**
@@ -101,10 +128,12 @@ function xapiTest() {
 }
 
 /**
+ * function that will take a k6/http response and run it through metric validation
  *
  * @param {object} response - a k6/http response object
  * @returns {void} Nothing
  * @memberof xapi-service
+ * @alias xapiCheckRequest
  */
 function checkRequest(response) {
 
@@ -117,6 +146,7 @@ function checkRequest(response) {
 }
 
 /**
+ * function that will sum the length of the body and headers and add them to the landing tracking metrics
  *
  * @param {*} response - a k6/http response object
  * @returns {void} Nothing
