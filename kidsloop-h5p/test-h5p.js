@@ -39,10 +39,10 @@ export function setup() {
  */
 export default function main(data) {
   // Run these one by one to obtain accurate request per second metrics
-  contentParamsTest(h5pEndpoint, data.token);
-  contentPlayTest(h5pEndpoint, data.token);
-  contentTypeCacheTest(h5pEndpoint, data.token);
-  coreTest(h5pEndpoint, data.token);
-  librariesTest(h5pEndpoint, data.token);
-  librariesAjaxTest(h5pEndpoint, data.token);
+  contentParamsTest(h5pEndpoint, data);
+  contentPlayTest(h5pEndpoint, data);
+  contentTypeCacheTest(h5pEndpoint, data);
+  coreTest(h5pEndpoint, data);
+  librariesTest(h5pEndpoint, data);
+  librariesAjaxTest(h5pEndpoint, data);
 }
