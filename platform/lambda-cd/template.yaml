@@ -24,6 +24,7 @@ Globals:
         LATEST_TAG: main
     ReservedConcurrentExecutions: 1
     EventInvokeConfig:
+      MaximumRetryAttempts: 0
       DestinationConfig:
         OnFailure:
           Destination: arn:aws:events:eu-west-2:828974637366:event-bus/loadtest-poc-event-bus
