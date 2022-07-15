@@ -11,7 +11,7 @@ require (
 	golang.org/x/exp v0.0.0-20220407100705-7b9b53b0aca4
 	k8s.io/apimachinery v0.22.1
 	k8s.io/client-go v0.22.1
-	sigs.k8s.io/aws-iam-authenticator v0.5.5
+	sigs.k8s.io/aws-iam-authenticator v0.5.9
 )
 
 require (
