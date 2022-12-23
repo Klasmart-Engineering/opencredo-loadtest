@@ -1,7 +1,7 @@
 {
     "name": "kidsloop-h5p-edge-lambda",
     "dependencies": {
-        "jsonwebtoken": "^8.5.1"
+        "jsonwebtoken": "^9.0.0"
     },
     "devDependencies": {
         "@types/jsonwebtoken": "^8.5.6"
